@@ -149,12 +149,77 @@ export const ProductChildProps = ({ name, age }) => {
 }
 
 // Card Component
-export const CustomCard = ({ title, description, image, children }) => {
+export const cards = [
+    {
+        id: 1,
+        title: "Getting Started",
+        description: "Introductory card explaining JSX basics and how to create components.",
+        image: "https://media.istockphoto.com/id/615422436/photo/demo-sign-cubes.jpg?s=612x612&w=0&k=20&c=HHOLIiF8SmbIssxKv3G480EgTVub_v9cc1QME3Dn6XU=",
+        features: ["JSX syntax", "Component structure", "Rendering"]
+    },
+    {
+        id: 2,
+        title: "Props & State",
+        description: "Overview of passing data to components and managing local state.",
+        image: "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
+        features: ["Props", "State", "Lifting state"]
+    },
+    {
+        id: 3,
+        title: "Lists & Keys",
+        description: "How to render lists with map() and why keys are important.",
+        image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+        features: ["map()", "keys", "Performance tips"]
+    },
+    {
+        id: 4,
+        title: "Reusable Components",
+        description: "Create and reuse components like cards, modals and form controls.",
+        image: "https://images.unsplash.com/photo-1633621412960-6df85eff8c85?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=627",
+        features: ["Props", "Composition", "Children"]
+    },
+    {
+        id: 5,
+        title: "Advanced Patterns",
+        description: "Composition patterns, render props, and hooks best practices.",
+        image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1025",
+        features: ["Hooks", "Context", "Performance"]
+    }
+];
+export const CustomCard = ({
+    title = "Reusable Components",
+    description = "Create and reuse components like cards, modals and form controls.",
+    image = "https://media.istockphoto.com/id/615422436/photo/demo-sign-cubes.jpg?s=612x612&w=0&k=20&c=HHOLIiF8SmbIssxKv3G480EgTVub_v9cc1QME3Dn6XU=",
+    children }) => {
     return (
         <div className="bg-white shadow-lg rounded-2xl p-4 w-64 text-center hover:scale-105 transition-transform duration-300">
             {image && (
-                <img src={image} title={title} className='border border-2 border-' />
+                <img src={image} title={title} className='w-full h-40 object-cover rounded-xl mb-3' />
             )}
+            <h3 className='text-lg font-semibold text-gray-800'>{title}</h3>
+            <p className='text-sm text-gray-500'>{description}</p>
+
+            {/* {Extra JSX Passed from Parent} */}
+            <div className='mt-3'>
+                {children}
+            </div>
+        </div>
+    )
+}
+
+export const CustomCardMap = ({ title, description, image, children }) => {
+    return (
+        <div className="w-full bg-white shadow-lg rounded-2xl p-4 text-center hover:scale-105 transition-transform duration-300">
+            {image && (
+                <img src={image} title={title} className='w-full h-40 object-cover rounded-xl mb-3' />
+            )}
+            <h3 className='text-lg font-semibold text-gray-800'>{title}</h3>
+            <p className='text-sm text-gray-500'>{description}</p>
+
+            {/* {Extra JSX Passed from Parent} */}
+            <div className='mt-3'>
+                {children}
+            </div>
         </div>
     )
 }

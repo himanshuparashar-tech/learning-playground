@@ -14,7 +14,10 @@ import {
     ParentProps,
     ParentPropsDestructring,
     PersonParentProps,
-    ProductParentProps
+    ProductParentProps,
+    CustomCard,
+    CustomCardMap,
+    cards
 } from './tabsComponents';
 
 export function getTabs() {
@@ -475,11 +478,140 @@ export function getTabs() {
         },
         {
             id: 14,
-            name: 'Reusable Card Component',
+            name: 'Reusable Card Component with default Props',
+            type: 'codePreview',
+            code: `const CustomCard = ({
+                    title = "Reusable Components",
+                    description = "Create and reuse components like cards, modals and form controls.",
+                    image = "https://media.istockphoto.com/id/615422436/photo/demo-sign-cubes.jpg?s=612x612&w=0&k=20&c=HHOLIiF8SmbIssxKv3G480EgTVub_v9cc1QME3Dn6XU=",
+                    children }) => {
+                    return (
+                        <div className="bg-white shadow-lg rounded-2xl p-4 w-64 text-center hover:scale-105 transition-transform duration-300">
+                            {image && (
+                                <img src={image} title={title} className='w-full h-40 object-cover rounded-xl mb-3' />
+                            )}
+                            <h3 className='text-lg font-semibold text-gray-800'>{title}</h3>
+                            <p className='text-sm text-gray-500'>{description}</p>
+                
+                            {/* {Extra JSX Passed from Parent} */}
+                            <div className='mt-3'>
+                                {children}
+                            </div>
+                        </div>
+                    )
+                }`,
+            preview:
+                <CustomCard />
         },
-        {},
-        {},
-        {},
+        {
+            id: 15,
+            name: 'Reusable Card Component with Mapping',
+            type: 'codePreview',
+            code:
+                `export const CustomCardMap = ({ title, description, image, children }) => {
+                    return (
+                        <div className="bg-white shadow-lg rounded-2xl p-4 w-64 text-center hover:scale-105 transition-transform duration-300">
+                            {image && (
+                                <img src={image} title={title} className='w-full h-40 object-cover rounded-xl mb-3' />
+                            )}
+                            <h3 className='text-lg font-semibold text-gray-800'>{title}</h3>
+                            <p className='text-sm text-gray-500'>{description}</p>
+                
+                            {/* {Extra JSX Passed from Parent} */}
+                            <div className='mt-3'>
+                                {children}
+                            </div>
+                        </div>
+                    )
+                }
+                    
+                // With Slice 
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">
+                    {cards.slice(0, 3).map((card, idx) => (
+                        <CustomCardMap
+                            key={card.id}
+                            title={card.title}
+                            description={card.description}
+                            image={card.image}
+                        >
+                            <ul className="text-left list-disc pl-5 mt-2">
+                                {card.features.map((feature, index) => (
+                                    <li key={index}>{feature}</li>
+                                ))}
+                            </ul>
+                        </CustomCardMap>
+                    )
+                    )}
+                </div>
+                
+                `,
+            preview:
+                <div className='overflow-auto' style={{maxHeight: 'calc(100vh - 275px)'}}>
+                    <div className="flex justify-between gap-6 w-full">
+                        <CustomCardMap
+                            className="sm:w-1/3 w-full"
+                            title={cards[0].title}
+                            description={cards[0].description}
+                            image={cards[0].image}
+                        >
+                            <ul className="text-left list-disc pl-5 mt-2">
+                                {cards[0].features.map((feature, index) => (
+                                    <li key={index}>{feature}</li>
+                                ))}
+                            </ul>
+                        </CustomCardMap>
+                        <CustomCardMap
+                            className="sm:w-1/3 w-full"
+                            title={cards[1].title}
+                            description={cards[1].description}
+                            image={cards[1].image}
+                        >
+                            <ul className="text-left list-disc pl-5 mt-2">
+                                {cards[1].features.map((feature, index) => (
+                                    <li key={index}>{feature}</li>
+                                ))}
+                            </ul>
+                        </CustomCardMap>
+                        <CustomCardMap
+                            className="sm:w-1/3 w-full"
+                            title={cards[2].title}
+                            description={cards[2].description}
+                            image={cards[2].image}
+                        >
+                            <ul className="text-left list-disc pl-5 mt-2">
+                                {cards[2].features.map((feature, index) => (
+                                    <li key={index}>{feature}</li>
+                                ))}
+                            </ul>
+                        </CustomCardMap>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                // Or We can use like this also in the bottom it is used as a map with slice
+                    <br />
+                    <br />
+                    <br />
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">
+                        {cards.slice(0, 3).map((card, idx) => (
+                            <CustomCardMap
+                                key={card.id}
+                                title={card.title}
+                                description={card.description}
+                                image={card.image}
+                            >
+                                <ul className="text-left list-disc pl-5 mt-2">
+                                    {card.features.map((feature, index) => (
+                                        <li key={index}>{feature}</li>
+                                    ))}
+                                </ul>
+                            </CustomCardMap>
+                        )
+                        )}
+                    </div>
+                </div>
+        },
         {
             id: 20,
             name: 'Examples',
