@@ -34,13 +34,13 @@ export default function TabsViewFancy() {
         { }
         <div className='flex flex-col sm:flex-row gap-6 rounded-xl overflow-hidden'>
             { }
-            <div className='sm:w-64 flex sm:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: '80vh' }}>
+            <div className='sm:w-64 flex sm:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: 'calc(100vh - 135px)' }}>
                 {tabs.map(tab => <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`
-                relative group flex flex-wrap break-words items-center w-full px-4 py-3 sm:py-4 transition-all
+                relative group flex flex-wrap break-words items-center sm:w-full px-4 py-3 min-w-[120px]  sm:py-4 transition-all
                 ${activeTab === tab.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300'}
               `}>
                     { }
-                    {activeTab === tab.id && <motion.div layoutId='tabBackground' className='absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg' initial={{
+                    {activeTab === tab.id && <motion.div layoutId='tabBackground' className='absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg  ' initial={{
                         opacity: 0
                     }} animate={{
                         opacity: 1
@@ -119,7 +119,7 @@ export default function TabsViewFancy() {
 
                             {/* render selected view */}
                             {(viewMode[activeTab] || 'preview') === 'code' ? (
-                                <pre className='rounded bg-gray-100 dark:bg-gray-800 p-4 overflow-auto text-sm h-80 overflow-y-auto' >
+                                <pre className='rounded bg-gray-100 dark:bg-gray-800 p-4 overflow-auto text-sm ' style={{maxHeight: 'calc(100vh - 275px)'}} >
                                     <code>{tabs.find(tab => tab.id === activeTab).code}</code>
                                 </pre>
                             ) : (
