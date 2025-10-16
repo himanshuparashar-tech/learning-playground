@@ -21,3 +21,10 @@
     background: linear-gradient(to right, #6c6b6b, #6c6b6b);
   }
 }
+
+ul{
+  padding: 10px 20px;
+  li{
+    list-style: disc;
+  }
+}

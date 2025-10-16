@@ -17,7 +17,9 @@ import {
     ProductParentProps,
     CustomCard,
     CustomCardMap,
-    cards
+    cards,
+    Password,
+    PasswordTernary
 } from './tabsComponents';
 
 export function getTabs() {
@@ -547,7 +549,7 @@ export function getTabs() {
                 
                 `,
             preview:
-                <div className='overflow-auto' style={{maxHeight: 'calc(100vh - 275px)'}}>
+                <div className='overflow-auto' style={{ maxHeight: 'calc(100vh - 275px)' }}>
                     <div className="flex justify-between gap-6 w-full">
                         <CustomCardMap
                             className="sm:w-1/3 w-full"
@@ -610,6 +612,71 @@ export function getTabs() {
                         )
                         )}
                     </div>
+                </div>
+        },
+        {
+            id: 16,
+            name: 'Conditional Rendering',
+            type: 'codePreview',
+            code: `// Conditional Rendering Components
+            export const validPassword = () => { <h1>Valid Password</h1> }
+            export const InvalidPassword = () => { <h1>InValid Password</h1> }
+            
+            export const Password = ({ isvalid }) => {
+                if (isvalid) {
+                    return (
+                        <h1>Valid Password</h1>
+                    )
+                }
+            
+                return (
+                    <h1> InValid Password</h1 >
+                )
+            }`,
+            preview:
+                <div>
+                    <Password isValid={true} />
+                    <br />
+                    <br />
+                    <h6><strong>Note:</strong></h6>
+                    <ul>
+                        <li>
+                            It allow us to dynamically display different UI Components or content based specification.
+                        </li>
+                        <li>
+                            This enables us to create interactive and more responsive user experiences
+                        </li>
+                    </ul>
+                </div>
+
+        },
+        {
+            id: 17,
+            name: 'Conditional Redendering with Ternary',
+            type: 'codePreview',
+            code: `// Conditional Rendering with Ternary Operator
+            export const PasswordTernary = ({isValid}) => {
+                return (
+                    isValid ? <ValidPassword /> : <InvalidPassword />
+                )
+            }
+            `,
+            preview:
+                <div>
+                    <PasswordTernary isValid={true} >
+                        Test
+                    </PasswordTernary>
+                    <br />
+                    <br />
+                    <h6><strong>In arrow functions:</strong></h6>
+                    <ul>
+                        <li>
+                            {"() => <JSX /> → implicit return, no return keyword needed"}
+                        </li>
+                        <li>
+                            {"() => { <JSX /> } → explicit return required, otherwise returns undefined"}
+                        </li>
+                    </ul>
                 </div>
         },
         {

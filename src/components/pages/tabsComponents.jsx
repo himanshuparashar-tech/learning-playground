@@ -1,3 +1,4 @@
+import { h1 } from 'framer-motion/client';
 import React from 'react';
 
 // dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
@@ -221,5 +222,28 @@ export const CustomCardMap = ({ title, description, image, children }) => {
                 {children}
             </div>
         </div>
+    )
+}
+
+// Conditional Rendering Components
+export const ValidPassword = () => { return (<h1>Valid Password</h1>) }
+export const InvalidPassword = () => { return (<h1>InValid Password</h1>) }
+
+export const Password = ({ isvalid }) => {
+    if (isvalid) {
+        return (
+            <h1>Valid Password</h1>
+        )
+    }
+
+    return (
+        <h1> InValid Password</h1 >
+    )
+}
+
+// Conditional Rendering with Ternary Operator
+export const PasswordTernary = ({ isValid }) => {
+    return (
+        isValid ? <ValidPassword /> : <InvalidPassword />
     )
 }
