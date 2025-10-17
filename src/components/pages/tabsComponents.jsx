@@ -1,4 +1,4 @@
-import { h1 } from 'framer-motion/client';
+import { div, h1 } from 'framer-motion/client';
 import React from 'react';
 
 // dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
@@ -245,5 +245,73 @@ export const Password = ({ isvalid }) => {
 export const PasswordTernary = ({ isValid }) => {
     return (
         isValid ? <ValidPassword /> : <InvalidPassword />
+    )
+}
+
+// Conditional Rendering With Cart
+export const CartRender = () => {
+    const items = ["Wireless Mouse", "Keyboard", "HDMI Cable"];
+    return (
+        <div>
+            <h1> Cart 🛒 </h1>
+            {items.length > 0 && <h2>You have {items.length} items in your cart.</h2>}
+
+            <ul>
+                <h3>Products</h3>
+                {items.map((item, index) => {
+                    return (
+                        <li key={index}>
+                            {item}
+                        </li>
+                    )
+                })}
+
+            </ul>
+        </div >
+
+    )
+}
+
+// Exercise Conditional Rendering
+export const ExerciseWeather = ({ temprature }) => {
+    if (temprature < 15) {
+        return <h1> It's Cold Outside ❄️ </h1>;
+    }
+    else if (temprature >= 15 && temprature <= 25) {
+        return (
+            <h1> It's Normal Weather 🌤️ </h1>
+        )
+    }
+    else {
+        return (
+            <h1> It's Hot Outside 🔥 </h1>
+        )
+    }
+}
+
+// Exercise Weather with Ternary Operator
+export const ExerciseWeatherTernary = ({ temprature }) => {
+    return (
+        (temprature < 15) ? <h1>`It's Cold Outside `</h1> :
+            (temprature >= 15 && temprature <= 25) ? <h1>`It's Normal Weather `</h1> :
+                <h1>`It's Hot Outside `</h1>
+    )
+}
+
+
+// Excercise UserStatus with the && Operator
+export const UserStatus = ({ isLoggedIn, isAdmin }) => {
+    return (
+        (isLoggedIn && isAdmin) ? <h1>Welcome Admin</h1> : <h1>Welcome User</h1>
+    )
+}
+
+// Excercise Morning Day Status
+export const DayStatus = ({ timeOfDay }) => {
+    return (
+        (timeOfDay === 'morning') ? <h1>Good Morning!</h1> :
+            (timeOfDay === 'afternoon') ? <h1>Good Afternoon!</h1> :
+                (timeOfDay === 'evening') ? <h1>Good Evening!</h1> :
+                    <h1>Good Night!</h1>
     )
 }

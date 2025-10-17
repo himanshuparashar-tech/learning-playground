@@ -19,7 +19,12 @@ import {
     CustomCardMap,
     cards,
     Password,
-    PasswordTernary
+    PasswordTernary,
+    CartRender,
+    ExerciseWeather,
+    ExerciseWeatherTernary,
+    UserStatus,
+    DayStatus
 } from './tabsComponents';
 
 export function getTabs() {
@@ -680,7 +685,93 @@ export function getTabs() {
                 </div>
         },
         {
+            id: 18,
+            name: 'Conditional Rendeering with Cart Example',
+            type: 'codePreview',
+            code: `// Conditional Rendering With Cart
+            export const CartRender = () => {
+                return (
+                    <div>
+                        Cart
+                    </div>
+                )
+            }`,
+            preview:
+                <CartRender />
+        },
+        {
+            id: 19,
+            name: 'Exercise: Conditional Rendering Based on Weather',
+            type: 'codePreview',
+            code: `// Exercise Conditional Rendering
+            export const ExerciseWeatherNormal = ({ temprature }) => {
+                if (temprature < 15) {
+                    return <h1> It's Cold Outside ❄️ </h1>;
+                }
+                else if (temprature >= 15 && temprature <= 25) {
+                    return (
+                        <h1> It's Normal Weather 🌤️ </h1>
+                    )
+                }
+                else {
+                    return (
+                        <h1> It's Hot Outside 🔥 </h1>
+                    )
+                }
+            }`,
+            preview:
+                <ExerciseWeather temprature={14} />
+        },
+        {
             id: 20,
+            name: 'Exercise Weather with Ternary Operator',
+            type: 'codePreview',
+            code: `// Exercise Weather with Ternary Operator
+            export const ExerciseWeatherTernary = ({ temprature }) => {
+                return (
+                    (temprature < 15) ? <h1>It's Cold Outside </h1> :
+                    (temprature >= 15 && temprature <= 25) ?<h1>It's Normal Weather </h1> :
+                    <h1>It's Hot Outside </h1>
+                )
+            }`,
+            preview:
+                <ExerciseWeatherTernary temprature={30} />
+        },
+        {
+            id: 21,
+            name: 'Excercise with User Status',
+            type: 'codePreview',
+            code: `// Excercise UserStatus with the && Operator
+            export const UserStatus = ({ isLoggedIn, isAdmin }) => {
+                return (
+                    (isLoggedIn && isAdmin) ? <h1>Welcome Admin</h1> : <h1>Welcome User</h1>
+                )
+            }`,
+            preview:
+                <div>
+                    <UserStatus isLoggedIn={true} isAdmin={false} />
+                </div>
+        },
+        {
+            id: 22,
+            name: 'Exercise with Greeting Day Message',
+            type: 'codepPreview',
+            code: `// Excercise Morning Day Status
+            export const DayStatus = ({ timeOfDay }) => {
+                return (
+                    (timeOfDay === 'morning') ? <h1>Good Morning!</h1> :
+                        (timeOfDay === 'afternoon') ? <h1>Good Afternoon!</h1> :
+                            (timeOfDay === 'evening') ? <h1>Good Evening!</h1> :
+                                <h1>Good Night!</h1>
+                )
+            }`,
+            preview:
+                <div>
+                    <DayStatus timeOfDay='evening' />
+                </div>
+        },
+        {
+            id: 30,
             name: 'Examples',
             type: 'codePreview',
             code: `const Examples = () => {
@@ -688,18 +779,18 @@ export function getTabs() {
                 const example1Multiply = (a, b) => a * b;
                 const example1dynaClass = "MustBeRed"
                 return (
-                <div>
-                    <p>Add Expression : {2 + 2}</p>
-                    <p>My Name : {example1MyName}</p>
-                    <p>Random Number : {Math.random()}</p>
-                    <p>My Friend List : {["Alex, Bob, Cherry"]}</p>
-                    <p>Expression Multiply: {example1Multiply(3, 5)}</p>
-                    <p>Conditional Rendering : {2 > 3 ? 'R' : 'W'}</p>
-                    <p className={example1dynaClass}>Example1 Dyna Class : {example1dynaClass}</p>
-                </div>
+                    <div>
+                        <p>Add Expression : {2 + 2}</p>
+                        <p>My Name : {example1MyName}</p>
+                        <p>Random Number : {Math.random()}</p>
+                        <p>My Friend List : {["Alex, Bob, Cherry"]}</p>
+                        <p>Expression Multiply: {example1Multiply(3, 5)}</p>
+                        <p>Conditional Rendering : {2 > 3 ? 'R' : 'W'}</p>
+                        <p className={example1dynaClass}>Example1 Dyna Class : {example1dynaClass}</p>
+                    </div>
                 )
-                }
-                export default Examples;`,
+            }
+            export default Examples; `,
             preview: <div>
                 <p>Add Expression : {2 + 2}</p>
                 <p>My Name : {example1MyName}</p>
