@@ -24,7 +24,8 @@ import {
     ExerciseWeather,
     ExerciseWeatherTernary,
     UserStatus,
-    DayStatus
+    DayStatus,
+    InlineStyles
 } from './tabsComponents';
 
 export function getTabs() {
@@ -755,7 +756,7 @@ export function getTabs() {
         {
             id: 22,
             name: 'Exercise with Greeting Day Message',
-            type: 'codepPreview',
+            type: 'codePreview',
             code: `// Excercise Morning Day Status
             export const DayStatus = ({ timeOfDay }) => {
                 return (
@@ -766,9 +767,29 @@ export function getTabs() {
                 )
             }`,
             preview:
-                <div>
-                    <DayStatus timeOfDay='evening' />
-                </div>
+                <DayStatus timeOfDay='' />
+        },
+        {
+            id: 23,
+            name: 'Inline Styles in React',
+            type: 'codePreview',
+            code: `// Inline Styles in React
+            export const InlineStyles = () => {
+                const styles = { color: 'red', fontSize: '2rem', fontWeight: 'bold', backgroundColor: 'black', padding: '1rem', borderRadius: '0.5rem' }
+                return (
+                    <div>
+                        <h6><strong>Styles with constant styles</strong></h6>
+                        <div style={styles}>Inline Styles</div>
+                        <br />
+                        {/* OR */}
+                        <br />
+                        <h6><strong>Styles with inline styles</strong></h6>
+                        <div style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold', backgroundColor: 'maroon', padding: '1rem', borderRadius: '0.5rem' }}> Inline Styles</div >
+                    </div>
+                )
+            }`,
+            preview:
+                <InlineStyles />
         },
         {
             id: 30,

@@ -1,4 +1,4 @@
-import { div, h1 } from 'framer-motion/client';
+import { div, h1, p } from 'framer-motion/client';
 import React from 'react';
 
 // dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
@@ -313,5 +313,27 @@ export const DayStatus = ({ timeOfDay }) => {
             (timeOfDay === 'afternoon') ? <h1>Good Afternoon!</h1> :
                 (timeOfDay === 'evening') ? <h1>Good Evening!</h1> :
                     <h1>Good Night!</h1>
+    )
+}
+
+// Inline Styles in React
+export const InlineStyles = () => {
+    const styles = { color: 'red', fontSize: '2rem', fontWeight: 'bold', backgroundColor: 'black', padding: '1rem', borderRadius: '0.5rem' }
+    return (
+        <div>
+            <h6 className='mb-2'><strong>Styles with constant styles</strong></h6>
+            <div style={styles}>Inline Styles</div>
+            {/* OR */}
+            <br />
+            <h6 className='mb-2'><strong>Styles with inline styles</strong></h6>
+            <div style={{
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                backgroundColor: 'maroon',
+                padding: '1rem',
+                borderRadius: '0.5rem'
+            }}> Inline Styles</div >
+        </div>
     )
 }

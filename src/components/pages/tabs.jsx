@@ -30,6 +30,9 @@ export default function TabsViewFancy() {
         }
     }, [activeTab]);
 
+    console.log(tabs.find(tab => tab.id === activeTab), ';;;;;;;;');
+    
+
     return <div className='p-3 w-full mx-auto'>
         { }
         <div className='flex flex-col sm:flex-row gap-6 rounded-xl overflow-hidden'>
