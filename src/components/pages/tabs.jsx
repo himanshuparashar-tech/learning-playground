@@ -30,7 +30,7 @@ export default function TabsViewFancy() {
         }
     }, [activeTab]);
 
-    console.log(tabs.find(tab => tab.id === activeTab), ';;;;;;;;');
+    // console.log(tabs.find(tab => tab.id === activeTab), ';;;;;;;;');
 
 
     return <div className='p-3 w-full mx-auto'>
@@ -39,7 +39,7 @@ export default function TabsViewFancy() {
             { }
             <div className='sm:w-64 flex sm:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: 'calc(100vh - 135px)' }}>
                 {tabs.map(tab => <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`
-                relative group flex flex-wrap break-words items-center sm:w-full px-4 py-3 min-w-[120px]  sm:py-4 transition-all
+                relative group flex flex-wrap break-words items-center sm:w-full px-4 py-3 min-w-[200px]  sm:py-4 transition-all
                 ${activeTab === tab.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300'}
               `}>
                     { }

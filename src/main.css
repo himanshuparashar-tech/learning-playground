@@ -55,3 +55,20 @@ ul {
   box-sizing: border-box;
   background-color: #90ee90;
 }
+
+button.cstm {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 5px 10px
+}
+
+button.cstm:focus {
+  background-color: #cccccc96;
+}
+.event-style{
+  margin-bottom: 22px
+}
+.event-style .showMessage{
+  text-align: center;
+  padding: 10px;
+}

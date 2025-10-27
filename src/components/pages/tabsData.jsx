@@ -25,7 +25,14 @@ import {
     ExerciseWeatherTernary,
     UserStatus,
     DayStatus,
-    InlineStyles
+    InlineStyles,
+    ReactIcons,
+    StyleCard,
+    ProfileCard,
+    AddEvents,
+    Copy,
+    Move,
+    Select
 } from './tabsComponents';
 
 export function getTabs() {
@@ -790,6 +797,174 @@ export function getTabs() {
             }`,
             preview:
                 <InlineStyles />
+        },
+        {
+            id: 24,
+            name: 'React Icons',
+            type: 'codePreview',
+            code: `
+                export const ReactIcons = () => {
+                    <FcHome /> 
+            }`,
+            preview: <ReactIcons />
+
+
+        },
+        {
+            id: 25,
+            name: 'Exercise with Styled Card',
+            type: 'codePreview',
+            code: `// Exercise with Style Card
+            
+            export const StyleCard = () => {
+                return (
+                    <>
+            
+                        <div style={{ backgroundColor: 'lightblue', padding: '20px', borderRadius: '10px', color: 'white' }}>
+                            <h2 style={{fontSize: '20px'}} >Inline Styled</h2 >
+                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ex repudiandae tempore tempora iste. Iure eum architecto dicta dolorem adipisci est quisquam, reiciendis dolorum voluptatum quos eaque minus, amet animi.</p>
+                        </div>
+                    </>
+                )
+            }
+            
+            export const ProfileCard = () => {
+                const styles1 = { backgroundColor: 'lightblue', padding: '15px', borderRadius: '8px', color: 'black', marginTop: '20px' }
+                return (
+                    <>
+                        <div style={styles1}>
+                            <h2 style={{fontSize: '20px'}} >style by Object</h2 >
+                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ex repudiandae tempore tempora iste. Iure eum architecto dicta dolorem adipisci est quisquam, reiciendis dolorum voluptatum quos eaque minus, amet animi.</p>
+                        </div>
+                    </>
+                )
+            }
+            `,
+            preview:
+                <>
+                    <StyleCard />
+                    <ProfileCard />
+                </>
+
+        },
+        {
+            id: 26,
+            name: 'Event - Click',
+            type: 'codePreview',
+            code: `// Events on Elements - Click
+            export const AddEvents = () => {
+                const handleClick = () => {
+                    const showMessage1 = document.getElementById('message1');
+                    if (showMessage1) {
+                        showMessage1.textContent = 'Yes Button is Clicked';
+                    } else {
+                        showMessage1.textContent = '';
+                    }
+                    console.log(Math.round(Math.random() * 10));
+                }
+                return (
+                    <>
+                        <button className='cstm' onClick={handleClick}>Click</button>
+                        <p id='message1'></p>
+                    </>
+                )
+            }`,
+            preview:
+                <>
+                    <AddEvents />
+                </>
+        },
+        {
+            id: 27,
+            name: 'Event - Copy',
+            type: 'codePreview',
+            code: `// Events on Elements - Copy
+            export const Copy = () => {
+                const copyHandler = () => {
+                    return (
+                        console.log('Please stop copying my text')
+                    )
+                }
+                return (
+                    <div className="event-style">
+                        <p onCopy={copyHandler}>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos consequuntur rerum officia non quae, placeat reiciendis inventore ducimus ullam quibusdam sunt aliquam unde magni laboriosam praesentium repudiandae similique amet alias!
+                        </p>
+                    </div>
+                )
+            }`,
+            preview:
+                <>
+                    <Copy />
+                </>
+        },
+        {
+            id: 28,
+            name: 'Event - Select',
+            type: 'codePreview',
+            code: `// Events on Elements - Select
+            export const Select = () => {
+                const selectHandler = () => {
+                    const selection = window.getSelection().toString();
+                    const messageEl = document.getElementById('select-message');
+                    if (selection) {
+                        messageEl.innerHTML = \`Your selected content is : <strong> {selection}</strong>\`;
+                    }
+                    else {
+                        messageEl.innerHTML = '';
+                    }
+                }
+                return (
+                    <div className="event-style">
+                        <p
+                            onMouseUp={selectHandler}
+                            onKeyUp={selectHandler}
+                            onSelect={selectHandler}
+                        >
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ad culpa distinctio ipsa cupiditate aliquam! Perferendis, nulla id eum, veniam commodi reiciendis laudantium facere tempore temporibus, maxime atque nesciunt qui!
+                        </p>
+                        <p className='showMessage' id='select-message'></p>
+                    </div >
+                )
+            }`,
+            preview:
+                <>
+                    <Select />
+                </>
+        },
+        {
+            id: 29,
+            name: 'Event - Move',
+            type: 'codePreview',
+            code: `// Events on Elements - Move
+            export const Move = () => {
+                const moveHandler = () => {
+                    const messageElement = document.getElementById('msg'); // 
+                    messageElement.textContent = 'Do not move mouse here!';
+                }
+            
+                const leaveHandler = () => {
+                    const messageElement = document.getElementById('msg');
+                    messageElement.textContent = '';
+                }
+                return (
+                    <div className="event-style">
+                        <p
+                            onMouseMove={moveHandler}
+                            onMouseLeave={leaveHandler}
+                        >
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem facilis mollitia quibusdam quaerat pariatur iste, excepturi, provident ut distinctio corporis porro doloribus. Quibusdam quasi quae itaque, in vero distinctio dignissimos?
+                        </p>
+                        <p className='showMessage' id='msg' >
+            
+                        </p>
+                    </div>
+                )
+            }`,
+            preview:
+                <>
+                    <Move />
+                </>
         },
         {
             id: 30,
