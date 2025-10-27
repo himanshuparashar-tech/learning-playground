@@ -111,18 +111,18 @@ export default function TabsViewFancy() {
                         {tabs.find(tab => tab.id === activeTab)?.type === 'codePreview' ? <>
                             <div className='mb-4 flex justify-between items-center gap-2'>
                                 <button
-                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'preview' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}
+                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'preview' ? 'bg-indigo-600 text-white' : 'bg-gray-100 '}`}
                                     onClick={() => setTabView(activeTab, 'preview')}
                                 >Preview</button>
                                 <button
-                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'code' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}
+                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'code' ? 'bg-indigo-600 text-white' : 'bg-gray-100 '}`}
                                     onClick={() => setTabView(activeTab, 'code')}
                                 >Code</button>
                             </div>
 
                             {/* render selected view */}
                             {(viewMode[activeTab] || 'preview') === 'code' ? (
-                                <pre className='rounded bg-gray-100 dark:bg-gray-800 p-4 overflow-auto text-sm ' style={{ maxHeight: 'calc(100vh - 275px)' }} >
+                                <pre className='rounded bg-gray-100  p-4 overflow-auto text-sm ' style={{ maxHeight: 'calc(100vh - 275px)' }} >
                                     <code>{tabs.find(tab => tab.id === activeTab).code}</code>
                                 </pre>
                             ) : (
