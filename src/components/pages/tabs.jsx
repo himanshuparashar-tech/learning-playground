@@ -101,7 +101,7 @@ export default function TabsViewFancy() {
                         x: -10
                     }} transition={{
                         duration: 0.3
-                    }} className='p-6'>
+                    }} className='p-6 bg-white'>
                         <h3 className='text-lg font-semibold flex items-center gap-2 mb-4 text-gray-900 dark:text-white'>
                             <span>{tabs.find(t => t.id === activeTab)?.icon}</span>
                             <span>{tabs.find(t => t.id === activeTab)?.name}</span>

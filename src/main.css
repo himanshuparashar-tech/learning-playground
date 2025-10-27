@@ -72,3 +72,9 @@ button.cstm:focus {
   text-align: center;
   padding: 10px;
 }
+.counter-card{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

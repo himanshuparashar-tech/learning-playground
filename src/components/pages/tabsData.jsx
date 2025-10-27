@@ -32,7 +32,8 @@ import {
     AddEvents,
     Copy,
     Move,
-    Select
+    Select,
+    Counter,
 } from './tabsComponents';
 
 export function getTabs() {
@@ -967,7 +968,31 @@ export function getTabs() {
                 </>
         },
         {
-            id: 30,
+            id: 31,
+            name: 'Use State',
+            type: 'codePreview',
+            code: `// Use State
+            export const Counter = () => {
+                const [count, setCount] = useState(0);
+            
+                const increment = () => setCount(count + 1);
+                const decrement = () => setCount(count - 1);
+            
+                return (
+                    <div className='counter-card'>
+                        <h1>{count}</h1>
+                        <div className='flex gap-2 mt-2'>
+                            <button className='cstm' style={{minWidth: '35px'}} onClick={decrement}>-</button>
+                            <button className='cstm' style={{minWidth: '35px'}} onClick={increment}>+</button>
+                        </div>
+                    </div>
+                )
+            }`,
+            preview:
+                <Counter />
+        },
+        {
+            id: 50,
             name: 'Examples',
             type: 'codePreview',
             code: `const Examples = () => {

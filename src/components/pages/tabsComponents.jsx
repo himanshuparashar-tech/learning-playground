@@ -1,5 +1,5 @@
 import { div, h1, h3, h4, p, select } from 'framer-motion/client';
-import React from 'react';
+import React, { useState } from 'react';
 import { FcHome } from "react-icons/fc";
 
 
@@ -460,3 +460,20 @@ export const Move = () => {
     )
 }
 
+// Use State
+export const Counter = () => {
+    const [count, setCount] = useState(0);
+
+    const increment = () => setCount(count + 1);
+    const decrement = () => setCount(count - 1);
+
+    return (
+        <div className='counter-card'>
+            <h1>{count}</h1>
+            <div className='flex gap-2 mt-2'>
+                <button className='cstm' style={{minWidth: '35px'}} onClick={decrement}>-</button>
+                <button className='cstm' style={{minWidth: '35px'}} onClick={increment}>+</button>
+            </div>
+        </div>
+    )
+}
