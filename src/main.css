@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @layer utilities {
+
   /* Custom scrollbar styles */
   .scrollbar-gradient::-webkit-scrollbar {
     width: 4px;
@@ -13,7 +14,8 @@
   }
 
   .scrollbar-gradient::-webkit-scrollbar-thumb {
-    background: linear-gradient(to right, #c9c9c9, #c9c9c9); /* from-indigo-600 to-purple-600 */
+    background: linear-gradient(to right, #c9c9c9, #c9c9c9);
+    /* from-indigo-600 to-purple-600 */
     border-radius: 8px;
   }
 
@@ -22,9 +24,34 @@
   }
 }
 
-ul{
+ul {
   padding: 10px 20px;
-  li{
+
+  li {
     list-style: disc;
   }
+}
+
+
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 5px solid black;
+  background-color: lightblue;
+}
+
+.content-box {
+  box-sizing: content-box;
+  background-color: #ffb3b3;
+}
+
+.border-box {
+  box-sizing: border-box;
+  background-color: #90ee90;
 }

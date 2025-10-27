@@ -31,7 +31,7 @@ export default function TabsViewFancy() {
     }, [activeTab]);
 
     console.log(tabs.find(tab => tab.id === activeTab), ';;;;;;;;');
-    
+
 
     return <div className='p-3 w-full mx-auto'>
         { }
@@ -69,7 +69,7 @@ export default function TabsViewFancy() {
             </div>
 
             { }
-            <div className='flex-1 relative rounded-xl bg-white/80 dark:bg-gray-900/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden'>
+            <div className='flex-1 relative rounded-xl bg-white dark:bg-gray-900/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden'>
                 { }
                 <AnimatePresence>
                     {isLoading && <motion.div key='loader' className='absolute inset-0 z-20 flex items-center justify-center bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm' initial={{
@@ -122,7 +122,7 @@ export default function TabsViewFancy() {
 
                             {/* render selected view */}
                             {(viewMode[activeTab] || 'preview') === 'code' ? (
-                                <pre className='rounded bg-gray-100 dark:bg-gray-800 p-4 overflow-auto text-sm ' style={{maxHeight: 'calc(100vh - 275px)'}} >
+                                <pre className='rounded bg-gray-100 dark:bg-gray-800 p-4 overflow-auto text-sm ' style={{ maxHeight: 'calc(100vh - 275px)' }} >
                                     <code>{tabs.find(tab => tab.id === activeTab).code}</code>
                                 </pre>
                             ) : (
