@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getTabs } from './TabsData.jsx';
+import { getTabs } from './tabsData.jsx';
 
 export default function TabsViewFancy() {
     const [activeTab, setActiveTab] = useState(1);
