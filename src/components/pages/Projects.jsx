@@ -11,6 +11,11 @@ const projects = [
         id: 'calculator',
         title: 'Calculator App',
         description: 'Calculate BODMAS'
+    },
+    {
+        id: 'todoone',
+        title: 'Todo App One',
+        description: 'A Task Manager'
     }
 ]
 

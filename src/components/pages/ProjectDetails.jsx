@@ -2,6 +2,7 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import TodoApp from '../projects/TodoApp';
 import Calculator from '../projects/Calculator';
+import TodoAppOne from '../projects/TodoAppOne';
 
 const projectMap = {
   todo: {
@@ -36,6 +37,11 @@ const projectMap = {
     component: <Calculator />,
     code: `// Calculator code here...`,
   },
+  todoone: {
+    title: "TodoAppOne",
+    component: <TodoAppOne />,
+    code: ``
+  }
 };
 
 const ProjectDetails = () => {
