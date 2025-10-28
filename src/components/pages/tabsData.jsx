@@ -34,7 +34,7 @@ import {
     Move,
     Select,
     Counter,
-} from './tabsComponents';
+} from './TabsComponents';
 
 export function getTabs() {
 

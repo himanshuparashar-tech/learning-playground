@@ -9,7 +9,8 @@
   }
 
   .scrollbar-gradient::-webkit-scrollbar-track {
-    background: linear-gradient(to right, #4e46e546, #9233ea54);
+    /* background: linear-gradient(to right, #4e46e546, #9233ea54); */
+    background: transparent;
     border-radius: 8px;
   }
 

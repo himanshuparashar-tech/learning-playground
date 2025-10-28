@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const MenuIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
   <line x1="4" x2="20" y1="12" y2="12" />
@@ -65,13 +66,13 @@ const Header = () => {
     } catch (e) { /* ignore */ }
   }, [theme, mounted]);
 
-  const navLinks = [{ href: "#", label: "Home" }, { href: "#", label: "About" }, { href: "#", label: "Contact" }];
+  const navLinks = [{ href: "/home", label: "Home" }, { href: "#", label: "About" }, { href: "/projects", label: "Projects" }];
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   return <header className="bg-white/80 dark:bg-black/80 backdrop-blur-sm sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700">
-    <div className="mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="   mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
         <div className="flex-shrink-0">
           <a href="#" className="flex items-center gap-2">
@@ -81,9 +82,9 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map(link => <a key={link.label} href={link.href} className="text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+          {navLinks.map(link => <Link key={link.label} to={link.href} className="text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
             {link.label}
-          </a>)}
+          </Link>)}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -107,9 +108,9 @@ const Header = () => {
 
     {isMenuOpen && <div className="md:hidden border-t border-gray-200 dark:border-gray-700" id="mobile-menu">
       <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        {navLinks.map(link => <a key={link.label} href={link.href} className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
+        {navLinks.map(link => <Link key={link.label} to={link.href} className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
           {link.label}
-        </a>)}
+        </Link>)}
         <a href="#" className="w-full mt-2 text-center items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 block transition-colors duration-300">
           Get Started
         </a>

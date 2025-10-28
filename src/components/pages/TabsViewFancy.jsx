@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getTabs } from './tabsData';
+import { getTabs } from './TabsData';
 
 export default function TabsViewFancy() {
     const [activeTab, setActiveTab] = useState(1);
@@ -111,13 +111,14 @@ export default function TabsViewFancy() {
                         {tabs.find(tab => tab.id === activeTab)?.type === 'codePreview' ? <>
                             <div className='mb-4 flex justify-between items-center gap-2'>
                                 <button
-                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'preview' ? 'bg-indigo-600 text-white' : 'bg-gray-100 '}`}
-                                    onClick={() => setTabView(activeTab, 'preview')}
-                                >Preview</button>
-                                <button
-                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'code' ? 'bg-indigo-600 text-white' : 'bg-gray-100 '}`}
+                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'code' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'bg-gray-100 '}`}
                                     onClick={() => setTabView(activeTab, 'code')}
-                                >Code</button>
+                                >💻 Code</button>
+                                <button
+                                    className={`px-3 py-1 rounded ${(viewMode[activeTab] || 'preview') === 'preview' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'bg-gray-100 '}`}
+                                    onClick={() => setTabView(activeTab, 'preview')}
+                                >👀 Preview</button>
+
                             </div>
 
                             {/* render selected view */}
