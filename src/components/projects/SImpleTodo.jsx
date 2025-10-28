@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SimpleTodo = () => {
+const SimpleTodo = () => { 
     const [tasks, setTasks] = useState([]) // Stores Tasks
     const [input, setInput] = useState('') // Stores Input text
 
