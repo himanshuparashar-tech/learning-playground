@@ -1,8 +1,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import TodoApp from '../projects/TodoApp';
-import Calculator from '../projects/Calculator';
-import TodoAppOne from '../projects/TodoAppOne';
+import SimpleTodo from '../projects/simpleTodo';
 
 const projectMap = {
   todo: {
@@ -32,14 +31,9 @@ const projectMap = {
       };
       export default TodoApp;`,
   },
-  calculator: {
-    title: "Calculator",
-    component: <Calculator />,
-    code: `// Calculator code here...`,
-  },
-  todoone: {
-    title: "TodoAppOne",
-    component: <TodoAppOne />,
+  simpletodo: {
+    title: "Simple Todo App",
+    component: <SimpleTodo /> ,
     code: ``
   }
 };
@@ -69,7 +63,7 @@ const ProjectDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
           <h2 className="font-semibold mb-2 text-lg">💻 Code:</h2>
-          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
+          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>
             {project.code.trim()}
           </pre>
         </div>

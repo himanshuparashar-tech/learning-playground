@@ -7,14 +7,10 @@ const projects = [
         title: 'Todo App',
         description: 'A Simple Task Manager'
     },
+
     {
-        id: 'calculator',
-        title: 'Calculator App',
-        description: 'Calculate BODMAS'
-    },
-    {
-        id: 'todoone',
-        title: 'Todo App One',
+        id: 'simpletodo',
+        title: 'Simple Todo App',
         description: 'A Task Manager'
     }
 ]
