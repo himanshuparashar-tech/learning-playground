@@ -7,6 +7,11 @@ const projects = [
         title: 'Todo App',
         description: 'A Simple Task Manager'
     },
+    {
+        id: 'simpletodo',
+        title: 'Simple Todo App',
+        description: 'A Simple Todo App'
+    }
 
 ]
 
