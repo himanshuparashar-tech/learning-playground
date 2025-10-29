@@ -1,7 +1,6 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import TodoApp from '../projects/TodoApp';
-import SimpleTodo from '../projects/simpleTodo';
 
 const projectMap = {
   todo: {
@@ -31,11 +30,6 @@ const projectMap = {
       };
       export default TodoApp;`,
   },
-  simpletodo: {
-    title: "Simple Todo App",
-    component: <SimpleTodo /> ,
-    code: ``
-  }
 };
 
 const ProjectDetails = () => {

@@ -8,11 +8,6 @@ const projects = [
         description: 'A Simple Task Manager'
     },
 
-    {
-        id: 'simpletodo',
-        title: 'Simple Todo App',
-        description: 'A Task Manager'
-    }
 ]
 
 const Projects = () => {
