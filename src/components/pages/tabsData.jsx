@@ -208,7 +208,7 @@ export function getTabs() {
         },
         {
             id: 7,
-            name: 'React Table With Difference Data',
+            name: 'ForEach & Map',
             type: 'codePreview',
             code: `const MethodComparisonTable = () => {
                 const data = [

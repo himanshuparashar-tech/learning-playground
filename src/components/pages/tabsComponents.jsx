@@ -29,16 +29,16 @@ export const data = [
         section: '🧠 Purpose',
         rows: [
             { method: 'forEach()', description: 'Used to loop through an array and perform an action for each element.' },
-            { method: 'map()', description: 'Used to loop through an array and create a new array by transforming each element.' }
-        ]
+            { method: 'map()', description: <> Used to loop through an array and<strong> create a new array</strong> by transforming each element.</> }
+]
     },
-    {
-        section: '💻 Return Value',
+{
+    section: '💻 Return Value',
         rows: [
             { method: 'forEach()', description: 'Nothing (undefined)' },
             { method: 'map()', description: 'A new array with modified values' }
         ]
-    }
+}
 ];
 
 // Map Array Method with Destructuring
@@ -471,8 +471,8 @@ export const Counter = () => {
         <div className='counter-card'>
             <h1>{count}</h1>
             <div className='flex gap-2 mt-2'>
-                <button className='cstm' style={{minWidth: '35px'}} onClick={decrement}>-</button>
-                <button className='cstm' style={{minWidth: '35px'}} onClick={increment}>+</button>
+                <button className='cstm' style={{ minWidth: '35px' }} onClick={decrement}>-</button>
+                <button className='cstm' style={{ minWidth: '35px' }} onClick={increment}>+</button>
             </div>
         </div>
     )

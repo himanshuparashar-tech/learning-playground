@@ -9,8 +9,28 @@ const projects = [
     },
     {
         id: 'simpletodo',
-        title: 'Simple Todo App',
+        title: 'Simple Todo App With Add',
         description: 'A Simple Todo App'
+    },
+    {
+        id: 'simpletodowithtoaster',
+        title: 'Simple Todo With Add, Toaster',
+        description: 'A simple Todo App With Toaster'
+    },
+    {
+        id: 'simpletodowithdelete',
+        title: 'Simple Todo With Add, Toaster, Delete Task ',
+        description: 'A simple Todo App With Toaster & Delete Task individually'
+    },
+    {
+        id: 'simpletodowithedit',
+        title: 'Simple Todo With Add, Edit, Delete, Toaster ',
+        description: 'A simple Todo App with Add, Edit, Delete, Toaster'
+    },
+    {
+        id: 'simpletodowithlocalstorage',
+        title: 'Simple Todo With Add, Edit, Delete, Toaster, Local Storage',
+        description: 'A simple Todo App with Add, Edit, Delete, Toaster'
     }
 
 ]
