@@ -34,6 +34,8 @@ import {
     Move,
     Select,
     Counter,
+    ArrayContent,
+    ArrayContentAddnewElement
 } from './tabsComponents';
 
 export function getTabs() {
@@ -991,6 +993,20 @@ export function getTabs() {
             preview:
                 <Counter />
         },
+        {
+            id: 32,
+            name: 'Array of content with use state',
+            type: 'codePreview',
+            code: `// Use State
+            `,
+            preview:
+                <>
+                    <ArrayContent />
+                    <br />
+                    <ArrayContentAddnewElement />
+                </>
+        },
+
         {
             id: 50,
             name: 'Examples',

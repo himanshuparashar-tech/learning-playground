@@ -1,4 +1,4 @@
-import { div, h1, h3, h4, p, select } from 'framer-motion/client';
+import { div, h1, h3, h4, li, p, select } from 'framer-motion/client';
 import React, { useState } from 'react';
 import { FcHome } from "react-icons/fc";
 
@@ -30,15 +30,15 @@ export const data = [
         rows: [
             { method: 'forEach()', description: 'Used to loop through an array and perform an action for each element.' },
             { method: 'map()', description: <> Used to loop through an array and<strong> create a new array</strong> by transforming each element.</> }
-]
+        ]
     },
-{
-    section: '💻 Return Value',
+    {
+        section: '💻 Return Value',
         rows: [
             { method: 'forEach()', description: 'Nothing (undefined)' },
             { method: 'map()', description: 'A new array with modified values' }
         ]
-}
+    }
 ];
 
 // Map Array Method with Destructuring
@@ -475,5 +475,31 @@ export const Counter = () => {
                 <button className='cstm' style={{ minWidth: '35px' }} onClick={increment}>+</button>
             </div>
         </div>
+    )
+}
+
+// Array Content Use State
+export const ArrayContent = () => {
+    const [friends, setFriends] = useState(["Alex", "Bob"]);
+
+    return (
+        <>
+            {friends.map((f) => (
+                <li key={f}>{f}</li>
+            ))}
+        </>
+    )
+}
+
+// Array Content Add new Element
+export const ArrayContentAddnewElement = () => {
+    const [friends, setFriends] = useState(["Alex", "Bob"]);
+
+    return (
+        <>
+            {friends.map((f) => (
+                <li key={f}>{f}</li>
+            ))}
+        </>
     )
 }
