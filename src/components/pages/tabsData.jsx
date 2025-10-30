@@ -35,7 +35,13 @@ import {
     Select,
     Counter,
     ArrayContent,
-    ArrayContentAddnewElement
+    ArrayContentAddnewElement,
+    ArrayContentRemoveNewElement,
+    ArrayContentExistingElement,
+    ObjectContent,
+    ObjectContentChangeRating,
+    ArrayOfObjects,
+    ShareStateToOther
 } from './tabsComponents';
 
 export function getTabs() {
@@ -997,14 +1003,149 @@ export function getTabs() {
             id: 32,
             name: 'Array of content with use state',
             type: 'codePreview',
-            code: `// Use State
-            `,
+            code: `// Array Content Use State
+                    export const ArrayContent = () => {
+                        const [friends, setFriends] = useState(["Alex", "Bob"]);
+
+                        return (
+                            <>
+                                <h6 className='font-semibold'>Array Content Use State</h6>
+                                <ul>
+                                    {friends.map((f) => (
+                                        <li key={f}>{f}</li>
+                                    ))}
+                                </ul>
+                            </>
+                        )
+                    }
+
+                    // Array Content Add new Element
+                    export const ArrayContentAddnewElement = () => {
+                        const [friends, setFriends] = useState(["Alex", "Bob"]);
+                        const addOneFriend = () => {
+                            if (!friends.includes("Foster")) {
+                                setFriends([...friends, "Foster"]);
+                            }
+                            else {
+                                toast.error('Name already exists');
+                            }
+                        }
+
+                        return (
+                            <>
+                                <Toaster position='top-right' reverseOrder={false} />
+                                <h6 className='font-semibold'>Array Content Add new Element</h6>
+                                <ul>
+                                    {friends.map((f) => (
+                                        <li key={f}>{f}</li>
+                                    ))}
+                                </ul>
+                                <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+                                <br />
+                            </>
+                        )
+                    }
+
+                    // Array Content Remove One Element From the list
+                    export const ArrayContentRemoveNewElement = () => {
+                        const [friends, setFriends] = useState(["Alex", "Bob", "Cherry"]);
+                        const addOneFriend = () => {
+                            if (!friends.includes("Dolby")) {
+                                setFriends([...friends, "Dolby"]);
+                            }
+                            else {
+                                toast.error('Name already exists');
+                            }
+                        }
+                        const removeOneFriend = () => setFriends(friends.filter((f) => f !== "Cherry"))
+                        return (
+                            <>
+                                <Toaster position='top-right' reverseOrder={false} />
+                                <h6 className='font-semibold'>Array Content Remove new Element</h6>
+                                <ul>
+                                    {friends.map((f) => (
+                                        <li key={f}>{f}</li>
+                                    ))}
+                                </ul>
+                                <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+                                <button className='cstm m-1' onClick={removeOneFriend}>Remove One Friend</button>
+                            </>
+                        )
+                    }
+
+                    // Array Content Update Existing Element
+                    export const ArrayContentExistingElement = () => {
+                        const [friends, setFriends] = useState(["Alex", "Bob", "Cherry", "Dobby", "Elixir"]);
+                        const addOneFriend = () => {
+                            if (!friends.includes("Foster")) {
+                                setFriends([...friends, "Foster"]);
+                            }
+                            else {
+                                toast.error('Name is already exist')
+                            }
+                        }
+                        const removeOneFriend = () => setFriends(friends.filter((f) => f !== "Cherry"));
+                        const updateExistingFriend = () => setFriends(friends.map((f) => (f == "Alex" ? 'Alex Smith' : f)));
+
+
+                        return (
+                            <>
+                                <Toaster position='top-right' reverseOrder={false} />
+                                <h1 className='font-semibold'>Array Content Update Existing Element</h1>
+                                <ul>
+                                    {friends.map((f) => (
+                                        <li key={f}>{f}</li>
+                                    ))}
+                                </ul>
+                                <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+                                <button className='cstm m-1' onClick={removeOneFriend}>Remove One Friend</button>
+                                <button className='cstm m-1' onClick={updateExistingFriend}>Update Existing Friend</button>
+                            </>
+                        )
+                    }`,
             preview:
-                <>
+                <div style={{ maxHeight: 'calc(100vh - 275px)', overflow: 'auto' }}>
                     <ArrayContent />
                     <br />
                     <ArrayContentAddnewElement />
-                </>
+                    <br />
+                    <ArrayContentRemoveNewElement />
+                    <br />
+                    <ArrayContentExistingElement />
+                </div>
+        },
+        {
+            id: 33,
+            name: 'Object of content with use state',
+            type: 'codePreview',
+            code: `// Use State
+            `,
+            preview:
+                <div style={{ maxHeight: 'calc(100vh - 275px)', overflow: 'auto' }}>
+                    <ObjectContent />
+                    <br />
+                    <ObjectContentChangeRating />
+                </div>
+        },
+        {
+            id: 34,
+            name: 'Array of Objects with Use State',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <div style={{ maxHeight: 'calc(100vh - 275px)', overflow: 'auto' }}>
+                    <ArrayOfObjects />
+                </div>
+        },
+        {
+            id: 35,
+            name: 'Share State to other Component',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <div style={{ maxHeight: 'calc(100vh - 275px)', overflow: 'auto' }}>
+                    <ShareStateToOther />
+                </div>
         },
 
         {

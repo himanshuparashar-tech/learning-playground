@@ -1,7 +1,9 @@
-import { div, h1, h3, h4, li, p, select } from 'framer-motion/client';
+import { div, h1, h3, h4, h6, li, p, select } from 'framer-motion/client';
 import React, { useState } from 'react';
 import { FcHome } from "react-icons/fc";
-
+import toast, { Toaster } from 'react-hot-toast';
+import ComponentOne from '../ComponentOne';
+import ComponentTwo from '../ComponentTwo';
 
 // dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
 export const greetMessage = 'Hello, Welcome to World of R';
@@ -484,9 +486,12 @@ export const ArrayContent = () => {
 
     return (
         <>
-            {friends.map((f) => (
-                <li key={f}>{f}</li>
-            ))}
+            <h6 className='font-semibold'>Array Content Use State</h6>
+            <ul>
+                {friends.map((f) => (
+                    <li key={f}>{f}</li>
+                ))}
+            </ul>
         </>
     )
 }
@@ -494,12 +499,182 @@ export const ArrayContent = () => {
 // Array Content Add new Element
 export const ArrayContentAddnewElement = () => {
     const [friends, setFriends] = useState(["Alex", "Bob"]);
+    const addOneFriend = () => {
+        if (!friends.includes("Foster")) {
+            setFriends([...friends, "Foster"]);
+        }
+        else {
+            toast.error('Name already exists');
+        }
+    }
 
     return (
         <>
-            {friends.map((f) => (
-                <li key={f}>{f}</li>
-            ))}
+            <Toaster position='top-right' reverseOrder={false} />
+            <h6 className='font-semibold'>Array Content Add new Element</h6>
+            <ul>
+                {friends.map((f) => (
+                    <li key={f}>{f}</li>
+                ))}
+            </ul>
+            <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+            <br />
         </>
     )
 }
+
+// Array Content Remove One Element From the list
+export const ArrayContentRemoveNewElement = () => {
+    const [friends, setFriends] = useState(["Alex", "Bob", "Cherry"]);
+    const addOneFriend = () => {
+        if (!friends.includes("Dolby")) {
+            setFriends([...friends, "Dolby"]);
+        }
+        else {
+            toast.error('Name already exists');
+        }
+    }
+    const removeOneFriend = () => setFriends(friends.filter((f) => f !== "Cherry"))
+    return (
+        <>
+            <Toaster position='top-right' reverseOrder={false} />
+            <h6 className='font-semibold'>Array Content Remove new Element</h6>
+            <ul>
+                {friends.map((f) => (
+                    <li key={f}>{f}</li>
+                ))}
+            </ul>
+            <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+            <button className='cstm m-1' onClick={removeOneFriend}>Remove One Friend</button>
+        </>
+    )
+}
+
+// Array Content Update Existing Element
+export const ArrayContentExistingElement = () => {
+    const [friends, setFriends] = useState(["Alex", "Bob", "Cherry", "Dobby", "Elixir"]);
+    const addOneFriend = () => {
+        if (!friends.includes("Foster")) {
+            setFriends([...friends, "Foster"]);
+        }
+        else {
+            toast.error('Name is already exist')
+        }
+    }
+    const removeOneFriend = () => setFriends(friends.filter((f) => f !== "Cherry"));
+    const updateExistingFriend = () => setFriends(friends.map((f) => (f == "Alex" ? 'Alex Smith' : f)));
+
+
+    return (
+        <>
+            <Toaster position='top-right' reverseOrder={false} />
+            <h1 className='font-semibold'>Array Content Update Existing Element</h1>
+            <ul>
+                {friends.map((f) => (
+                    <li key={f}>{f}</li>
+                ))}
+            </ul>
+            <button className='cstm m-1' onClick={addOneFriend}>Add One Friend</button>
+            <button className='cstm m-1' onClick={removeOneFriend}>Remove One Friend</button>
+            <button className='cstm m-1' onClick={updateExistingFriend}>Update Existing Friend</button>
+        </>
+    )
+}
+
+// Object Content Update with Use State
+export const ObjectContent = () => {
+    const [movie, setMovie] = useState(
+        {
+            title: 'Equalizer 3',
+            ratings: 7,
+        }
+    );
+
+    return (
+        <>
+            <h6 className='font-semibold'>Object Content </h6>
+            <ul>
+                <li>
+                    <h1>Movie: <strong>{movie.title}</strong></h1>
+                    <p>Rating: <strong>{movie.ratings}</strong></p>
+                </li>
+            </ul>
+        </>
+    )
+}
+
+// Object Content change rating with Use State
+export const ObjectContentChangeRating = () => {
+    const [movie, setMovie] = useState({
+        title: 'Dreams',
+        ratings: 6
+    });
+
+    // const updateRating = () => {
+    //     const copyMovie = {
+    //         ...movie,
+    //         ratings: 5
+    //     }
+    //     setMovie(copyMovie);
+    // }
+
+    // or we can done like this
+    const updateRating = () => setMovie({ ...movie, ratings: 2 });
+
+    return (
+        <>
+            <h6 className='font-semibold'>Object Content change rating </h6>
+            <ul>
+                <li>
+                    <h1>Movie: <strong>{movie.title}</strong></h1>
+                    <p>Ratings: <strong>{movie.ratings}</strong></p>
+                </li>
+            </ul>
+            <button className='cstm m-1' onClick={updateRating}>Update Ratings</button>
+        </>
+    )
+}
+
+// Array of Objects with Use State
+export const ArrayOfObjects = () => {
+    const [movies, setMovies] = useState([
+        {
+            id: 1,
+            title: 'SpiderMan',
+            rating: 7
+        },
+        {
+            id: 2,
+            title: 'IronMan',
+            rating: 8
+        }
+    ]);
+
+    const handleClick = () => (setMovies(movies.map((m) => m.id == 1 ? { ...movies, title: 'John Wick' } : m)));
+
+    return (
+        <>
+            <h6 className='font-semibold'>Array of Objects with Usestate</h6>
+            <ul>
+                {movies.map((m) => (
+                    <li key={m.id}>{m.title}</li>
+                ))}
+            </ul>
+            <button className='cstm m-1' onClick={handleClick}>Change Movie Name</button>
+        </>
+    )
+}
+
+// Share State to other Component
+export const ShareStateToOther = () => {
+    const [count, setCount] = useState(0);
+
+    return (
+        <>
+            <h6 className='font-semibold'>Share State to other Component</h6>
+            <ComponentOne count={count} onClickHandler={() => setCount(count + 1)} />
+            <ComponentTwo count={count} onClickHandler={() => setCount(count + 1)} />
+        </>
+    )
+}
+
