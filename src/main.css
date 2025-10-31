@@ -66,14 +66,27 @@ button.cstm {
 button.cstm:focus {
   background-color: #cccccc96;
 }
-.event-style{
+
+.cstm-input {
+  border: 1px solid rgb(99, 98, 98);
+  border-radius: 4px;
+  padding: 5px 10px
+}
+
+.cstm-input:focus{
+  border: inherit;
+}
+
+.event-style {
   margin-bottom: 22px
 }
-.event-style .showMessage{
+
+.event-style .showMessage {
   text-align: center;
   padding: 10px;
 }
-.counter-card{
+
+.counter-card {
   display: flex;
   justify-content: center;
   align-items: center;

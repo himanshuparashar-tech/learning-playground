@@ -43,6 +43,9 @@ import {
     ArrayOfObjects,
     ShareStateToOther
 } from './tabsComponents';
+import ExampleOne from '../ExampleOne';
+import ExampleTwo from '../ExampleTwo';
+import ExampleThree from '../ExampleThree';
 
 export function getTabs() {
 
@@ -425,7 +428,7 @@ export function getTabs() {
         },
         {
             id: 12,
-            name: 'Exercise: Using Props in React Components',
+            name: 'Ex: Using Props in React Components',
             type: 'codePreview',
             code: `// Person props from parent to child
             export const PersonParentProps = () => {
@@ -476,7 +479,7 @@ export function getTabs() {
         },
         {
             id: 13,
-            name: 'Exercise: Using Props With Destructuring',
+            name: 'Ex: Using Props With Destructuring',
             type: 'codePreview',
             code: `
             export const ProductParentProps = () => {
@@ -718,7 +721,7 @@ export function getTabs() {
         },
         {
             id: 19,
-            name: 'Exercise: Conditional Rendering Based on Weather',
+            name: 'Ex: Conditional Rendering Based on Weather',
             type: 'codePreview',
             code: `// Exercise Conditional Rendering
             export const ExerciseWeatherNormal = ({ temprature }) => {
@@ -741,7 +744,7 @@ export function getTabs() {
         },
         {
             id: 20,
-            name: 'Exercise Weather with Ternary Operator',
+            name: 'Ex: Weather with Ternary Operator',
             type: 'codePreview',
             code: `// Exercise Weather with Ternary Operator
             export const ExerciseWeatherTernary = ({ temprature }) => {
@@ -756,7 +759,7 @@ export function getTabs() {
         },
         {
             id: 21,
-            name: 'Excercise with User Status',
+            name: 'Ex: with User Status',
             type: 'codePreview',
             code: `// Excercise UserStatus with the && Operator
             export const UserStatus = ({ isLoggedIn, isAdmin }) => {
@@ -771,7 +774,7 @@ export function getTabs() {
         },
         {
             id: 22,
-            name: 'Exercise with Greeting Day Message',
+            name: 'Ex: with Greeting Day Message',
             type: 'codePreview',
             code: `// Excercise Morning Day Status
             export const DayStatus = ({ timeOfDay }) => {
@@ -821,7 +824,7 @@ export function getTabs() {
         },
         {
             id: 25,
-            name: 'Exercise with Styled Card',
+            name: 'Ex: with Styled Card',
             type: 'codePreview',
             code: `// Exercise with Style Card
             
@@ -1169,15 +1172,164 @@ export function getTabs() {
                 )
             }
             export default Examples; `,
-            preview: <div>
-                <p>Add Expression : {2 + 2}</p>
-                <p>My Name : {example1MyName}</p>
-                <p>Random Number : {Math.random()}</p>
-                <p>My Friend List : {['Alex, Bob, Cherry']}</p>
-                <p>Expression Multiply: {example1Multiply(3, 5)}</p>
-                <p>Conditional Rendering : {2 > 3 ? 'R' : 'W'}</p>
-                <p className={example1dynaClass}>Example1 Dyna Class : {example1dynaClass}</p>
-            </div>
+            preview:
+                <div>
+                    <div className="">
+                        <p>Add Expression : {2 + 2}</p>
+                        <p>My Name : {example1MyName}</p>
+                        <p>Random Number : {Math.random()}</p>
+                        <p>My Friend List : {['Alex, Bob, Cherry']}</p>
+                        <p>Expression Multiply: {example1Multiply(3, 5)}</p>
+                        <p>Conditional Rendering : {2 > 3 ? 'R' : 'W'}</p>
+                        <p className={example1dynaClass}>Example1 Dyna Class : {example1dynaClass}</p>
+
+                    </div>
+                </div>
+        },
+        {
+            id: 51,
+            name: 'Eg : Lazy Initializer',
+            type: 'codePreview',
+            code: `import React, { useState } from 'react'
+            import { InteractiveDemo } from './InteractiveDemo';
+            import { InteractiveDemoVisual } from './InteractiveVisualDemo';
+            
+            const ExampleOne = () => {
+                const [count, setCount] = useState(() => {
+                    const initialCount = 10;
+                    return initialCount;
+                })
+            
+                const increment = () => {
+                    setCount(count => count + 1);
+                }
+            
+                const [countNormal, setCountNormal] = useState(0);
+                const [countFunctional, setCountFunctional] = useState(0);
+            
+                // Normal increment (may fail if called multiple times in a row)
+                const incrementNormalTwice = () => {
+                    setCountNormal(countNormal + 1);
+                    setCountNormal(countNormal + 1);
+                    console.log("Normal count after 2 increments:", countNormal);
+                };
+            
+                // Functional increment (always correct)
+                const incrementFunctionalTwice = () => {
+                    setCountFunctional(c => c + 1);
+                    setCountFunctional(c => c + 1);
+                    console.log("Functional count after 2 increments:", countFunctional);
+                };
+            
+                return (
+                    <div style={{ maxHeight: 'calc(100vh - 275px)' , overflow: 'auto'}}>
+                        <h6 className='font-semibold'>Example One With lazy initializer</h6>
+                        <ul>
+                            <li>If you pass a function instead of a value, React will call that function only once — the very first time the component renders</li>
+                            <li>
+                                {/* const [count, setCount] = useState(() => {
+                                    console.log("Initializing count...");
+                                return 5; // or any computed value
+                                }); */}
+                                That’s called lazy initialization — it "lazily" runs the function only when needed.
+                            </li>
+                            <li className='font-semibold'>Why it is useful?</li>
+                            <li>The function runs only once (on the first render).
+            
+                                If you had written useState(localStorage.getItem("count")), it would try to read localStorage every time the component re-renders, which is inefficient.</li>
+                        </ul>
+                        <p>
+                            Count: {count}
+                        </p>
+            
+                        <button className='cstm m-1' onClick={increment}>Increment</button>
+                        <br />
+                        <br />
+            
+                        <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
+                            <h2>Normal Counter (may fail)</h2>
+                            <p>{countNormal}</p>
+                            <button className='cstm m-1' onClick={incrementNormalTwice}>Increment Twice</button>
+            
+                            <hr style={{ margin: "20px 0" }} />
+            
+                            <h2>Functional Counter (always correct)</h2>
+                            <p>{countFunctional}</p>
+                            <button className='cstm m-1' onClick={incrementFunctionalTwice}>Increment Twice</button>
+                        </div>
+            
+                        <br />
+                        <br />
+                        <h6 className='font-semibold'>Example One With Interactive Demo</h6>
+                        <InteractiveDemo />
+            
+                        <br />
+                        <br />
+                        <h6 className='font-semibold'>Example One With Interactive Demo Visual</h6>
+                        <InteractiveDemoVisual />
+                    </div>
+                )
+            }
+            
+            export default ExampleOne `,
+            preview:
+                <div >
+                    <div className="">
+                        <ExampleOne />
+                    </div>
+                </div>
+        },
+        {
+            id: 52,
+            name: 'Eg : Random Number',
+            type: 'codePreview',
+            code: `ssdsd`,
+            preview:
+                <div >
+                    <div className="">
+                        <ExampleTwo />
+                    </div>
+                </div>
+        },
+        {
+            id: 53,
+            name: 'Eg : Local Storage',
+            type: 'codePreview',
+            code: `
+            import React, { useEffect, useState } from 'react'
+            
+            const ExampleThree = () => {
+                const [name, setName] = useState(() => {
+                    const savedName = localStorage.getItem('name');
+                    return savedName ? JSON.parse(savedName) : ''
+                })
+            
+                useEffect(() => {
+                    localStorage.setItem('name', JSON.stringify(name))
+                }, [name])
+            
+                const handleChange = (event) => {
+                    setName(event.target.value);
+                }
+                const handleClear = () => {
+                    setName('');
+                }
+                return (
+                    <div>
+                        <h6>Your Name : {name}</h6>
+                        <input type="text" value={name} onChange={handleChange} placeholder='Enter your name' className='cstm-input' />
+                        <button onClick={handleClear} className='cstm m-1'>Clear Name</button>
+                    </div>
+                )
+            }
+            
+            export default ExampleThree`,
+            preview:
+                <div >
+                    <div className="">
+                        <ExampleThree />
+                    </div>
+                </div>
         }
     ];
 }
