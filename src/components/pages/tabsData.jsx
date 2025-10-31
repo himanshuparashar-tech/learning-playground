@@ -1323,7 +1323,157 @@ export function getTabs() {
                 )
             }
             
-            export default ExampleThree`,
+            export default ExampleThree
+            
+            Code Analysis: 
+            -------------------------------------------------
+            1) import React, { useEffect, useState } from 'react'
+            -------------------------------------------------
+                import React → React library import kar rahe hain.
+
+                { useEffect, useState } → Ye React hooks hai:
+
+                useState → state create karne ke liye
+
+                useEffect → side-effects manage karne ke liye (e.g., API call, localStorage)
+
+                'react' → package name jahan se import kar rahe hain
+
+            -------------------------------------------------
+            2) const ExampleThree = () => {
+            -------------------------------------------------
+                const ExampleThree → Ye React functional component ka naam
+
+                = () => { ... } → Arrow function jo component ka body define karta hai
+
+                Functional components me render function ye arrow function hota hai
+
+            -------------------------------------------------
+            3) const [name, setName] = useState(() => {
+                    const savedName = localStorage.getItem('name');
+                    return savedName ? JSON.parse(savedName) : ''
+                })
+            -------------------------------------------------
+                3.1) Break it down:
+
+                    const [name, setName] → Array destructuring
+
+                    name → current state value (yaha user ka name)
+
+                    setName → function jo state update karega
+
+                3.2) useState(() => { ... }) → Lazy initialization
+
+                    Arrow function pass kar rahe hain → function sirf first render pe execute hoga
+
+                    Advantage: LocalStorage se value read karne me performance better hoti hai
+
+                3.3) Inside the Function
+            -------------------------------------------------
+            4) const savedName = localStorage.getItem('name');
+            -------------------------------------------------
+                localStorage.getItem('name') → browser ke localStorage me 'name' key se value read karta hai
+
+                Agar user pehle name type karke page reload kiya hai → ye value wapas milegi
+            -------------------------------------------------
+            5) return savedName ? JSON.parse(savedName) : ''
+            -------------------------------------------------
+                Agar savedName exist karta hai → JSON.parse(savedName) → string me convert karke return karo
+
+                Agar exist nahi karta → empty string '' return karo
+
+                Ye initial state ban jaati hai name ki
+            -------------------------------------------------
+            6) useEffect(() => {
+                    localStorage.setItem('name', JSON.stringify(name))
+                }, [name])
+            -------------------------------------------------
+                6.1) useEffect(() => { ... }, [name]) → Ye side-effect hook hai
+
+                    Callback function () => { ... } tab chalta hai jab dependency change ho
+
+                    [name] → dependency array → isme jo values honge, unke change hone pe useEffect run hoga
+
+                6.2) Inside useEffect:
+            -------------------------------------------------
+            7) localStorage.setItem('name', JSON.stringify(name))
+            -------------------------------------------------
+                localStorage.setItem('name', ...) → localStorage me 'name' key ke saath value save kar raha hai
+
+                JSON.stringify(name) → state value ko string me convert kar raha hai (localStorage me hamesha string store hota hai)
+
+                💡 Purpose:
+
+                Har baar user type kare → name update hota hai → localStorage me save ho jaata hai → page reload pe bhi value retained rahe
+            -------------------------------------------------
+            8) const handleChange = (event) => {
+                    setName(event.target.value);
+                }
+            -------------------------------------------------
+                handleChange → function jo input ke change event me call hota hai
+
+                event → input field ka event object
+
+                event.target.value → input box ka current text value
+
+                setName(event.target.value) → state update kar raha hai → component re-render hoga
+            -------------------------------------------------
+            9) const handleClear = () => {
+                    setName('');
+                }
+            -------------------------------------------------
+                handleClear → function jo Clear button click pe call hota hai
+
+                setName('') → state ko empty string set kar deta hai → input box clear ho jaata hai
+            -------------------------------------------------
+            10) return (
+                    <div>
+                        <h6>Your Name : {name}</h6>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={handleChange}
+                            placeholder='Enter your name'
+                            className='cstm-input'
+                        />
+                        <button onClick={handleClear} className='cstm m-1'>Clear Name</button>
+                    </div>
+                )
+            -------------------------------------------------
+                Step by Step:
+
+                    10.1)  <div> → parent container
+
+                    10.2)  <h6>Your Name : {name}</h6> →
+
+                            Display karta hai current state (name)
+
+                            {name} → JSX me JavaScript expression insert karna
+
+                    10.3)  <input ... /> → Input field
+
+                            type="text" → text input
+
+                            value={name} → controlled component → input value state se bind hai
+
+                            onChange={handleChange} → user typing pe state update hota hai
+
+                            placeholder='Enter your name' → empty input me placeholder text
+
+                            className='cstm-input' → custom CSS class
+
+                    10.4)  <button onClick={handleClear}>Clear Name</button> →
+
+                            Button click → input clear ho jaata hai
+
+            -------------------------------------------------
+            11) export default ExampleThree
+            -------------------------------------------------
+                Ye line component ko export karta hai
+
+                Taaki kisi bhi file me import karke use kar sako
+
+            `,
             preview:
                 <div >
                     <div className="">
