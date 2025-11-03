@@ -5,23 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import ComponentOne from '../ComponentOne';
 import ComponentTwo from '../ComponentTwo';
 
-// dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
-export const greetMessage = 'Hello, Welcome to World of R';
-export const currentDateTime = new Date().toLocaleString();
-export const currentDateInString = new Date().toDateString();
-export const currentDateInNumber = new Date().toLocaleDateString();
 
-// Example 1 dynamic values
-export const example1MyName = 'Heller';
-export const example1Multiply = (a, b) => a * b;
-export const example1dynaClass = 'MustBeRed';
-
-// Example for Map method
-export const userInfo = [
-    { username: 'Alice', email: 'alice@example.com', age: 28 },
-    { username: 'Bob', email: 'bob@example.com', age: 34 },
-    { username: 'Charlie', email: 'charlie@example.com', age: 25 }
-];
 // Map Array
 export const mapArray = [1, 2, 3, 4, 5];
 
@@ -302,6 +286,55 @@ export const ExerciseWeatherTernary = ({ temprature }) => {
     )
 }
 
+// Conditonal rendering with checklist
+export const ConditionalRenderingItem = ({ name, isPacked }) => {
+    let itemContent = name;
+    if (isPacked) {
+        itemContent = name + '✅';
+    }
+    else {
+        itemContent = name + '❌';
+    }
+    return (
+        <>
+            <ul>
+                <li className='item'>
+                    {itemContent}
+                </li>
+            </ul>
+        </>
+    )
+}
+
+
+
+//  Conditional Rendering Single Featured Product
+export const FeaturedProduct = ({ name, price, image, inStock }) => {
+    return (
+        <div className="border p-4 rounded w-64">
+            <img src={image} alt="image pic" className='w-full rounded h-40 object-cover mb-2' />
+            <h2 className='text-xl font-bold'>{name}</h2>
+            <p className='text-gray-700'>${price}</p>
+            <p className={inStock ? 'text-green-500' : 'text-red-500'}>
+                {inStock ? 'In Stock' : 'Out Stock'}
+            </p>
+        </div>
+    )
+}
+
+// Conditional Rendering Multiple Products
+export const MultipleProduct = ({ name, price, image, inStock }) => {
+    return (
+        <div className="border p-4 rounded w-64">
+            <img src={image} alt="image pic" className='w-full rounded h-40 object-cover mb-2' />
+            <h2 className='text-xl font-bold'>{name}</h2>
+            <p className='text-gray-700'>${price}</p>
+            <p className={inStock ? 'text-green-500' : 'text-red-500'}>
+                {inStock ? 'In Stock' : 'Out Stock'}
+            </p>
+        </div>
+    )
+}
 
 // Excercise UserStatus with the && Operator
 export const UserStatus = ({ isLoggedIn, isAdmin }) => {
@@ -678,3 +711,4 @@ export const ShareStateToOther = () => {
     )
 }
 
+// 

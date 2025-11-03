@@ -8,6 +8,7 @@ import Projects from "./components/pages/Projects";
 import ProjectDetails from './components/pages/ProjectDetails';
 import NotFound from './components/pages/NotFound';
 import About from './components/pages/About';
+import Demo from './components/pages/Demo';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetails />} />
           <Route path="/about" element={<About />} />
+          <Route path="/demo" element={<Demo />} />
 
           {/* 404 Pages */}
           <Route path="*" element={<NotFound />} />

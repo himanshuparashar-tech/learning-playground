@@ -16,6 +16,7 @@ const ExampleThree = () => {
     const handleClear = () => {
         setName('');
     }
+    
     return (
         <div>
             <h6>Your Name : {name}</h6>

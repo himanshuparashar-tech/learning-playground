@@ -20,9 +20,9 @@ export default function TabsViewFancy() {
     const tabs = getTabs();
 
     useEffect(() => {
-
+  
         if (activeTab) {
-            setIsLoading(true);
+            setIsLoading(true); 
             const timer = setTimeout(() => {
                 setIsLoading(false);
             }, 400);

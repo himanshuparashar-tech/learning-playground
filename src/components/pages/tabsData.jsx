@@ -1,13 +1,5 @@
 import React from 'react';
 import {
-    greetMessage,
-    currentDateTime,
-    currentDateInString,
-    currentDateInNumber,
-    example1MyName,
-    example1Multiply,
-    example1dynaClass,
-    userInfo,
     data,
     mapArray,
     destructureArray,
@@ -41,11 +33,15 @@ import {
     ObjectContent,
     ObjectContentChangeRating,
     ArrayOfObjects,
-    ShareStateToOther
+    ShareStateToOther,
+    ConditionalRenderingItem,
+    FeaturedProduct,
+    MultipleProduct
 } from './tabsComponents';
 import ExampleOne from '../ExampleOne';
 import ExampleTwo from '../ExampleTwo';
 import ExampleThree from '../ExampleThree';
+import { ArrayData } from './ArrayData';
 
 export function getTabs() {
 
@@ -137,10 +133,10 @@ export function getTabs() {
                 }
                 export default Greet;`,
             preview: <div className='space-y-1'>
-                <h4 className='font-medium'>{greetMessage}</h4>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>{currentDateTime}</p>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>{currentDateInString}</p>
-                <p className='text-sm text-gray-600 dark:text-gray-300'>{currentDateInNumber}</p>
+                <h4 className='font-medium'>{ArrayData.greetMessage}</h4>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>{ArrayData.currentDateTime}</p>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>{ArrayData.currentDateInString}</p>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>{ArrayData.currentDateInNumber}</p>
             </div>
         },
         {
@@ -207,7 +203,7 @@ export function getTabs() {
             preview:
                 <div>
                     {
-                        userInfo.map(({ username, email, age }, idx) => (
+                        ArrayData.userInfo.map(({ username, email, age }, idx) => (
                             <ul key={idx}>
                                 <li>{username}</li>
                                 <li>{email}</li>
@@ -662,6 +658,15 @@ export function getTabs() {
                 <div>
                     <Password isValid={true} />
                     <br />
+
+                    <ConditionalRenderingItem name='mouse' isPacked={true} />
+                    <br />
+                    <br />
+                    <FeaturedProduct
+                        name={name}
+                    />
+                    <br />
+                    <MultipleProduct />
                     <br />
                     <h6><strong>Note:</strong></h6>
                     <ul>
@@ -672,6 +677,8 @@ export function getTabs() {
                             This enables us to create interactive and more responsive user experiences
                         </li>
                     </ul>
+
+
                 </div>
 
         },
@@ -1150,6 +1157,25 @@ export function getTabs() {
                     <ShareStateToOther />
                 </div>
         },
+        {
+            id: 36,
+            name: 'Single Card',
+            type: 'codePreview',
+            code: `
+
+            `,
+            preview:
+                <>
+                    <h6>Your components will often need to display different things depending on different conditions. In React, you can conditionally render JSX using JavaScript syntax like if statements, &&, and ? : operators.</h6>
+                    <FeaturedProduct
+                        name={ArrayData.products[0].name}
+                        price={ArrayData.products[0].price}
+                        image={ArrayData.products[0].image}
+                        inStock={ArrayData.products[0].inStock}
+                    />
+                </>
+
+        },
 
         {
             id: 50,
@@ -1176,12 +1202,12 @@ export function getTabs() {
                 <div>
                     <div className="">
                         <p>Add Expression : {2 + 2}</p>
-                        <p>My Name : {example1MyName}</p>
+                        <p>My Name : {ArrayData.example1MyName}</p>
                         <p>Random Number : {Math.random()}</p>
                         <p>My Friend List : {['Alex, Bob, Cherry']}</p>
-                        <p>Expression Multiply: {example1Multiply(3, 5)}</p>
+                        <p>Expression Multiply: {ArrayData.example1Multiply(3, 5)}</p>
                         <p>Conditional Rendering : {2 > 3 ? 'R' : 'W'}</p>
-                        <p className={example1dynaClass}>Example1 Dyna Class : {example1dynaClass}</p>
+                        <p className={ArrayData.example1dynaClass}>Example1 Dyna Class : {ArrayData.example1dynaClass}</p>
 
                     </div>
                 </div>
