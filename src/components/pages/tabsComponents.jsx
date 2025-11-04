@@ -1,50 +1,9 @@
-import { div, h1, h3, h4, h6, li, p, select } from 'framer-motion/client';
+
 import React, { useState } from 'react';
 import { FcHome } from "react-icons/fc";
 import toast, { Toaster } from 'react-hot-toast';
 import ComponentOne from '../ComponentOne';
 import ComponentTwo from '../ComponentTwo';
-
-
-// Map Array
-export const mapArray = [1, 2, 3, 4, 5];
-
-// Difference Between forEach and map method (table data)
-export const data = [
-    {
-        section: '🧠 Purpose',
-        rows: [
-            { method: 'forEach()', description: 'Used to loop through an array and perform an action for each element.' },
-            { method: 'map()', description: <> Used to loop through an array and<strong> create a new array</strong> by transforming each element.</> }
-        ]
-    },
-    {
-        section: '💻 Return Value',
-        rows: [
-            { method: 'forEach()', description: 'Nothing (undefined)' },
-            { method: 'map()', description: 'A new array with modified values' }
-        ]
-    }
-];
-
-// Map Array Method with Destructuring
-export const destructureArray = [
-    {
-        id: 1,
-        name: 'Artech',
-        age: 28,
-    },
-    {
-        id: 2,
-        name: 'Bacany',
-        age: 34,
-    },
-    {
-        id: 3,
-        name: 'Charli',
-        age: 25,
-    }
-]
 
 // export Props related content
 export const ParentProps = () => {
@@ -138,43 +97,6 @@ export const ProductChildProps = ({ name, age }) => {
 }
 
 // Card Component
-export const cards = [
-    {
-        id: 1,
-        title: "Getting Started",
-        description: "Introductory card explaining JSX basics and how to create components.",
-        image: "https://media.istockphoto.com/id/615422436/photo/demo-sign-cubes.jpg?s=612x612&w=0&k=20&c=HHOLIiF8SmbIssxKv3G480EgTVub_v9cc1QME3Dn6XU=",
-        features: ["JSX syntax", "Component structure", "Rendering"]
-    },
-    {
-        id: 2,
-        title: "Props & State",
-        description: "Overview of passing data to components and managing local state.",
-        image: "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-        features: ["Props", "State", "Lifting state"]
-    },
-    {
-        id: 3,
-        title: "Lists & Keys",
-        description: "How to render lists with map() and why keys are important.",
-        image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-        features: ["map()", "keys", "Performance tips"]
-    },
-    {
-        id: 4,
-        title: "Reusable Components",
-        description: "Create and reuse components like cards, modals and form controls.",
-        image: "https://images.unsplash.com/photo-1633621412960-6df85eff8c85?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=627",
-        features: ["Props", "Composition", "Children"]
-    },
-    {
-        id: 5,
-        title: "Advanced Patterns",
-        description: "Composition patterns, render props, and hooks best practices.",
-        image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1025",
-        features: ["Hooks", "Context", "Performance"]
-    }
-];
 export const CustomCard = ({
     title = "Reusable Components",
     description = "Create and reuse components like cards, modals and form controls.",
@@ -325,7 +247,7 @@ export const FeaturedProduct = ({ name, price, image, inStock }) => {
 // Conditional Rendering Multiple Products
 export const MultipleProduct = ({ name, price, image, inStock }) => {
     return (
-        <div className="border p-4 rounded w-64">
+        <div className="border p-4 rounded w-full">
             <img src={image} alt="image pic" className='w-full rounded h-40 object-cover mb-2' />
             <h2 className='text-xl font-bold'>{name}</h2>
             <p className='text-gray-700'>${price}</p>
@@ -711,4 +633,118 @@ export const ShareStateToOther = () => {
     )
 }
 
-// 
+// Form Controlled Components
+export const FormControlled = () => {
+    const [inputValue, setInputValue] = useState('');
+    const [textareaValue, setTextareaValue] = useState('');
+    const [color, setColor] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
+    const [passwordChange, setPasswordChange] = useState('');
+    const [password, setPassword] = useState('');
+    const [visible, setVisible] = useState(false);
+    const [passwordStrength, setPasswordStrength] = useState('')
+
+    // Input Type
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+    // Textarea (Multiple lines)
+    const handleChangeTextarea = (event) => {
+        setTextareaValue(event.target.value);
+    };
+
+    // Select Dropdown
+    const handleChangeDropdown = (event) => {
+        setColor(event.target.value);
+    }
+
+    // Checkbox (Boolean values)
+    const handleChangeChecked = (event) => {
+        setIsChecked(event.target.checked);
+    }
+
+    // Password input
+    const handleChangePassword = (event) => {
+        setPasswordChange(event.target.value);
+    }
+
+    // Password Toggle 
+    const toggleVisiblity = () => {
+        setVisible(!visible);
+    }
+
+    // Password Strength Checker
+    const checkStrength = (passwordStrength) => {
+        if (passwordStrength.length < 6) {
+            return (
+                <>
+                    Weak ❌
+                </>
+            )
+        }
+    }
+
+
+    return (
+        <>
+            <form >
+                <div className="flex gap-5 flex-col">
+                    <h6 className='font-semibold'>Input Type :</h6>
+                    <div className='flex justify-between  items-center gap-5'>
+                        <label htmlFor=""><input className='cstm-input' type="text" value={inputValue} onChange={handleChange} /></label>
+                        <p className='flex-1'>input Value : {inputValue}</p>
+                    </div>
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'>Textarea (Multiple lines) :</h6>
+                    <div className="flex justify-between  items-center gap-5">
+                        <textarea className='cstm-input' value={textareaValue} onChange={handleChangeTextarea}></textarea>
+                        <p className='flex-1'>Input Value : {textareaValue}</p>
+                    </div>
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'>Select Dropdown :</h6>
+                    <div className="flex justify-between  items-center gap-5">
+                        <select className='cstm-input' name="" id="" value={color} onChange={handleChangeDropdown}>
+                            <option value="">Choose Color</option>
+                            <option value="blue">Blue</option>
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                        </select>
+                        <p className='flex-1'><span style={{ backgroundColor: color || 'transparent', padding: '5px', color: 'white' }}>Selected Color : {color}</span></p>
+                    </div>
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'>Checkbox (Boolean values) :</h6>
+                    <div className='flex justify-between items-center gap-5'>
+                        <label htmlFor="">Accept Terms : </label>
+                        <input className='cstm-input' type="checkbox" value={isChecked} onChange={handleChangeChecked} />
+                        <p className='flex-1'>{isChecked ? 'Accepted ✅' : 'Not Accepted ❌'}</p>
+                    </div>'
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'>Password input :</h6>
+                    <div className="flex justify-between items-center gap-5">
+                        <label htmlFor="">Please type password</label>
+                        <input type="password" value={passwordChange} onChange={handleChangePassword} className='cstm-input' />
+                        <p className='flex-1 flex flex-col'>
+                            <span><strong className='font-semibold'>Password Length:</strong> {passwordChange.length} </span>
+                            <span><strong className='font-semibold'>Password Text :</strong> {passwordChange}</span>
+                        </p>
+                    </div>
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'> Password Toggle : </h6>
+                    <div className="flex justify-between items-start gap-5 flex-col">
+                        <label htmlFor="">Click on Button</label>
+                        <input className='cstm-input' type={visible ? 'text' : 'password'} value={password} placeholder='Enter Password' onChange={(e) => setPassword(e.target.value)} />
+                        <button type='button' className='cstm' onClick={toggleVisiblity}> {visible ? 'Hide' : 'Show'}</button>
+                        <p> Password Visible : {password}</p>
+                    </div>
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'> Password Strength Checker : </h6>
+                    <div className="flex justify-between items-start gap-5 flex-col">
+                        <input type="password" className='cstm-input' value={passwordStrength} onChange={(e) => setPasswordStrength(e.target.value)} />
+                        <p>Password Strength: {checkStrength(passwordStrength)} </p>
+                    </div>
+                </div>
+            </form>
+        </>
+    )
+}

@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-    data,
-    mapArray,
-    destructureArray,
     ParentProps,
     ParentPropsDestructring,
     PersonParentProps,
     ProductParentProps,
     CustomCard,
     CustomCardMap,
-    cards,
     Password,
     PasswordTernary,
     CartRender,
@@ -36,7 +32,8 @@ import {
     ShareStateToOther,
     ConditionalRenderingItem,
     FeaturedProduct,
-    MultipleProduct
+    MultipleProduct,
+    FormControlled
 } from './tabsComponents';
 import ExampleOne from '../ExampleOne';
 import ExampleTwo from '../ExampleTwo';
@@ -156,7 +153,7 @@ export function getTabs() {
                 }
                 export default Map`,
             preview: <div>
-                {mapArray.map((number) => (
+                {ArrayData.mapArray.map((number) => (
                     <ul key={number}>
                         <li>{number}</li>
                     </ul>
@@ -281,7 +278,7 @@ export function getTabs() {
                 export default MethodComparisonTable;`,
             preview:
                 <div style={{ margin: '20px', fontFamily: 'sans-serif' }}>
-                    {data.map(({ section, rows }) => (
+                    {ArrayData.data.map(({ section, rows }) => (
                         <div key={section} style={{ marginBottom: '30px' }}>
                             <h3>{section}</h3>
                             <table
@@ -336,7 +333,7 @@ export function getTabs() {
             preview:
                 <div>
                     {
-                        destructureArray.map(({ id, name, age }) => (
+                        ArrayData.destructureArray.map(({ id, name, age }) => (
                             <ul key={id}>
                                 <li>{name}</li>
                                 <li>{age}</li>
@@ -574,36 +571,36 @@ export function getTabs() {
                     <div className="flex justify-between gap-6 w-full">
                         <CustomCardMap
                             className="sm:w-1/3 w-full"
-                            title={cards[0].title}
-                            description={cards[0].description}
-                            image={cards[0].image}
+                            title={ArrayData.cards[0].title}
+                            description={ArrayData.cards[0].description}
+                            image={ArrayData.cards[0].image}
                         >
                             <ul className="text-left list-disc pl-5 mt-2">
-                                {cards[0].features.map((feature, index) => (
+                                {ArrayData.cards[0].features.map((feature, index) => (
                                     <li key={index}>{feature}</li>
                                 ))}
                             </ul>
                         </CustomCardMap>
                         <CustomCardMap
                             className="sm:w-1/3 w-full"
-                            title={cards[1].title}
-                            description={cards[1].description}
-                            image={cards[1].image}
+                            title={ArrayData.cards[1].title}
+                            description={ArrayData.cards[1].description}
+                            image={ArrayData.cards[1].image}
                         >
                             <ul className="text-left list-disc pl-5 mt-2">
-                                {cards[1].features.map((feature, index) => (
+                                {ArrayData.cards[1].features.map((feature, index) => (
                                     <li key={index}>{feature}</li>
                                 ))}
                             </ul>
                         </CustomCardMap>
                         <CustomCardMap
                             className="sm:w-1/3 w-full"
-                            title={cards[2].title}
-                            description={cards[2].description}
-                            image={cards[2].image}
+                            title={ArrayData.cards[2].title}
+                            description={ArrayData.cards[2].description}
+                            image={ArrayData.cards[2].image}
                         >
                             <ul className="text-left list-disc pl-5 mt-2">
-                                {cards[2].features.map((feature, index) => (
+                                {ArrayData.cards[2].features.map((feature, index) => (
                                     <li key={index}>{feature}</li>
                                 ))}
                             </ul>
@@ -617,7 +614,7 @@ export function getTabs() {
                     <br />
                     <br />
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 w-full">
-                        {cards.slice(0, 3).map((card, idx) => (
+                        {ArrayData.cards.slice(0, 3).map((card, idx) => (
                             <CustomCardMap
                                 key={card.id}
                                 title={card.title}
@@ -1176,7 +1173,45 @@ export function getTabs() {
                 </>
 
         },
+        {
+            id: 37,
+            name: 'Multiple Cards',
+            type: 'codePreview',
+            code: `
 
+            `,
+            preview:
+                <>
+                    <h6>Your components will often need to display different things depending on different conditions. In React, you can conditionally render JSX using JavaScript syntax like if statements, &&, and ? : operators.</h6>
+
+
+                    <h6 className='font-semibold'>Multiple Cards</h6>
+
+                    <div className="grid gap-2 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {ArrayData.products.map(({ id, name, price, inStock, image }) => (
+                            <MultipleProduct
+                                key={id}
+                                name={name}
+                                price={price}
+                                inStock={inStock}
+                                image={image}
+                                className=""
+                            />
+                        ))}
+                    </div>
+                </>
+
+        },
+        {
+            id: 38,
+            name: 'Form Controlled Components',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <>
+                    <FormControlled />
+                </>
+        },
         {
             id: 50,
             name: 'Examples',
