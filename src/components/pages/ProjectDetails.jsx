@@ -505,7 +505,7 @@ export default TodoAppWithDelete;                  // Export component so it can
 
     export default SimpleTodoWithLocalStorage;
 `
-  }
+  },
 };
 
 const ProjectDetails = () => {

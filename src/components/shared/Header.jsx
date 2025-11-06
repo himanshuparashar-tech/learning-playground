@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { href, Link } from 'react-router-dom';
 
 const MenuIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
   <line x1="4" x2="20" y1="12" y2="12" />
@@ -66,7 +66,7 @@ const Header = () => {
     } catch (e) { /* ignore */ }
   }, [theme, mounted]);
 
-  const navLinks = [{ href: "/home", label: "Home" }, { href: "/about", label: "About" }, { href: "/projects", label: "Projects" }, {href: "/demo", label: "Demo" }];
+  const navLinks = [{ href: "/home", label: "Home" }, { href: "/about", label: "About" }, { href: "/projects", label: "Projects" }, { href: "/demo", label: "Demo" }, { href: "/faq", label: "FAQ" }];
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };

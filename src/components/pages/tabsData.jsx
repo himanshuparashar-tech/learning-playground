@@ -33,7 +33,11 @@ import {
     ConditionalRenderingItem,
     FeaturedProduct,
     MultipleProduct,
-    FormControlled
+    FormControlled,
+    ExampleUseState,
+    UsWithArray,
+    UsProfile,
+    ShoppingList
 } from './tabsComponents';
 import ExampleOne from '../ExampleOne';
 import ExampleTwo from '../ExampleTwo';
@@ -1208,9 +1212,25 @@ export function getTabs() {
             type: 'codePreview',
             code: ``,
             preview:
-                <>
+                <div style={{ maxHeight: 'calc(100vh - 275px)', overflow: 'auto' }}>
                     <FormControlled />
-                </>
+                </div>
+        },
+        {
+            id: 39,
+            name: 'Use State Examples',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <div className="">
+                    <ExampleUseState />
+                    <br />
+                    <UsWithArray />
+                    <br />
+                    <UsProfile />
+                    <br />
+                    <ShoppingList />
+                </div>
         },
         {
             id: 50,

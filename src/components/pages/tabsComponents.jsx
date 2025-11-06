@@ -642,7 +642,14 @@ export const FormControlled = () => {
     const [passwordChange, setPasswordChange] = useState('');
     const [password, setPassword] = useState('');
     const [visible, setVisible] = useState(false);
-    const [passwordStrength, setPasswordStrength] = useState('')
+    const [passwordStrength, setPasswordStrength] = useState('');
+    // Confirm Password
+    const [cPassword, setCPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    // Password Policy Checker (like websites require)
+    const [password1, setPassword1] = useState('');
+
 
     // Input Type
     const handleChange = (event) => {
@@ -675,15 +682,30 @@ export const FormControlled = () => {
     }
 
     // Password Strength Checker
+    const hasUpperCase = /[A-Z]/.test(passwordStrength);
+    const hasNumber = /[0-9]/.test(passwordStrength);
+    const hasSpecialCase = /[^A-Za-z0-9]/.test(passwordStrength);
     const checkStrength = (passwordStrength) => {
         if (passwordStrength.length < 6) {
-            return (
-                <>
-                    Weak ❌
-                </>
-            )
+            return <span style={{ color: 'red' }}> Weak ❌</span>
+        }
+
+        if (hasUpperCase && hasNumber && hasSpecialCase) {
+            return <span style={{ color: 'green' }}>Strong 💪</span>
+        }
+        else {
+            return <span style={{ color: 'orange' }}>medium ⚡</span>
         }
     }
+
+    // Confirm Password Validation
+    const match = cPassword && confirmPassword && cPassword === confirmPassword;
+
+    // Password Policy Checker (like websites require)
+    const hasLength = (password1.length > 8);
+    const hasUpperCase1 = /[A-Z]/.test(password1);
+    const hasNumber1 = /[0-9]/.test(password1);
+    const hasSpecialCase1 = /[^A-Za-z0-9]/.test(password1);
 
 
     return (
@@ -695,12 +717,14 @@ export const FormControlled = () => {
                         <label htmlFor=""><input className='cstm-input' type="text" value={inputValue} onChange={handleChange} /></label>
                         <p className='flex-1'>input Value : {inputValue}</p>
                     </div>
+
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'>Textarea (Multiple lines) :</h6>
                     <div className="flex justify-between  items-center gap-5">
                         <textarea className='cstm-input' value={textareaValue} onChange={handleChangeTextarea}></textarea>
                         <p className='flex-1'>Input Value : {textareaValue}</p>
                     </div>
+
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'>Select Dropdown :</h6>
                     <div className="flex justify-between  items-center gap-5">
@@ -712,13 +736,15 @@ export const FormControlled = () => {
                         </select>
                         <p className='flex-1'><span style={{ backgroundColor: color || 'transparent', padding: '5px', color: 'white' }}>Selected Color : {color}</span></p>
                     </div>
+
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'>Checkbox (Boolean values) :</h6>
                     <div className='flex justify-between items-center gap-5'>
                         <label htmlFor="">Accept Terms : </label>
-                        <input className='cstm-input' type="checkbox" value={isChecked} onChange={handleChangeChecked} />
+                        <input className='cstm-input' type="checkbox" checked={isChecked} onChange={handleChangeChecked} />
                         <p className='flex-1'>{isChecked ? 'Accepted ✅' : 'Not Accepted ❌'}</p>
-                    </div>'
+                    </div>
+
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'>Password input :</h6>
                     <div className="flex justify-between items-center gap-5">
@@ -729,22 +755,129 @@ export const FormControlled = () => {
                             <span><strong className='font-semibold'>Password Text :</strong> {passwordChange}</span>
                         </p>
                     </div>
+
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'> Password Toggle : </h6>
                     <div className="flex justify-between items-start gap-5 flex-col">
                         <label htmlFor="">Click on Button</label>
                         <input className='cstm-input' type={visible ? 'text' : 'password'} value={password} placeholder='Enter Password' onChange={(e) => setPassword(e.target.value)} />
-                        <button type='button' className='cstm' onClick={toggleVisiblity}> {visible ? 'Hide' : 'Show'}</button>
+                        <button type='button' className='cstm' onClick={toggleVisiblity}> {visible ? '🔒 Hide' : '🔓Show'}</button>
                         <p> Password Visible : {password}</p>
                     </div>
+
+                    {/* Password Strength Checker */}
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'> Password Strength Checker : </h6>
                     <div className="flex justify-between items-start gap-5 flex-col">
                         <input type="password" className='cstm-input' value={passwordStrength} onChange={(e) => setPasswordStrength(e.target.value)} />
                         <p>Password Strength: {checkStrength(passwordStrength)} </p>
+                        <p>Password Text : {passwordStrength}</p>
+                    </div>
+
+                    {/* Confirm Password */}
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'> Confirm Password : </h6>
+                    <div className="flex justify-between items-start gap-5 flex-col">
+                        <span className='font-semibold mb-0'>Password : </span> <input className='cstm-input' type="text" value={cPassword} onChange={(e) => setCPassword(e.target.value)} />
+                        <span className='font-semibold mb-0'>Confirm Password</span><input className='cstm-input' type="text" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <p>{confirmPassword ? match ? '✅ Passwords Match!' : '❌ Passwords do not match!' : ''}</p>
+                    </div>
+
+                    {/* Password Policy Checker (like websites require) */}
+                    <hr className='border border-dashed' />
+                    <h6 className='font-semibold'> Password Policy Checker : </h6>
+                    <div className="flex justify-between items-start gap-5 flex-col">
+                        <input className='cstm-input' type="text" value={password1} placeholder='Enter Password' onChange={(e) => setPassword1(e.target.value)} />
+                        {hasLength && hasUpperCase1 && hasNumber1 && hasSpecialCase1 ? (
+                            <p style={{ color: 'green', fontWeight: 'semi-bold' }}>✅ Your password is matched</p>)
+                            : (
+                                <ul>
+                                    <li style={{ color: hasLength ? 'green' : 'red' }}>At least 8 characters</li>
+                                    <li style={{ color: hasUpperCase1 ? 'green' : 'red' }}>At least 1 capital letter</li>
+                                    <li style={{ color: hasNumber1 ? 'green' : 'red' }}>At least 1 number</li>
+                                    <li style={{ color: hasSpecialCase1 ? 'green' : 'red' }}>At least 1 symbol</li>
+                                </ul>
+                            )}
                     </div>
                 </div>
             </form>
+        </>
+    )
+}
+
+// Use state Examples
+export const ExampleUseState = () => {
+    const [usCount, setUsCount] = useState(0);
+    const currentValue = () => setUsCount(usCount + 1)
+
+    return (
+        <>
+            <p>{usCount}</p>
+
+            <button className='cstm' onClick={currentValue}>usCount</button>
+        </>
+    )
+}
+
+// Use State with and Array
+export const UsWithArray = () => {
+    const [usArray, setUsArray] = useState([]);
+    const addOneState = (e) => {
+        e.preventDefault();
+        if (!usArray.includes('State 1')) {
+            setUsArray([...usArray, 'State 1'])
+        }
+    }
+
+    return (
+        <>
+            <form>
+                <ul>
+                    {usArray.map((us, index) => (
+                        <li key={index}>{us}</li>
+                    ))}
+                </ul>
+                <button className='cstm' onClick={addOneState}>Add States</button>
+            </form>
+        </>
+    )
+}
+
+// profile.jsx
+export const UsProfile = () => {
+    const [profileseth, setProfileseth] = useState({
+        name: 'Heller',
+        age: '20'
+    })
+
+    return (
+        <>
+            <p>Name : {profileseth.name}</p>
+            <p>Age: {profileseth.age}</p>
+        </>
+    )
+}
+
+// Change Shopping list
+export const ShoppingList = () => {
+    const [shoppingList, setShoppingList] = useState(
+        {
+            name: 'Mouse',
+            quantity: 3
+        }
+    )
+
+    const changeList = () => setShoppingList({ ...shoppingList, quantity: 5 });
+
+    return (
+        <>
+            <form >
+                <ul>
+                    <li>Name : {shoppingList.name}</li>
+                    <li>Quantity: {shoppingList.quantity}</li>
+                </ul>
+            </form>
+            <button onClick={changeList} className='cstm'>Change List</button>
         </>
     )
 }

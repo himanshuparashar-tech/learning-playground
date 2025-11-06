@@ -117,4 +117,37 @@ export const ArrayData = {
         { id: 201, name: "USB Cable", price: 10, inStock: true },
         { id: 202, name: "Mouse Pad", price: 15, inStock: false },
     ],
+    projects: [
+        {
+            id: 'todo',
+            title: 'Todo App',
+            description: 'A Simple Task Manager'
+        },
+        {
+            id: 'simpletodo',
+            title: 'Simple Todo App With Add',
+            description: 'A Simple Todo App'
+        },
+        {
+            id: 'simpletodowithtoaster',
+            title: 'Simple Todo With Add, Toaster',
+            description: 'A simple Todo App With Toaster'
+        },
+        {
+            id: 'simpletodowithdelete',
+            title: 'Simple Todo With Add, Toaster, Delete Task ',
+            description: 'A simple Todo App With Toaster & Delete Task individually'
+        },
+        {
+            id: 'simpletodowithedit',
+            title: 'Simple Todo With Add, Edit, Delete, Toaster ',
+            description: 'A simple Todo App with Add, Edit, Delete, Toaster'
+        },
+        {
+            id: 'simpletodowithlocalstorage',
+            title: 'Simple Todo With Add, Edit, Delete, Toaster, Local Storage',
+            description: 'A simple Todo App with Add, Edit, Delete, Toaster'
+        },
+
+    ]
 };
