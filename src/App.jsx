@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/shared/Header";
+import Sidebar from './components/shared/Sidebar';
 import Footer from "./components/shared/Footer";
 import TabsViewFancy from './components/pages/TabsViewFancy';
 import './main';
@@ -17,16 +18,20 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
-          {/* Default Route — redirect "/" to "/home" */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
 
-          {/* Actual Pages */}
-          <Route path="/home" element={<TabsViewFancy />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<ProjectDetails />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/demo" element={<Demo />} />
-          <Route path="/faq" element={<Faq />} />
+          {/* Default Route — redirect "/" to "/home" */}
+          <Route path="/" element={<Navigate to="/tabsLayout" replace />} />
+
+          {/* Sidebar Layout */}
+          <Route element={<Sidebar />} >
+            {/* Actual Pages */}
+            <Route path="/tabsLayout" element={<TabsViewFancy />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetails />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/faq" element={<Faq />} />
+          </Route>
 
           {/* 404 Pages */}
           <Route path="*" element={<NotFound />} />

@@ -28,8 +28,16 @@
 ul {
   padding: 10px 20px;
 
+  &.no-space{
+    padding: 0;
+  }
+
   li {
     list-style: disc;
+
+    &.no-listing{
+      list-style: none;
+    }
   }
 }
 
