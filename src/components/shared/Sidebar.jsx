@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // React Icons
-import { BiAbacus, BiLeaf, BiMenu } from 'react-icons/bi';
+import { BiAbacus, BiAperture, BiCode, BiFace, BiLeaf, BiMenu } from 'react-icons/bi';
 import { CgChevronRight, CgClose } from 'react-icons/cg';
 import { FaBookOpen } from 'react-icons/fa';
 import { HiHome } from 'react-icons/hi';
@@ -18,22 +18,24 @@ const Sidebar = () => {
     const location = useLocation(); // Get Current Route
     const navigate = useNavigate();
 
-    const handleParentClick = ((item) => {
-        if (item.children && item.children.length > 0) {
-            // Toggle Submenu
+
+    const handleParentClick = (item) => {
+        if (!isOpen && item.path || isOpen && !item.children) {
+            // Sidebar is collapsed → Navigate directly
+            navigate(item.path);
+        } else if (item.children && item.children.length > 0) {
+            // Sidebar expanded → toggle submenu
             setOpenMenu(openMenu === item.name ? null : item.name);
         }
-        else {
-            navigate(item.path);
-        }
-    })
+
+    };
 
     const menuItems = [
         {
             name: 'Getting Started',
             icon: <HiHome size={20} />,
             rightIcon: <CgChevronRight />,
-            path: '',
+            path: '/intro',
             children: [
                 { name: 'Introduction', icon: <BiAbacus />, path: '/intro' }
             ]
@@ -51,16 +53,40 @@ const Sidebar = () => {
             name: 'About',
             icon: <FaBookOpen size={20} />,
             path: '/about'
+        },
+        {
+            name: 'Projects',
+            icon: <BiAbacus size={20} />,
+            rightIcon: <CgChevronRight />,
+            path: '/projects/todo',
+            children: [
+                { name: 'Todo App', icon: <BiAbacus size={20} />, path: '/projects/todo' },
+                { name: 'Simple Todo App', icon: <BiAbacus size={20} />, path: '/projects/simpletodo' },
+                { name: 'Simple Todo Toaster', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithtoaster' },
+                { name: 'Simple Todo Edit', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithedit' },
+                { name: 'Simple Todo Delete', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithdelete' },
+                { name: 'Simple Todo Local Storage', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithlocalstorage' },
+            ]
+        },
+        {
+            name : 'CodePlay',
+            icon : <BiCode size={20} />,
+            path : '/demo',
+        },
+        {
+            name : 'FAQ',
+            icon : <BiAperture size={20} />,
+            path : '/faq',
         }
     ];
     return (
-        <div className='flex min-h-screen bg-white'>
+        <div className=' bg-white'>
 
             {/* Sidebar */}
             <aside className={`border-r border-r-zinc-100 p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
 
                 {/* Toggle Button */}
-                <button className=' mb-6 flex-items-center gap-2' onClick={() => setIsOpen(!isOpen)}>
+                <button className='px-3 mb-6 flex-items-center gap-2' onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <CgClose /> : <BiMenu />}
                 </button>
 
@@ -76,11 +102,15 @@ const Sidebar = () => {
 
                                 {/* Parent Menu */}
                                 <div onClick={() => handleParentClick(item)} className={`flex items-center gap-3 rounded hovr:bg-gray-700 p-2 ${isActiveParent ? 'bg-gray-300 text-black font-medium' : 'hover:bg-gray-100'}`}>
-                                    {item.icon}
+
+                                    {/* Icon */}
+                                    <span onClick={() => handleParentClick(item)}>
+                                        {item.icon}
+                                    </span>
                                     {isOpen && <span>{item.name}</span>}
 
                                     {/* Arrow */}
-                                    {item.children && (
+                                    {isOpen && item.children && (
                                         <span className={` transition-transform duration-300 
                                         ${openMenu === item.name ? 'rotate-90' : 'rotate-0'}`}>
                                             {item.rightIcon}
@@ -94,7 +124,7 @@ const Sidebar = () => {
                                         {item.children.map((child, i) => {
                                             const isActiveChild = location.pathname === child.path;
                                             return (
-                                                <li li key={i} className={`hover:text-purple-600 p-2 rounded no-listing 
+                                                <li key={i} className={`hover:text-purple-600 p-2 rounded no-listing 
                                                     ${isActiveChild
                                                         ? "bg-gray-300 text-black font-medium"
                                                         : "hover:bg-gray-100"
@@ -115,7 +145,7 @@ const Sidebar = () => {
             </aside>
 
             {/* Main Content */}
-            <main className='flex-1 p-8 '>
+            <main className='flex-auto md:flex-1'>
                 <Outlet />
             </main>
         </div >
