@@ -20,9 +20,9 @@ export default function TabsViewFancy() {
     const tabs = getTabs();
 
     useEffect(() => {
-  
+
         if (activeTab) {
-            setIsLoading(true); 
+            setIsLoading(true);
             const timer = setTimeout(() => {
                 setIsLoading(false);
             }, 400);
@@ -35,11 +35,11 @@ export default function TabsViewFancy() {
 
     return <div className='p-3 w-full mx-auto'>
         { }
-        <div className='flex flex-col sm:flex-row gap-6 rounded-xl overflow-hidden'>
+        <div className='flex flex-col lg:flex-row gap-6 rounded-xl'>
             { }
-            <div className='sm:w-64 flex sm:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: 'calc(100vh - 135px)' }}>
+            <div className='max-w-full lg:w-64 flex lg:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: 'calc(100vh - 160px)' }}>
                 {tabs.map(tab => <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`
-                relative group flex flex-wrap break-words items-center sm:w-full px-4 py-3 min-w-[200px]  sm:py-4 transition-all
+                relative group flex flex-wrap break-words items-center sm:w-full lg:px-4 lg:py-3 px-2 py=2 min-w-[200px] transition-all
                 ${activeTab === tab.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300'}
               `}>
                     { }
@@ -69,7 +69,7 @@ export default function TabsViewFancy() {
             </div>
 
             { }
-            <div className='flex-1 relative rounded-xl bg-white dark:bg-gray-900/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden'>
+            <div className='flex-1 relative rounded-xl bg-white dark:bg-gray-900/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-auto fancy-view' style={{ maxHeight: 'calc(100vh - 160px) ', minHeight: 'calc(100vh - 278px)' }}>
                 { }
                 <AnimatePresence>
                     {isLoading && <motion.div key='loader' className='absolute inset-0 z-20 flex items-center justify-center bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm' initial={{

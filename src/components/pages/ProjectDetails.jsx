@@ -530,7 +530,7 @@ const ProjectDetails = () => {
       </Link>
       <h1 className="text-3xl font-bold mt-4">{project.title}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
           <h2 className="font-semibold mb-2 text-lg">💻 Code:</h2>
           <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>

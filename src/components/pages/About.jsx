@@ -31,7 +31,7 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-10 px-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-10 px-4" style={{maxHeight: 'calc(100vh - 275px)'}}>
       <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">
         About React JS Learning
       </h1>

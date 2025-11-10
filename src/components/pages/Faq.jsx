@@ -323,7 +323,7 @@ const Faq = () => {
     const handleItemClick = index => {
         setOpenIndex(openIndex === index ? null : index);
     };
-    return <div className="flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-950 ">
+    return <div className="flex items-center justify-center p-1 lg:p-4 bg-zinc-50 dark:bg-zinc-950 ">
         <div className="w-full max-w-full mx-auto bg-white dark:bg-zinc-900 rounded-2xl shadow-lg dark:shadow-zinc-900/20 border border-zinc-200 dark:border-zinc-800 overflow-hidden">
             <div className="p-6">
                 <h1 className="text-2xl font-bold text-center text-zinc-900 dark:text-zinc-100 mb-1">
@@ -333,7 +333,7 @@ const Faq = () => {
                     Here are some of our most asked questions.
                 </p>
             </div>
-            <div style={{ maxHeight: 'calc(100vh - 280px)', overflow: 'auto' }}>
+            <div style={{ maxHeight: 'calc(100vh - 250px)', overflow: 'auto' }}>
                 {
                     accordionData.map((item, index) =>
                         <AccordionItem

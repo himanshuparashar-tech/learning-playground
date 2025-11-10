@@ -13,7 +13,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 const Sidebar = () => {
 
     // State changing while click
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [openMenu, setOpenMenu] = useState(null); // Track which menu is expanded
     const location = useLocation(); // Get Current Route
     const navigate = useNavigate();
@@ -69,14 +69,14 @@ const Sidebar = () => {
             ]
         },
         {
-            name : 'CodePlay',
-            icon : <BiCode size={20} />,
-            path : '/demo',
+            name: 'CodePlay',
+            icon: <BiCode size={20} />,
+            path: '/demo',
         },
         {
-            name : 'FAQ',
-            icon : <BiAperture size={20} />,
-            path : '/faq',
+            name: 'FAQ',
+            icon: <BiAperture size={20} />,
+            path: '/faq',
         }
     ];
     return (
@@ -101,13 +101,15 @@ const Sidebar = () => {
                                 className='cursor-pointer no-listing py-2'>
 
                                 {/* Parent Menu */}
-                                <div onClick={() => handleParentClick(item)} className={`flex items-center gap-3 rounded hovr:bg-gray-700 p-2 ${isActiveParent ? 'bg-gray-300 text-black font-medium' : 'hover:bg-gray-100'}`}>
+                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded hovr:bg-gray-700 p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-gray-100'}`}>
 
-                                    {/* Icon */}
-                                    <span onClick={() => handleParentClick(item)}>
-                                        {item.icon}
-                                    </span>
-                                    {isOpen && <span>{item.name}</span>}
+                                    <div className="flex items-center gap-3">
+                                        {/* Icon */}
+                                        <span onClick={() => handleParentClick(item)}>
+                                            {item.icon}
+                                        </span>
+                                        {isOpen && <span>{item.name}</span>}
+                                    </div>
 
                                     {/* Arrow */}
                                     {isOpen && item.children && (
@@ -126,7 +128,7 @@ const Sidebar = () => {
                                             return (
                                                 <li key={i} className={`hover:text-purple-600 p-2 rounded no-listing 
                                                     ${isActiveChild
-                                                        ? "bg-gray-300 text-black font-medium"
+                                                        ? "bg-gradient-to-br from-indigo-300 to-purple-300 text-black font-medium"
                                                         : "hover:bg-gray-100"
                                                     }`}
                                                 >

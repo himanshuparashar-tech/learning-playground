@@ -13,10 +13,12 @@ import Introduction from '../pages/Introduction';
 
 const SidebarLayout = () => {
     return (
-        <div className="flex ">
+        <div className='flex' style={{
+            maxHeight: 'calc(100vh - 7rem)', overflow: 'hidden'
+        }} >
             <Sidebar />
 
-            <main className="flex-1 p-6 bg-zinc-50">
+            <main className="flex-1 p-2 bg-zinc-50 overflow-auto" style={{ minHeight: 'calc(100vh - 7rem)' }}>
                 <Routes>
                     {/* Default redirect inside sidebar layout */}
                     <Route path="/" element={<Navigate to="/tabsLayout" replace />} />
