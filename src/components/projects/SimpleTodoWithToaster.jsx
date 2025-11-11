@@ -25,12 +25,12 @@ const SimpleTodoWithToaster = () => {
         <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
             {/* Toaster component displays the toast notifications */}
             {/* shows at top right newest toast appears on top */}
-            <Toaster position='top-right' reverseOrder={false} toasterId='default'/> 
+            <Toaster position='top-right' reverseOrder={false} toasterId='default' />
 
             <h2 style={{ textAlign: "center" }} className='mb-2'>Todo App</h2>
 
             {/* Input and Add button */}
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: 'wrap' }}>
                 <input
                     type="text" // input type is text
                     value={input} // controlled input

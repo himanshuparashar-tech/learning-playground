@@ -14,7 +14,7 @@ const SimpleTodoApp = () => {
         <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
             <h2 style={{ textAlign: "center" }} className='mb-2'>Todo App</h2>
 
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" , flexWrap: 'wrap'}}>
                 <input
                     type="text"
                     value={input}

@@ -14,7 +14,7 @@ const TodoApp = () => {
   return (
     <div className="p-4 border rounded-lg bg-white dark:bg-gray-900 shadow">
       <h2 className="text-xl font-semibold mb-2">📝 Todo App</h2>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
         <input
           className="border p-2 flex-grow rounded"
           value={input}

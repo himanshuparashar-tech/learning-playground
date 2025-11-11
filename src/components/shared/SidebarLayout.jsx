@@ -10,6 +10,7 @@ import About from '../pages/About';
 import Demo from '../pages/Demo';
 import Faq from '../pages/Faq';
 import Introduction from '../pages/Introduction';
+import ProtectedRoute from './ProtectedRoute';
 
 const SidebarLayout = () => {
     return (
@@ -21,16 +22,71 @@ const SidebarLayout = () => {
             <main className="flex-1 p-2 bg-zinc-50 overflow-auto" style={{ minHeight: 'calc(100vh - 7rem)' }}>
                 <Routes>
                     {/* Default redirect inside sidebar layout */}
-                    <Route path="/" element={<Navigate to="/tabsLayout" replace />} />
+
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <Navigate to="/tabsLayout" replace />
+                            </ProtectedRoute>
+                        }
+                    />
 
                     {/* All pages */}
-                    <Route path="tabsLayout" element={<TabsViewFancy />} />
-                    <Route path="projects" element={<Projects />} />
-                    <Route path="projects/:id" element={<ProjectDetails />} />
-                    <Route path="intro" element={<Introduction />} />
-                    <Route path="about" element={<About />} />
-                    <Route path="demo" element={<Demo />} />
-                    <Route path="faq" element={<Faq />} />
+                    <Route
+                        path="tabsLayout"
+                        element={
+                            <ProtectedRoute>
+                                <TabsViewFancy />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="projects"
+                        element={
+                            <ProtectedRoute>
+                                <Projects />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="projects/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ProjectDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="intro"
+                        element={
+                            <ProtectedRoute>
+                                <Introduction />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="about"
+                        element={
+                            <About />
+                        }
+                    />
+                    <Route
+                        path="demo"
+                        element={
+                            <ProtectedRoute>
+                                <Demo />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="faq"
+                        element={
+                            <ProtectedRoute>
+                                <Faq />
+                            </ProtectedRoute>
+                        }
+                    />
 
                 </Routes>
 

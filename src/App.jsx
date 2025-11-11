@@ -5,25 +5,32 @@ import Header from "./components/shared/Header";
 import Footer from "./components/shared/Footer";
 import SidebarLayout from './components/shared/SidebarLayout';
 import NotFound from './components/pages/NotFound';
+import { AuthProvider } from './context/AuthContext';
+import Login from './components/pages/Login';
 
 
 const App = () => {
   return (
-    <Router>
-      <Header />
-      <Routes>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Routes>
 
-        {/* Default Route — redirect "/" to "/home" */}
-        <Route path="/" element={<Navigate to="/intro" replace />} />
+          {/* Login Route */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Sidebar Layout */}
-        <Route path="/*" element={<SidebarLayout />} />
+          {/* Default Route — redirect "/" to "/home" */}
+          <Route path="/" element={<Navigate to="/intro" replace />} />
 
-        {/* 404 Page or Fallback */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </Router>
+          {/* Protected Sidebar Layout */}
+          <Route path="/*" element={<SidebarLayout />} />
+
+          {/* 404 Page or Fallback */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   )
 }
 

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { href, Link } from 'react-router-dom';
+import { href, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+
 
 const MenuIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
   <line x1="4" x2="20" y1="12" y2="12" />
@@ -66,10 +69,20 @@ const Header = () => {
     } catch (e) { /* ignore */ }
   }, [theme, mounted]);
 
-  const navLinks = [ { href: "", label: "" }];
+  // Navigation Links
+  const navLinks = [{ href: "", label: "" }];
+
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Clear the userstate from Context
+    navigate('/login') // Redirect to login page
+  }
 
   return <header className="bg-white/80 dark:bg-black/80 backdrop-blur-sm sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 ">
     <div className="   mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,9 +101,11 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <a href="#" className="hidden sm:inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-300">
-            Get Started
-          </a>
+          {user && (
+            <button className="hidden sm:inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-gray-900 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors duration-300" onClick={handleLogout}>
+              Log Out
+            </button>
+          )}
 
           <button onClick={toggleTheme} className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-300" aria-label="Toggle theme">
             {theme === 'dark' ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}

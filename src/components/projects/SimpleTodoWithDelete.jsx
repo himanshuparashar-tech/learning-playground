@@ -45,7 +45,7 @@ const SimpleTodoWithDelete = () => {                       // Define a functiona
             <h2 style={{ textAlign: "center" }} className="mb-2">Todo App</h2>     {/* Heading, centered */}
 
             {/* Input and Add button */}
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: 'wrap' }}>
                 <input
                     type="text" // input type is text
                     value={input} // controlled input

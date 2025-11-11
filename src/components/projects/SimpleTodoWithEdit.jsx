@@ -61,7 +61,7 @@ const TodoAppListEditIcon = () => {                     // Define functional com
             <h2 style={{ textAlign: "center" }} className="mb-3">Todo App</h2>    {/* Title */}
 
             {/* Input and Add/Save button */}
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: 'wrap' }}>
                 <input
                     type="text" // input type is text
                     value={input} // controlled input

@@ -80,7 +80,7 @@ const Sidebar = () => {
         }
     ];
     return (
-        <div className=' bg-white'>
+        <div className=' bg-white overflow-auto'>
 
             {/* Sidebar */}
             <aside className={`border-r border-r-zinc-100 p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>

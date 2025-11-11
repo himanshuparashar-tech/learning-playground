@@ -71,7 +71,7 @@ const SimpleTodoWithLocalStorage = () => {
 
             <h2 style={{ textAlign: "center" }} className="mb-3">Todo App</h2>  
 
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: 'wrap' }}>
                 <input
                     type="text" 
                     value={input} 

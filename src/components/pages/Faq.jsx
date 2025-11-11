@@ -283,6 +283,35 @@ const accordionData = [
                 <p>Here is the Greeting component can greet anyone just by changing a prop value.   </p>
             </>
         )
+    },
+    {
+        question: '👉 What is useState in React?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>useState is a Hook that lets you add state to functional components.</p>
+                <p>State is like a variable that React keeps track of, and when it changes, React re-renders the component to reflect the new state.</p>
+                <br />
+                <p><b>Define:</b></p>
+                {
+                    `
+                        import React, {useState} from "react"
+
+                        function Counter() {
+                            const [count, setCount] = useState() // count is state & setCount update it.
+
+                            return(
+                                <div>
+                                    <h2>Count : {count}</h2>
+                                    <button onClick={() => setCount(count + 1)}> Increase </button>
+                                </div>
+                            );
+                        }
+                    `
+                }
+
+            </>
+        )
     }
 ];
 
@@ -333,7 +362,7 @@ const Faq = () => {
                     Here are some of our most asked questions.
                 </p>
             </div>
-            <div style={{ maxHeight: 'calc(100vh - 250px)', overflow: 'auto' }}>
+            <div style={{ maxHeight: 'calc(100vh - 280px)', overflow: 'auto' }}>
                 {
                     accordionData.map((item, index) =>
                         <AccordionItem
