@@ -292,7 +292,7 @@ const accordionData = [
                 <p>useState is a Hook that lets you add state to functional components.</p>
                 <p>State is like a variable that React keeps track of, and when it changes, React re-renders the component to reflect the new state.</p>
                 <br />
-                <p><b>Define:</b></p>
+                <p><b>Code:</b></p>
                 {
                     `
                         import React, {useState} from "react"
@@ -309,7 +309,193 @@ const accordionData = [
                         }
                     `
                 }
+                <p><b>Logic:</b></p>
+                <p>Count holds the current value</p>
+                <p>setCount updates the value & react automatically rerender the component when state changes</p>
+            </>
+        )
+    },
+    {
+        question: '👉 How do you handle events in React?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>Events in React are handled using event handlers, which are functions that get called when a specific event occurs, like a button click or form submission.</p>
+                <br />
+                <p><b>Code:</b></p>
+                {`
+                    function clickMeButton() {
+                        const handleClick = () => {
+                            alert("Button Clicked");    
+                        }
+                        
+                        return (
+                            <button onClick={handleClick}>Click Me</button>
+                        )
+                    }
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>In this example, when the button is clicked, the handleClick function is called, which shows an alert.</p>
+                <p>React uses camelCase for event names (onClick instead of onclick) and you pass a function as the event handler.</p>
+            </>
+        )
+    },
+    {
+        question: '👉 How can you update state based on the previous state?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>Sometimes you need a current state value to calculate the next step</p>
+                <p>In such case use a function inside in setState</p>
+                <br />
+                <p><b>Code:</b></p>
 
+                {`
+                    const [count, setCount] = useState(0);
+
+                    function increment(){
+                        setCount(prevCount => prevCount + 1) // prevCount is the previous state
+                    }
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>This ensures your updates are safe even if multiple state updates at the same time.</p>
+            </>
+        )
+    },
+    {
+        question: '👉 How can you toggle boolean state in React?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>We can use the previous state to toggle between true and false using useState</p>
+                <br />
+                <p><b>Code:</b></p>
+                {`
+                    import React, {useState} from 'react';
+
+                    const [isOn, setIsOn] = useState(false);
+
+                    const toggle = () => {
+                        setIsOn(prevState = !prevState) // switches true ➡️ false or false ➡️ true     
+                    }
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>Using the previous state ensure that the toggle works reliably, even if multiple click happens quickly</p>
+            </>
+        )
+    },
+    {
+        question: '👉 Can you have multiple state variables in the one component?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>Yes, we can use multiple useState hooks for different piece of state </p>
+                <br />
+                <p><b>Code:</b></p>
+                {`
+                    const [likes, setLikes] = useState(0);
+                    const [liked, setLiked] = useState(false);
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>Each state is independent to one state changes doesn't affect other state</p>
+            </>
+        )
+    },
+    {
+        question: '👉 Can we use multiple useState in one piece of hook?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>Absolutely! ✅ We can use multiple useState hooks in a single component, or we can combine them into one state object depending on how we want to organize our state.</p>
+                <br />
+                <p><b>Code: 1️⃣ Multiple useState hooks (Separate Ingredients)</b></p>
+                {`
+                    import React, { useState } from "react";
+
+                    const Counter = () => {
+                    const [count, setCount] = useState(0);        // Ingredient 1: count
+                    const [color, setColor] = useState("blue");   // Ingredient 2: color
+
+                    const handleClick = () => {
+                        setCount(count + 1);
+                        setColor(color === "blue" ? "red" : "blue");
+                    };
+
+                    return (
+                        <div>
+                        <h1 style={{ color }}>{count}</h1>
+                        <button onClick={handleClick}>Click Me!</button>
+                        </div>
+                    );
+                    };
+
+                    export default Counter;
+
+                `}
+                <br />
+                <p><b>Code: 1️⃣ Single useState with Object (One Big Mixing Bowl)</b></p>
+                {`
+                    import React, { useState } from "react";
+
+                    const Counter = () => {
+                    const [state, setState] = useState({ count: 0, color: "blue" });
+
+                    const handleClick = () => {
+                        setState(prev => ({
+                        count: prev.count + 1,
+                        color: prev.color === "blue" ? "red" : "blue"
+                        }));
+                    };
+
+                    return (
+                        <div>
+                        <h1 style={{ color: state.color }}>{state.count}</h1>
+                        <button onClick={handleClick}>Click Me!</button>
+                        </div>
+                    );
+                    };
+
+                    export default Counter;
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>Each state is independent to one state changes doesn't affect other state</p>
+            </>
+        )
+    },
+    {
+        question: '👉 How do you apply dynamic styles based on state?',
+        answer: (
+            <>
+                <p><b>Define:</b></p>
+                <p>We can change styles dynamically using inline styles or conditional class names based on the state values.</p>
+                <br />
+                <p><b>Code:</b></p>
+                {`
+                    import React, { useState } from "react";
+                    const ColorfulText = () => {
+                        const [isRed, setIsRed] = useState(false);  
+                        const toggleColor = () => {
+                            setIsRed(prev => !prev);  
+                        }
+                        return (
+                            <div>
+                                <p style={{ color: isRed ? "red" : "blue" }}>
+                                    This text changes color!
+                                </p>
+                                <button onClick={toggleColor}>Toggle Color</button>
+                            </div>
+                        );
+                    }
+                    export default ColorfulText;
+                `}
+                <br />
+                <p><b>Logic:</b></p>
+                <p>When the button is clicked, the text color toggles between red and blue based on the isRed state.</p>
             </>
         )
     }

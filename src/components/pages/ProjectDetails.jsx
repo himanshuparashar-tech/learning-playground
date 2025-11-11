@@ -6,6 +6,9 @@ import SimpleTodoWithToaster from '../projects/SimpleTodoWithToaster';
 import SimpleTodoWithDelete from '../projects/SimpleTodoWithDelete';
 import SimpleTodoWithEdit from '../projects/SimpleTodoWithEdit';
 import SimpleTodoWithLocalStorage from '../projects/SimpleTodoWithLocalStorage';
+import MiniChallenge1 from '../projects/MiniChallenge1';
+import MiniChallenge2 from '../projects/MiniChallenge2';
+import MiniChallenge3 from '../projects/MiniChallenge3';
 
 const projectMap = {
   todo: {
@@ -506,6 +509,68 @@ export default TodoAppWithDelete;                  // Export component so it can
     export default SimpleTodoWithLocalStorage;
 `
   },
+  minichallenge1: {
+    title: 'Mini Challenge One,',
+    component: <MiniChallenge1 />,
+    code: `
+    import React, { useState } from 'react'
+    import { BiLike } from 'react-icons/bi'
+      const MiniChallenge1 = () => {
+      
+          const [likes, setLikes] = useState(0);
+          const [liked, setLiked] = useState(false);
+      
+          const handleClick = () => {
+              setLikes(prevCount => prevCount + 1) // Increment Likes
+              setLiked(true); // Change button color
+          }
+      
+          return (
+              <div>
+                  <button className='cstm' onClick={handleClick} style={{ backgroundColor: liked ? 'blue' : 'gray', color: 'white' }}> <BiLike /> {liked ? 'Liked!' : 'Like'}</button>
+                  <p>Likes : {likes}</p>
+              </div>
+          )
+      }
+      
+      export default MiniChallenge1`
+  },
+  minichallenge2: {
+    title: 'Mini Challenge Two',
+    component: <MiniChallenge2 />,
+    code: `
+      import React, { useState } from 'react'
+      
+      const MiniChallenge2 = () => {
+          const [state, setState] = useState({ count: 0, color: 'goldenrod' });
+      
+          const handleClick = () => {
+              setState(prev => ({
+                  count: prev.count + 1,
+                  color: prev.count % 2 === 0 ? 'goldenrod' : 'gray'
+              }))
+          }
+      
+          return (
+              <div style={{ padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
+                  <button
+                      className='cstm'
+                      onClick={handleClick}
+                      style={{ backgroundColor: state.color, color: 'white' }}>Click Me
+                  </button>
+                  <h1 style={{ color: state.color }}>Product: {state.count}</h1>
+              </div>
+          )
+      }
+      
+      export default MiniChallenge2
+    `
+  },
+  minichallenge3: {
+    title: 'Mini Challenge Three',
+    component: <MiniChallenge3 recipe={recipe}/>,
+    code: `// Your code here`
+  }
 };
 
 const ProjectDetails = () => {

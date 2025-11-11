@@ -148,6 +148,27 @@ export const ArrayData = {
             title: 'Simple Todo With Add, Edit, Delete, Toaster, Local Storage',
             description: 'A simple Todo App with Add, Edit, Delete, Toaster'
         },
-
+        {
+            id: 'minichallenge1',
+            title: 'Mini Challenge on the questions',
+            description: 'handle events, useState and the current state change on previous state'
+        },
+        {
+            id: 'minichallenge2',
+            title: 'Mini Challenge on the questions',
+            description: 'We can combine them how we want to organize our state'
+        },
+        {
+            id: 'minichallenge3',
+            title: 'Mini Challenge on the questions',
+            description: 'We can change dynamic styles based on state values'
+        }
+    ],
+    myRecipe: [
+        {
+            name: 'Spicy Pasta',
+            description: 'A delicious pasta with chili and herbs.',
+            ingredients: ['Pasta', 'Chili', 'Tomato', 'Garlic', 'Basil'],
+        }
     ]
 };
