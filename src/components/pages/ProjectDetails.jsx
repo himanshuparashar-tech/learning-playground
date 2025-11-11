@@ -568,7 +568,7 @@ export default TodoAppWithDelete;                  // Export component so it can
   },
   minichallenge3: {
     title: 'Mini Challenge Three',
-    component: <MiniChallenge3 recipe={recipe}/>,
+    component: <MiniChallenge3/>,
     code: `// Your code here`
   }
 };
