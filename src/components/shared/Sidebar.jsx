@@ -83,7 +83,7 @@ const Sidebar = () => {
         <div className=' bg-[var(--bg)] overflow-auto text-[var(--text)]'>
 
             {/* Sidebar */}
-            <aside className={`border-r text-[var(--text)] p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} bg-[var(--bg)]`}>
+            <aside className={`text-[var(--text)] p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} bg-[var(--bg)]`}>
 
                 {/* Toggle Button */}
                 <button className='px-3 mb-6 flex-items-center gap-2 text-[var(--text)] hover:bg-[var(--hover-bg)]' onClick={() => setIsOpen(!isOpen)}>
