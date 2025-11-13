@@ -1,111 +1,157 @@
-@import "tailwindcss";
+  @import "tailwindcss";
 
-@layer utilities {
+  @layer base {
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text: #111111;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --hover-bg: #f3f4f6;
+      --hover-bg: #f3f4f6;
 
-  /* Custom scrollbar styles */
-  .scrollbar-gradient::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
+      /* Buttons */
+      --btn-bg: #111111;
+      --btn-text: #ffffff;
+      --btn-hover-bg: #222222;
 
-  .scrollbar-gradient::-webkit-scrollbar-track {
-    /* background: linear-gradient(to right, #4e46e546, #9233ea54); */
-    background: transparent;
-    border-radius: 8px;
-  }
+      /* Mobile Menu */
+      --menu-bg: #ffffff;
 
-  .scrollbar-gradient::-webkit-scrollbar-thumb {
-    background: linear-gradient(to right, #c9c9c9, #c9c9c9);
-    /* from-indigo-600 to-purple-600 */
-    border-radius: 8px;
-  }
+      /* Gradient */
+      --gradient-from: #4f46e5;
+      --gradient-to: #9333ea;
+    }
 
-  .scrollbar-gradient::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to right, #6c6b6b, #6c6b6b);
-  }
-}
+    .dark {
+      --bg: #000000;
+      --bg-secondary: #111111;
+      --text: #ffffff;
+      --text-secondary: #d1d5db;
+      --border: #374151;
+      --hover-bg: #1f2937;
+      --hover-bg1: #f3f4f6;
+      
 
-ul {
-  padding: 10px 20px;
+      /* Buttons */
+      --btn-bg: #ffffff;
+      --btn-text: #000000;
+      --btn-hover-bg: #e5e7eb;
 
-  &.no-space {
-    padding: 0;
-  }
+      --menu-bg: #111111;
 
-  li {
-    list-style: disc;
-
-    &.no-listing {
-      list-style: none;
+      --gradient-from: #4f46e5;
+      --gradient-to: #9333ea;
     }
   }
-}
 
 
-.container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-}
+  @layer utilities {
 
-.box {
-  width: 200px;
-  padding: 20px;
-  border: 5px solid black;
-  background-color: lightblue;
-}
+    /* Custom scrollbar styles */
+    .scrollbar-gradient::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
 
-.content-box {
-  box-sizing: content-box;
-  background-color: #ffb3b3;
-}
+    .scrollbar-gradient::-webkit-scrollbar-track {
+      /* background: linear-gradient(to right, #4e46e546, #9233ea54); */
+      background: transparent;
+      border-radius: 8px;
+    }
 
-.border-box {
-  box-sizing: border-box;
-  background-color: #90ee90;
-}
+    .scrollbar-gradient::-webkit-scrollbar-thumb {
+      background: linear-gradient(to right, #c9c9c9, #c9c9c9);
+      /* from-indigo-600 to-purple-600 */
+      border-radius: 8px;
+    }
 
-button.cstm {
-  border: 1px solid black;
-  border-radius: 4px;
-  padding: 5px 10px
-}
-
-button.cstm:focus {
-  background-color: #cccccc96;
-}
-
-.cstm-input {
-  border: 1px solid rgb(99, 98, 98);
-  border-radius: 4px;
-  padding: 5px 10px
-}
-
-.cstm-input:focus {
-  border: inherit;
-}
-
-.event-style {
-  margin-bottom: 22px
-}
-
-.event-style .showMessage {
-  text-align: center;
-  padding: 10px;
-}
-
-.counter-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-@media screen and (max-width: 1023px) {
-
-  .fancy-view {
-    max-height: calc(-275px + 100vh) !important;
-    min-height: calc(100vh - 222px) !important;
+    .scrollbar-gradient::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to right, #6c6b6b, #6c6b6b);
+    }
   }
 
-}
+  ul {
+    padding: 10px 20px;
+
+    &.no-space {
+      padding: 0;
+    }
+
+    li {
+      list-style: disc;
+
+      &.no-listing {
+        list-style: none;
+      }
+    }
+  }
+
+
+  .container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .box {
+    width: 200px;
+    padding: 20px;
+    border: 5px solid black;
+    background-color: lightblue;
+  }
+
+  .content-box {
+    box-sizing: content-box;
+    background-color: #ffb3b3;
+  }
+
+  .border-box {
+    box-sizing: border-box;
+    background-color: #90ee90;
+  }
+
+  button.cstm {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px 10px
+  }
+
+  button.cstm:focus {
+    background-color: #cccccc96;
+  }
+
+  .cstm-input {
+    border: 1px solid rgb(99, 98, 98);
+    border-radius: 4px;
+    padding: 5px 10px
+  }
+
+  .cstm-input:focus {
+    border: inherit;
+  }
+
+  .event-style {
+    margin-bottom: 22px
+  }
+
+  .event-style .showMessage {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .counter-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  @media screen and (max-width: 1023px) {
+
+    .fancy-view {
+      max-height: calc(-275px + 100vh) !important;
+      min-height: calc(100vh - 222px) !important;
+    }
+
+  }

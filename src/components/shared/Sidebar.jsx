@@ -80,13 +80,13 @@ const Sidebar = () => {
         }
     ];
     return (
-        <div className=' bg-white overflow-auto'>
+        <div className=' bg-[var(--bg)] overflow-auto text-[var(--text)]'>
 
             {/* Sidebar */}
-            <aside className={`border-r border-r-zinc-100 p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
+            <aside className={`border-r text-[var(--text)] p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} bg-[var(--bg)]`}>
 
                 {/* Toggle Button */}
-                <button className='px-3 mb-6 flex-items-center gap-2' onClick={() => setIsOpen(!isOpen)}>
+                <button className='px-3 mb-6 flex-items-center gap-2 text-[var(--text)] hover:bg-[var(--hover-bg)]' onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <CgClose /> : <BiMenu />}
                 </button>
 
@@ -101,7 +101,7 @@ const Sidebar = () => {
                                 className='cursor-pointer no-listing py-2'>
 
                                 {/* Parent Menu */}
-                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded hovr:bg-gray-700 p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-gray-100'}`}>
+                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded hover:bg-gray-100 p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-[var(--hover-bg)] hover:text-[var(--text)]'}`}>
 
                                     <div className="flex items-center gap-3">
                                         {/* Icon */}

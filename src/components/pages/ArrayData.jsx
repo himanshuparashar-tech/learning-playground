@@ -162,6 +162,11 @@ export const ArrayData = {
             id: 'minichallenge3',
             title: 'Mini Challenge on the questions',
             description: 'We can change dynamic styles based on state values'
+        },
+        {
+            id: 'minichallenge4',
+            title: 'Mini Challenge on the questions',
+            description: 'Here we can change light mode and dark mode'
         }
     ],
     myRecipe: [
