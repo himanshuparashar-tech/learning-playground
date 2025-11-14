@@ -101,7 +101,7 @@ const Sidebar = () => {
                                 className='cursor-pointer no-listing py-2'>
 
                                 {/* Parent Menu */}
-                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded hover:bg-gray-100 p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-[var(--hover-bg)] hover:text-[var(--text)]'}`}>
+                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded  p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-[var(--gradient-from)] hover:bg-[var(--gradient-to)] hover:text-[var(--text)]'}`}>
 
                                     <div className="flex items-center gap-3">
                                         {/* Icon */}

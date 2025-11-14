@@ -11,7 +11,8 @@ import MiniChallenge2 from '../projects/MiniChallenge2';
 import MiniChallenge3 from '../projects/MiniChallenge3';
 import MiniChallenge4 from '../projects/MiniChallenge4';
 import { ArrayData } from './ArrayData';
-import { title } from 'framer-motion/client';
+import { div, title } from 'framer-motion/client';
+import AccordionJavascript from '../projects/AccordionJavascript';
 
 const projectMap = {
   todo: {
@@ -636,7 +637,28 @@ export default TodoAppWithDelete;                  // Export component so it can
     title: 'Mini Challenge Four',
     component: <MiniChallenge4 />,
     code: ``
-  }
+  },
+  accordionjavascript: {
+    title: 'Accordion js',
+    component: <AccordionJavascript />,
+    code: ``
+  },
+  accordionjquery: {
+    title: 'Accorion Jquery',
+    component: <div>Accordion Jquery Component</div>,
+    code: ``
+  },
+  accorionbootstrap5: {
+    title: 'Accordion Bootstrap5',
+    component: <div>Accordion Bootstrap5 Component</div>,
+    code: ``
+  },
+  accordionreact: {
+    title: 'Accorion react',
+    component: <div>Accordion react Component</div>,
+    code: ``
+  },
+
 };
 
 const ProjectDetails = () => {
@@ -662,16 +684,16 @@ const ProjectDetails = () => {
       <h1 className="text-3xl font-bold mt-4">{project.title}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+        <div className="p-4 border rounded-lg bg-gray-100">
           <h2 className="font-semibold mb-2 text-lg">💻 Code:</h2>
-          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>
+          <pre className="bg-white text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>
             {project.code.trim()}
           </pre>
         </div>
 
-        <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+        <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-200">
           <h2 className="font-semibold mb-2 text-lg">👀 Preview:</h2>
-          <div className="p-4 bg-white dark:bg-gray-900 rounded-md">
+          <div className="p-4 bg-white dark:bg-gray-300 rounded-md">
             {project.component}
           </div>
         </div>
