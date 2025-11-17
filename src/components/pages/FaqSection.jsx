@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Searchbar from '../Search-Block/Searchbar';
-import { SearchFilter } from '../Search-Block/SearchFilter';
+import Searchbar from '../SearchBlock/Searchbar';
+import { SearchFilter } from '../SearchBlock/SearchFilter';
 
 const AccordionIcon = ({ isOpen }) => (
 
