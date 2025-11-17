@@ -179,8 +179,18 @@ export const ArrayData = {
             id: 'minichallenge4',
             title: 'Mini Challenge on the questions',
             description: 'Here we can change light mode and dark mode'
+        },
+        {
+            id: 'singleopenaccordion',
+            title: 'Single Open',
+            description: 'Accordion which allows only one section to be open at a time.'
+        },
+        {
+            id: 'multiopenaccordion',
+            title: 'Multiple Open',
+            description: 'Accordion which allows multiple section to be open at a time.'
         }
-        
+
     ],
     myRecipe: [
         {
@@ -712,7 +722,7 @@ export const ArrayData = {
                         <li>For Game Development</li>
                     </ul>
                     <br />
-                    <strong>Logic: </strong> 
+                    <strong>Logic: </strong>
                     <p>Html provides structure, css provides styling and Javascript adds brain/logic to the webpage.</p>
                     <p>Examples : Popups, sliders, animations, dropdowns, API calls - all use Javascript</p>
                 </>
@@ -743,7 +753,7 @@ export const ArrayData = {
             question: '👉 ',
             answer: (
                 <>
-                    <strong>Define: </strong> 
+                    <strong>Define: </strong>
                     <p></p>
                     <br /><br />
                     <strong>Example: </strong>
@@ -754,7 +764,7 @@ export const ArrayData = {
                         }
                     </code>
                     <br /><br />
-                    <strong>Logic: </strong> 
+                    <strong>Logic: </strong>
                     <p></p>
                 </>
             )

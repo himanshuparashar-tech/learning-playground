@@ -11,8 +11,8 @@ import MiniChallenge2 from '../projects/MiniChallenge2';
 import MiniChallenge3 from '../projects/MiniChallenge3';
 import MiniChallenge4 from '../projects/MiniChallenge4';
 import { ArrayData } from './ArrayData';
-import { div, title } from 'framer-motion/client';
-import AccordionJavascript from '../projects/AccordionJavascript';
+import SingleOpenAccordion from '../projects/JavaScript/SingleOpenAccordion';
+import MultiOpenAccordion from '../projects/JavaScript/MultiOpenAccordion';
 
 const projectMap = {
   todo: {
@@ -638,16 +638,6 @@ export default TodoAppWithDelete;                  // Export component so it can
     component: <MiniChallenge4 />,
     code: ``
   },
-  accordionjavascript: {
-    title: 'Accordion js',
-    component: <AccordionJavascript />,
-    code: ``
-  },
-  accordionjquery: {
-    title: 'Accorion Jquery',
-    component: <div>Accordion Jquery Component</div>,
-    code: ``
-  },
   accorionbootstrap5: {
     title: 'Accordion Bootstrap5',
     component: <div>Accordion Bootstrap5 Component</div>,
@@ -656,6 +646,17 @@ export default TodoAppWithDelete;                  // Export component so it can
   accordionreact: {
     title: 'Accorion react',
     component: <div>Accordion react Component</div>,
+    code: ``
+  },
+
+  singleopenaccordion: {
+    title: 'Single Open',
+    component: <SingleOpenAccordion />,
+    code: ``
+  },
+  multiopenaccordion: {
+    title: 'Multiple Open',
+    component: <MultiOpenAccordion />,
     code: ``
   },
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // React Icons
-import { BiAbacus, BiAperture, BiCode, BiFace, BiLeaf, BiMenu } from 'react-icons/bi';
+import { BiAbacus, BiAperture, BiCode, BiLeaf, BiMenu } from 'react-icons/bi';
 import { CgChevronRight, CgClose } from 'react-icons/cg';
 import { FaBookOpen } from 'react-icons/fa';
 import { HiHome } from 'react-icons/hi';
@@ -9,27 +9,33 @@ import { HiHome } from 'react-icons/hi';
 // Routing
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-
 const Sidebar = () => {
-
-    // State changing while click
     const [isOpen, setIsOpen] = useState(false);
-    const [openMenu, setOpenMenu] = useState(null); // Track which menu is expanded
-    const location = useLocation(); // Get Current Route
+
+    // ⭐ Stores which menus are open (multi-level)
+    const [openMenus, setOpenMenus] = useState({});
+
+    const location = useLocation();
     const navigate = useNavigate();
 
-
-    const handleParentClick = (item) => {
-        if (!isOpen && item.path || isOpen && !item.children) {
-            // Sidebar is collapsed → Navigate directly
+    // ⭐ Toggle logic for ANY level
+    const toggleMenu = (item) => {
+        if (!isOpen) {
             navigate(item.path);
-        } else if (item.children && item.children.length > 0) {
-            // Sidebar expanded → toggle submenu
-            setOpenMenu(openMenu === item.name ? null : item.name);
+            return;
         }
 
+        if (item.children) {
+            setOpenMenus(prev => ({
+                ...prev,
+                [item.name]: !prev[item.name]
+            }));
+        } else {
+            navigate(item.path);
+        }
     };
 
+    // ⭐ Menu Structure (supports unlimited levels)
     const menuItems = [
         {
             name: 'Getting Started',
@@ -58,14 +64,62 @@ const Sidebar = () => {
             name: 'Projects',
             icon: <BiAbacus size={20} />,
             rightIcon: <CgChevronRight />,
-            path: '/projects/todo',
+            path: '/projects',
+
             children: [
                 { name: 'Todo App', icon: <BiAbacus size={20} />, path: '/projects/todo' },
                 { name: 'Simple Todo App', icon: <BiAbacus size={20} />, path: '/projects/simpletodo' },
-                { name: 'Simple Todo Toaster', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithtoaster' },
-                { name: 'Simple Todo Edit', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithedit' },
-                { name: 'Simple Todo Delete', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithdelete' },
-                { name: 'Simple Todo Local Storage', icon: <BiAbacus size={20} />, path: '/projects/simpletodowithlocalstorage' },
+
+                {
+                    name: 'JavaScript',
+                    icon: <BiAbacus size={20} />,
+                    rightIcon: <CgChevronRight />,
+                    path: '/projects/javascript',
+                    children: [
+                        {
+                            name: 'Accordion',
+                            icon: <BiAbacus size={20} />,
+                            rightIcon: <CgChevronRight />,
+                            path: '/projects/singleopenaccordion',
+
+                            // ⭐ 4th Level Example
+                            children: [
+                                {
+                                    name: 'Single Open',
+                                    icon: <BiAbacus size={20} />,
+                                    path: '/projects/singleopenaccordion'
+                                },
+                                {
+                                    name: 'Multiple Open',
+                                    icon: <BiAbacus size={20} />,
+                                    path: '/projects/multiopenaccordion'
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+                {
+                    name: 'Bootstrap 5',
+                    icon: <BiAbacus size={20} />,
+                    rightIcon: <CgChevronRight />,
+                    path: '/projects/bootstrap5',
+                    children: [
+                        { name: 'Modal Example', icon: <BiAbacus size={20} />, path: '/projects/bootstrap5/modal' },
+                        { name: 'Carousel Example', icon: <BiAbacus size={20} />, path: '/projects/bootstrap5/carousel' }
+                    ]
+                },
+
+                {
+                    name: 'ReactJS',
+                    icon: <BiAbacus size={20} />,
+                    rightIcon: <CgChevronRight />,
+                    path: '/projects/reactjs',
+                    children: [
+                        { name: 'useState Example', icon: <BiAbacus size={20} />, path: '/projects/reactjs/usestate' },
+                        { name: 'useEffect Example', icon: <BiAbacus size={20} />, path: '/projects/reactjs/useeffect' }
+                    ]
+                },
             ]
         },
         {
@@ -79,78 +133,74 @@ const Sidebar = () => {
             path: '/faq',
         }
     ];
+
+    // ⭐ Recursive Renderer (this is the magic)
+    const renderMenu = (items, level = 1) => {
+        return (
+            <ul className={`${level > 1 ? "ml-6 border-l border-l-zinc-200 p-0" : "p-0 no-padding"} sidebar-level-${level}`}>
+                {items.map((item, index) => {
+                    const isActive = location.pathname === item.path;
+                    const isOpenItem = openMenus[item.name];
+
+                    return (
+                        <li key={index} className="py-1 no-listing text-center">
+
+                            {/* Menu Button */}
+                            <div
+                                onClick={() => toggleMenu(item)}
+                                className={`flex items-center py-2 rounded cursor-pointer ${isOpen ? "justify-between px-3" : "justify-center px-2"}
+                                ${isActive
+                                        ? "bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium"
+                                        : "hover:bg-[var(--hover-bg)] text-[var(--text)]"
+                                    }`}
+                            >
+                                <div className={`flex items-center gap-3`}>
+                                    <span className={`icon-left `}>{item.icon}</span>
+                                    {isOpen && <span className='item-name'>{item.name}</span>}
+                                </div>
+
+                                {isOpen && item.children && (
+                                    <span className={`transition-transform duration-300 ${isOpenItem ? "rotate-90" : ""} icon-right-${level}`}>
+                                        {item.rightIcon}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Children */}
+                            {isOpen && item.children && isOpenItem && (
+                                <div className="mt-2">{renderMenu(item.children, level + 1)}</div>
+                            )}
+
+                        </li>
+                    );
+                })}
+            </ul>
+        );
+    };
+
     return (
-        <div className=' bg-[var(--bg)] overflow-auto text-[var(--text)]'>
-
-            {/* Sidebar */}
-            <aside className={`text-[var(--text)] p-5 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} bg-[var(--bg)]`}>
-
+        <div className="bg-[var(--bg)] overflow-auto text-[var(--text)]">
+            <aside
+                className={`p-5 transition-all duration-300 bg-[var(--bg)]
+                ${isOpen ? "w-64" : "w-20"}`}
+            >
                 {/* Toggle Button */}
-                <button className='px-3 mb-6 flex-items-center gap-2 text-[var(--text)] hover:bg-[var(--hover-bg)]' onClick={() => setIsOpen(!isOpen)}>
+                <button
+                    className="px-3 mb-6 text-[var(--text)] hover:bg-[var(--hover-bg)]"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
                     {isOpen ? <CgClose /> : <BiMenu />}
                 </button>
 
-                {/* Sidebar Menu using Map */}
-                <ul className='p-0' style={{ padding: 0 }}>
-                    {menuItems.map((item, index) => {
-                        const isActiveParent =
-                            item.children?.some((child) => child.path === location.pathname) ||
-                            item.path === location.pathname;
-                        return (
-                            <li key={index}
-                                className='cursor-pointer no-listing py-2'>
-
-                                {/* Parent Menu */}
-                                <div onClick={() => handleParentClick(item)} className={`flex items-center justify-between gap-3 rounded  p-2 ${isActiveParent ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium' : 'hover:bg-[var(--gradient-from)] hover:bg-[var(--gradient-to)] hover:text-[var(--text)]'}`}>
-
-                                    <div className="flex items-center gap-3">
-                                        {/* Icon */}
-                                        <span onClick={() => handleParentClick(item)}>
-                                            {item.icon}
-                                        </span>
-                                        {isOpen && <span>{item.name}</span>}
-                                    </div>
-
-                                    {/* Arrow */}
-                                    {isOpen && item.children && (
-                                        <span className={` transition-transform duration-300 
-                                        ${openMenu === item.name ? 'rotate-90' : 'rotate-0'}`}>
-                                            {item.rightIcon}
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Render Child Links */}
-                                {isOpen && item.children && openMenu === item.name && (
-                                    <ul className="ml-6 border-l border-l-zinc-200">
-                                        {item.children.map((child, i) => {
-                                            const isActiveChild = location.pathname === child.path;
-                                            return (
-                                                <li key={i} className={`hover:text-purple-600 p-2 rounded no-listing 
-                                                    ${isActiveChild
-                                                        ? "bg-gradient-to-br from-indigo-300 to-purple-300 text-black font-medium"
-                                                        : "hover:bg-gray-100"
-                                                    }`}
-                                                >
-                                                    <Link to={child.path}>{child.name}</Link>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                )
-                                }
-                            </li>
-                        )
-                    }
-                    )}
-                </ul>
+                {/* Render Sidebar */}
+                {renderMenu(menuItems)}
             </aside>
 
-            {/* Main Content */}
-            <main className='flex-auto md:flex-1'>
+            <main className="flex-auto md:flex-1">
                 <Outlet />
             </main>
-        </div >
-    )
+        </div>
+    );
 };
-export default Sidebar
+
+export default Sidebar;
