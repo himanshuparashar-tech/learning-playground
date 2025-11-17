@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Searchbar from '../SearchBlock/Searchbar';
-import { SearchFilter } from '../SearchBlock/SearchFilter';
+import Searchbar from '../SearchBox/Searchbar';
+import { SearchFilter } from '../SearchBox/SearchFilter';
 
 const AccordionIcon = ({ isOpen }) => (
 
-    <svg 
+    <svg
         className={`w-6 h-6 stroke-[var(--text-secondary)] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         fill="none"
         stroke="currentColor"
