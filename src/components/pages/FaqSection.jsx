@@ -42,7 +42,7 @@ const AccordionItem = ({ item, isOpen, onClick }) => (
 const FaqSection = ({ title, subtitle, data }) => {
     const [openIndex, setOpenIndex] = useState(null);
     const [search, setSearch] = useState("");
-
+ 
     // FIlter Logic for Search
     const filteredData = SearchFilter(data, search, "question");  // ⬅ USE IT HERE
 
