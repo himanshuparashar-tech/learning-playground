@@ -11,13 +11,15 @@ import MiniChallenge2 from '../projects/MiniChallenge2';
 import MiniChallenge3 from '../projects/MiniChallenge3';
 import MiniChallenge4 from '../projects/MiniChallenge4';
 import { ArrayData } from './ArrayData';
-import SingleOpenAccordion from '../projects/Bootstrap5/SingleOpenAccordion';
-import MultiOpenAccordion from '../projects/Bootstrap5/MultiOpenAccordion';
+import Bootstrap5_Projects from '../projects/Bootstrap5/Bootstrap5_Projects';
+import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
+import BsSingleOpenAccordion from '../projects/Bootstrap5/BsSingleOpenAccordion';
 
 const projectMap = {
   todo: {
     title: "Todo App",
     component: <TodoApp />,
+    showCode: true,
     code: `
       import React, { useState } from "react";
 
@@ -45,6 +47,7 @@ const projectMap = {
   simpletodo: {
     title: 'Simple Todo App',
     component: <SimpleTodoApp />,
+    showCode: true,
     code: `
     import React, { useState } from 'react';
     
@@ -91,169 +94,174 @@ const projectMap = {
   simpletodowithtoaster: {
     title: 'Simple Todo App With Toaster',
     component: <SimpleTodoWithToaster />,
-    code: `import React, { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+    showCode: true,
+    code: `
+      import React, { useState } from 'react';
+      import toast, { Toaster } from 'react-hot-toast';
 
-const SimpleTodoWithToaster = () => {
-    const [tasks, setTasks] = useState([]) // Stores Tasks
-    const [input, setInput] = useState('') // Stores Input text
+      const SimpleTodoWithToaster = () => {
+          const [tasks, setTasks] = useState([]) // Stores Tasks
+          const [input, setInput] = useState('') // Stores Input text
 
-    const addTasks = () => {
-        const trimmedInput = input.trim(); // remove spaces at start/end
-        if (!trimmedInput) return; // do nothing if input is empty
+          const addTasks = () => {
+              const trimmedInput = input.trim(); // remove spaces at start/end
+              if (!trimmedInput) return; // do nothing if input is empty
 
-        // Prevent duplicate tasks
-        const isDuplicate = tasks.some(
-            (task) => task.toLowerCase() === trimmedInput.toLowerCase()
-        )
-        if (isDuplicate) {
-            toast.error('Task already Exist '); // Show Error Toast
-            return;
+              // Prevent duplicate tasks
+              const isDuplicate = tasks.some(
+                  (task) => task.toLowerCase() === trimmedInput.toLowerCase()
+              )
+              if (isDuplicate) {
+                  toast.error('Task already Exist '); // Show Error Toast
+                  return;
+              }
+              setTasks([...tasks, trimmedInput]); // add new task to the list
+                setInput("");
+                toast.success('Task added'); // show success toast
+            };
+            return (
+                <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
+                    {/* Toaster component displays the toast notifications */}
+                    {/* shows at top right newest toast appears on top */}
+                    <Toaster position='top-right' reverseOrder={false} toasterId='default'/> 
+
+                    <h2 style={{ textAlign: "center" }} className='mb-2'>Todo App</h2>
+
+                    {/* Input and Add button */}
+                    <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+                        <input
+                            type="text" // input type is text
+                            value={input} // controlled input
+                            onChange={(e) => setInput(e.target.value)} // update input state
+                            placeholder='Add a task' // placeholder text
+                            style={{ flexGrow: '1', padding: '8px' }} // flexGrow: input takes available space
+                            className='border *:border-gray-200 border-xl focus:border-gray-100'
+                        />
+                        <button
+                            onClick={addTasks}  // call addTask on click
+                            className='bg-gradient-to-r rounded-md font-semibold from-indigo-600 to-purple-600 text-white'
+                            style={{ padding: '8px 12px' }}>
+                            Add
+                        </button>
+                    </div>
+
+                    {/* List of tasks */}
+                    <ul>
+                        {tasks.map((task, index) => (
+                            <li key={index}>
+                                {task}
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Empty state message */}
+                    {tasks.length === 0 &&
+                        <p style={{ textAlign: 'center', color: '#888' }}>
+                            No Tasks Yet.
+                        </p>
+                    }
+                </div>
+            )
         }
-        setTasks([...tasks, trimmedInput]); // add new task to the list
-        setInput("");
-        toast.success('Task added'); // show success toast
-    };
-    return (
-        <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
-            {/* Toaster component displays the toast notifications */}
-            {/* shows at top right newest toast appears on top */}
-            <Toaster position='top-right' reverseOrder={false} toasterId='default'/> 
 
-            <h2 style={{ textAlign: "center" }} className='mb-2'>Todo App</h2>
-
-            {/* Input and Add button */}
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-                <input
-                    type="text" // input type is text
-                    value={input} // controlled input
-                    onChange={(e) => setInput(e.target.value)} // update input state
-                    placeholder='Add a task' // placeholder text
-                    style={{ flexGrow: '1', padding: '8px' }} // flexGrow: input takes available space
-                    className='border *:border-gray-200 border-xl focus:border-gray-100'
-                />
-                <button
-                    onClick={addTasks}  // call addTask on click
-                    className='bg-gradient-to-r rounded-md font-semibold from-indigo-600 to-purple-600 text-white'
-                    style={{ padding: '8px 12px' }}>
-                    Add
-                </button>
-            </div>
-
-            {/* List of tasks */}
-            <ul>
-                {tasks.map((task, index) => (
-                    <li key={index}>
-                        {task}
-                    </li>
-                ))}
-            </ul>
-
-            {/* Empty state message */}
-            {tasks.length === 0 &&
-                <p style={{ textAlign: 'center', color: '#888' }}>
-                    No Tasks Yet.
-                </p>
-            }
-        </div>
-    )
-}
-
-export default SimpleTodoWithToaster;`
+      export default SimpleTodoWithToaster;`
   },
   simpletodowithdelete: {
     title: 'Simple Todo App With Delete',
     component: <SimpleTodoWithDelete />,
-    code: `import React, { useState } from "react";                 // Import React and useState hook
-import toast, { Toaster } from "react-hot-toast";       // Import toast and Toaster from react-hot-toast library
+    showCode: true,
+    code: `
+    import React, { useState } from "react";                 // Import React and useState hook
+    import toast, { Toaster } from "react-hot-toast";       // Import toast and Toaster from react-hot-toast library
 
-const TodoAppWithDelete = () => {                       // Define a functional component called TodoAppWithDelete
-    const [tasks, setTasks] = useState([]);              // State variable 'tasks' stores the list of tasks, initialized as empty array
-    const [input, setInput] = useState("");              // State variable 'input' stores the text typed by the user, initialized as empty string
+    const TodoAppWithDelete = () => {                       // Define a functional component called TodoAppWithDelete
+        const [tasks, setTasks] = useState([]);              // State variable 'tasks' stores the list of tasks, initialized as empty array
+        const [input, setInput] = useState("");              // State variable 'input' stores the text typed by the user, initialized as empty string
 
-    // Function to add a new task
-    const addTask = () => {
-        const trimmedInput = input.trim();                // Remove whitespace from start and end of input
-        if (!trimmedInput) return;                         // If input is empty after trimming, stop function
+        // Function to add a new task
+        const addTask = () => {
+            const trimmedInput = input.trim();                // Remove whitespace from start and end of input
+            if (!trimmedInput) return;                         // If input is empty after trimming, stop function
 
-        const isDuplicate = tasks.some(                   // Check if the task already exists
-            (task) => task.toLowerCase() === trimmedInput.toLowerCase() // Convert both to lowercase for case-insensitive comparison
-        );
-        if (isDuplicate) {                                // If a duplicate exists
-            toast.error("Task already exists! ❌");         // Show error toast
-            return;                                         // Stop function
-        }
+            const isDuplicate = tasks.some(                   // Check if the task already exists
+                (task) => task.toLowerCase() === trimmedInput.toLowerCase() // Convert both to lowercase for case-insensitive comparison
+            );
+            if (isDuplicate) {                                // If a duplicate exists
+                toast.error("Task already exists! ❌");         // Show error toast
+                return;                                         // Stop function
+            }
 
-        setTasks([...tasks, trimmedInput]);               // Add new task to tasks array using spread operator
-        setInput("");                                     // Clear input field
-        toast.success("Task added! ✅");                  // Show success toast
-    };
+            setTasks([...tasks, trimmedInput]);               // Add new task to tasks array using spread operator
+            setInput("");                                     // Clear input field
+            toast.success("Task added! ✅");                  // Show success toast
+        };
 
-    // Function to delete a task
-    const deleteTask = (index) => {                     // index is the position of task in array
-        const newTasks = tasks.filter((_, i) => i !== index); // Create a new array excluding the task to delete
-        setTasks(newTasks);                               // Update tasks state with new array
-        toast.success("Task deleted! 🗑️");               // Show success toast for deletion
-    };
+        // Function to delete a task
+        const deleteTask = (index) => {                     // index is the position of task in array
+            const newTasks = tasks.filter((_, i) => i !== index); // Create a new array excluding the task to delete
+            setTasks(newTasks);                               // Update tasks state with new array
+            toast.success("Task deleted! 🗑️");               // Show success toast for deletion
+        };
 
-    return (                                            // JSX: what this component renders
-        <div
-            style={{                                       // Inline CSS styles for container
-                maxWidth: "400px",                           // Maximum width 400px
-                margin: "50px auto",                         // 50px top/bottom margin, auto left/right to center
-                padding: "20px",                              // 20px padding inside container
-                border: "1px solid #ccc",                     // 1px light gray border
-                borderRadius: "8px",                          // Rounded corners
-            }}
-        >
-            <Toaster position="top-right" reverseOrder={false} />  {/* Toaster component displays toast notifications */}
+        return (                                            // JSX: what this component renders
+            <div
+                style={{                                       // Inline CSS styles for container
+                    maxWidth: "400px",                           // Maximum width 400px
+                    margin: "50px auto",                         // 50px top/bottom margin, auto left/right to center
+                    padding: "20px",                              // 20px padding inside container
+                    border: "1px solid #ccc",                     // 1px light gray border
+                    borderRadius: "8px",                          // Rounded corners
+                }}
+            >
+                <Toaster position="top-right" reverseOrder={false} />  {/* Toaster component displays toast notifications */}
 
-            <h2 style={{ textAlign: "center" }}>Todo App</h2>     {/* Heading, centered */}
+                <h2 style={{ textAlign: "center" }}>Todo App</h2>     {/* Heading, centered */}
 
-            {/* Input and Add button */}
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}> {/* Flex container for input and button */}
-                <input
-                    type="text"                               // Text input
-                    value={input}                             // Controlled input linked to input state
-                    onChange={(e) => setInput(e.target.value)}// Update input state on typing
-                    placeholder="Add a task"                  // Placeholder text
-                    style={{ flexGrow: 1, padding: "8px" }}  // FlexGrow: input expands to fill space; padding 8px
-                />
-                <button onClick={addTask} style={{ padding: "8px 12px" }}>Add</button> {/* Button calls addTask on click */}
-            </div>
+                {/* Input and Add button */}
+                <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}> {/* Flex container for input and button */}
+                    <input
+                        type="text"                               // Text input
+                        value={input}                             // Controlled input linked to input state
+                        onChange={(e) => setInput(e.target.value)}// Update input state on typing
+                        placeholder="Add a task"                  // Placeholder text
+                        style={{ flexGrow: 1, padding: "8px" }}  // FlexGrow: input expands to fill space; padding 8px
+                    />
+                    <button onClick={addTask} style={{ padding: "8px 12px" }}>Add</button> {/* Button calls addTask on click */}
+                </div>
 
-            {/* List of tasks */}
-            <ul>
-                {tasks.map((task, index) => (              // Loop through tasks array
-                    <li
-                        key={index}                             // Unique key for React rendering
-                        style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }} // Flex row: task text + delete button
-                    >
-                        <span>{task}</span>                     // Display task text
-                        <button
-                            onClick={() => deleteTask(index)}     // Call deleteTask when clicked
-                            style={{ color: "red", marginLeft: "10px" }} // Red delete button with spacing
+                {/* List of tasks */}
+                <ul>
+                    {tasks.map((task, index) => (              // Loop through tasks array
+                        <li
+                            key={index}                             // Unique key for React rendering
+                            style={{ display: "flex", justifyContent: "space-between", padding: "4px 0" }} // Flex row: task text + delete button
                         >
-                            ✕                                       {/* Unicode cross symbol */}
-                        </button>
-                    </li>
-                ))}
-            </ul>
+                            <span>{task}</span>                     // Display task text
+                            <button
+                                onClick={() => deleteTask(index)}     // Call deleteTask when clicked
+                                style={{ color: "red", marginLeft: "10px" }} // Red delete button with spacing
+                            >
+                                ✕                                       {/* Unicode cross symbol */}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
 
-            {/* Empty state message */}
-            {tasks.length === 0 && (                     // If no tasks
-                <p style={{ textAlign: "center", color: "#888" }}>No tasks yet.</p>  // Show message
-            )}
-        </div>
-    );
-};
+                {/* Empty state message */}
+                {tasks.length === 0 && (                     // If no tasks
+                    <p style={{ textAlign: "center", color: "#888" }}>No tasks yet.</p>  // Show message
+                )}
+            </div>
+        );
+    };
 
-export default TodoAppWithDelete;                  // Export component so it can be used in App.jsx
+    export default TodoAppWithDelete;                  // Export component so it can be used in App.jsx
 `
   },
   simpletodowithedit: {
     title: 'Simple Todo With Add, Edit, Delete, Toaster',
     component: <SimpleTodoWithEdit />,
+    showCode: true,
     code: `
     import React, { useState } from "react";                 // Import React and useState hook
     import toast, { Toaster } from "react-hot-toast";       // Import toast and Toaster component for notifications
@@ -379,6 +387,7 @@ export default TodoAppWithDelete;                  // Export component so it can
   simpletodowithlocalstorage: {
     title: 'Simple Todo With Add, Edit, Delete, Toaster, Local Storage',
     component: <SimpleTodoWithLocalStorage />,
+    showCode: true,
     code: `
     import React, { useState, useEffect } from "react";       // Import React and hooks
     import toast, { Toaster } from "react-hot-toast";        // Import toast notifications
@@ -516,6 +525,7 @@ export default TodoAppWithDelete;                  // Export component so it can
   minichallenge1: {
     title: 'Mini Challenge One,',
     component: <MiniChallenge1 />,
+    showCode: true,
     code: `
     import React, { useState } from 'react'
     import { BiLike } from 'react-icons/bi'
@@ -541,6 +551,7 @@ export default TodoAppWithDelete;                  // Export component so it can
   },
   minichallenge2: {
     title: 'Mini Challenge Two',
+    showCode: true,
     component: <MiniChallenge2 />,
     code: `
       import React, { useState } from 'react'
@@ -573,6 +584,7 @@ export default TodoAppWithDelete;                  // Export component so it can
   minichallenge3: {
     title: 'Mini Challenge Three',
     component: <MiniChallenge3 recipe={ArrayData.myRecipe[0]} />,
+    showCode: true,
     code: `
       import React, { useState } from 'react';
       
@@ -636,33 +648,33 @@ export default TodoAppWithDelete;                  // Export component so it can
   minichallenge4: {
     title: 'Mini Challenge Four',
     component: <MiniChallenge4 />,
+    showCode: true,
     code: ``
   },
-  accorionbootstrap5: {
-    title: 'Accordion Bootstrap5',
-    component: <div>Accordion Bootstrap5 Component</div>,
-    code: ``
-  },
-  accordionreact: {
-    title: 'Accorion react',
-    component: <div>Accordion react Component</div>,
-    code: ``
-  },
-  
+
+
   // Bootstrap Projects
+  bootstrap_projects: {
+    title: 'Bootstrap Projects',
+    component: <Bootstrap5_Projects />,
+    showCode: false,
+    code: ``
+  },
+
   bs_singleopenaccordion: {
-    title: 'Single Open',
-    component: <SingleOpenAccordion />,
-    code: ``
-  },
-  bs_multiopenaccordion: {
-    title: 'Multiple Open',
-    component: <MultiOpenAccordion />,
+    title: 'comes from project details',
+    component: <BsSingleOpenAccordion />,
+    showCode: false,
     code: ``
   },
 
-  // React Projects
-
+  //  React Projects
+  reactjs__projects: {
+    title: 'React Js Projects',
+    component: <ReactJs_Projects />,
+    showCode: false,
+    code: ``
+  },
 };
 
 const ProjectDetails = () => {
@@ -687,20 +699,51 @@ const ProjectDetails = () => {
       </Link>
       <h1 className="text-3xl font-bold mt-4">{project.title}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <div className="p-4 border rounded-lg bg-gray-100">
-          <h2 className="font-semibold mb-2 text-lg">💻 Code:</h2>
-          <pre className="bg-white text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>
-            {project.code.trim()}
-          </pre>
-        </div>
+      <div className={`grid gap-6 mt-6
+        ${project.showCode === false
+          ? 'grid-cols-1'
+          : 'grid-cols-1 md:grid-cols-1 lg:grid-cols-2'
+        }`}>
+        {
+          project.showCode !== false && (
 
-        <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-200">
-          <h2 className="font-semibold mb-2 text-lg">👀 Preview:</h2>
-          <div className="p-4 bg-white dark:bg-gray-300 rounded-md">
-            {project.component}
+            <div className="p-4 border rounded-lg bg-gray-100">
+              <h2 className="font-semibold mb-2 text-lg">💻 Code:</h2>
+              <pre className="bg-white text-green-400 p-4 rounded-lg overflow-x-auto " style={{ maxHeight: 'calc(100vh - 275px)' }}>
+                {project.code.trim()}
+              </pre>
+            </div>
+          )
+        }
+        {project.showCode === true && (
+
+          <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-200">
+            <h2 className="font-semibold mb-2 text-lg">👀 Preview:</h2>
+            <div className="p-4 bg-white dark:bg-gray-300 rounded-md">
+              {project.component}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Show projects cards only when showCode is  === false */}
+        {project.showCode === false && (
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {ArrayData.bs_projects.map(project => (
+              <div key={project.id} className="border p-4 rounded-lg shadow-md hover:shadow-lg transition">
+                <h2 className='text-xl font-semibold mb-4'>{project.title}</h2>
+                <p className='text-gray-600 mb-4'>{project.description}</p>
+                <Link
+                  to={`/projects/${project.id}`}
+                  className='text-indigo-600 hover:underline'
+                >
+                  View Details
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );

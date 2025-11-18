@@ -181,16 +181,27 @@ export const ArrayData = {
             description: 'Here we can change light mode and dark mode'
         },
         {
-            id: 'singleopenaccordion',
-            title: 'Single Open',
-            description: 'Accordion which allows only one section to be open at a time.'
+            id: 'bootstrap_projects',
+            title: 'Bootstrap Projects',
+            description: 'List of Bootstrap projects'
         },
         {
-            id: 'multiopenaccordion',
-            title: 'Multiple Open',
-            description: 'Accordion which allows multiple section to be open at a time.'
+            id: 'reactjs__projects',
+            title: 'React Js Projects',
+            description: 'List of React js Projects.'
         }
-
+    ],
+    bs_projects: [
+        {
+            id: 'bs_singleopenaccordion',
+            title: 'Single Accordion ',
+            description: 'Single Accordion'
+        },
+        {
+            id: 'reactjs__projects2',
+            title: 'React Js Projects',
+            description: 'List of React js Projects.'
+        }
     ],
     myRecipe: [
         {
