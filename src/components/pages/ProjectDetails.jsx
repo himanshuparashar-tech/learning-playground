@@ -11,8 +11,8 @@ import MiniChallenge2 from '../projects/MiniChallenge2';
 import MiniChallenge3 from '../projects/MiniChallenge3';
 import MiniChallenge4 from '../projects/MiniChallenge4';
 import { ArrayData } from './ArrayData';
-import SingleOpenAccordion from '../projects/JavaScript/SingleOpenAccordion';
-import MultiOpenAccordion from '../projects/JavaScript/MultiOpenAccordion';
+import SingleOpenAccordion from '../projects/Bootstrap5/SingleOpenAccordion';
+import MultiOpenAccordion from '../projects/Bootstrap5/MultiOpenAccordion';
 
 const projectMap = {
   todo: {
@@ -648,17 +648,20 @@ export default TodoAppWithDelete;                  // Export component so it can
     component: <div>Accordion react Component</div>,
     code: ``
   },
-
-  singleopenaccordion: {
+  
+  // Bootstrap Projects
+  bs_singleopenaccordion: {
     title: 'Single Open',
     component: <SingleOpenAccordion />,
     code: ``
   },
-  multiopenaccordion: {
+  bs_multiopenaccordion: {
     title: 'Multiple Open',
     component: <MultiOpenAccordion />,
     code: ``
   },
+
+  // React Projects
 
 };
 

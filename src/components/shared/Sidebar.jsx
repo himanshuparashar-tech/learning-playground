@@ -12,30 +12,25 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    // ⭐ Stores which menus are open (multi-level)
+    // ⭐ Stores which menus are open
     const [openMenus, setOpenMenus] = useState({});
 
     const location = useLocation();
     const navigate = useNavigate();
 
-    // ⭐ Toggle logic for ANY level
-    const toggleMenu = (item) => {
-        if (!isOpen) {
-            navigate(item.path);
-            return;
-        }
+    // ⭐ FLATTEN MENU WITH LEVELS
+    const flattenMenu = (items, level = 1) => {
+        let result = [];
+        items.forEach(item => {
+            result.push({ name: item.name, level });
 
-        if (item.children) {
-            setOpenMenus(prev => ({
-                ...prev,
-                [item.name]: !prev[item.name]
-            }));
-        } else {
-            navigate(item.path);
-        }
+            if (item.children) {
+                result = result.concat(flattenMenu(item.children, level + 1));
+            }
+        });
+        return result;
     };
 
-    // ⭐ Menu Structure (supports unlimited levels)
     const menuItems = [
         {
             name: 'Getting Started',
@@ -71,28 +66,26 @@ const Sidebar = () => {
                 { name: 'Simple Todo App', icon: <BiAbacus size={20} />, path: '/projects/simpletodo' },
 
                 {
-                    name: 'JavaScript',
+                    name: 'Bootstrap5',
                     icon: <BiAbacus size={20} />,
                     rightIcon: <CgChevronRight />,
-                    path: '/projects/javascript',
+                    path: '/projects/bootstrap_projects',
                     children: [
                         {
                             name: 'Accordion',
                             icon: <BiAbacus size={20} />,
                             rightIcon: <CgChevronRight />,
-                            path: '/projects/singleopenaccordion',
-
-                            // ⭐ 4th Level Example
+                            path: '/projects/bs_singleopenaccordion',
                             children: [
                                 {
                                     name: 'Single Open',
                                     icon: <BiAbacus size={20} />,
-                                    path: '/projects/singleopenaccordion'
+                                    path: '/projects/bs_singleopenaccordion'
                                 },
                                 {
                                     name: 'Multiple Open',
                                     icon: <BiAbacus size={20} />,
-                                    path: '/projects/multiopenaccordion'
+                                    path: '/projects/bs_multiopenaccordion'
                                 }
                             ]
                         }
@@ -100,24 +93,29 @@ const Sidebar = () => {
                 },
 
                 {
-                    name: 'Bootstrap 5',
-                    icon: <BiAbacus size={20} />,
-                    rightIcon: <CgChevronRight />,
-                    path: '/projects/bootstrap5',
-                    children: [
-                        { name: 'Modal Example', icon: <BiAbacus size={20} />, path: '/projects/bootstrap5/modal' },
-                        { name: 'Carousel Example', icon: <BiAbacus size={20} />, path: '/projects/bootstrap5/carousel' }
-                    ]
-                },
-
-                {
-                    name: 'ReactJS',
+                    name: 'ReactJs',
                     icon: <BiAbacus size={20} />,
                     rightIcon: <CgChevronRight />,
                     path: '/projects/reactjs',
                     children: [
-                        { name: 'useState Example', icon: <BiAbacus size={20} />, path: '/projects/reactjs/usestate' },
-                        { name: 'useEffect Example', icon: <BiAbacus size={20} />, path: '/projects/reactjs/useeffect' }
+                        {
+                            name: 'Accordion',
+                            icon: <BiAbacus size={20} />,
+                            rightIcon: <CgChevronRight />,
+                            path: '/projects/rjs_singleopenaccordion',
+                            children: [
+                                {
+                                    name: 'Single Open',
+                                    icon: <BiAbacus size={20} />,
+                                    path: '/projects/rjs_singleopenaccordion'
+                                },
+                                {
+                                    name: 'Multiple Open',
+                                    icon: <BiAbacus size={20} />,
+                                    path: '/projects/rjs_multiopenaccordion'
+                                }
+                            ]
+                        }
                     ]
                 },
             ]
@@ -134,7 +132,37 @@ const Sidebar = () => {
         }
     ];
 
-    // ⭐ Recursive Renderer (this is the magic)
+    const menuItemsFlat = flattenMenu(menuItems);
+
+    // ⭐ Toggle with SIBLING-CLOSE LOGIC
+    const toggleMenu = (item, level) => {
+        if (!isOpen) {
+            navigate(item.path);
+            return;
+        }
+
+        if (item.children) {
+            setOpenMenus(prev => {
+                const updated = { ...prev };
+
+                // CLOSE all siblings on the same level
+                menuItemsFlat
+                    .filter(m => m.level === level)
+                    .forEach(m => {
+                        if (m.name !== item.name) updated[m.name] = false;
+                    });
+
+                // TOGGLE the clicked one
+                updated[item.name] = !prev[item.name];
+
+                return updated;
+            });
+        } else {
+            navigate(item.path);
+        }
+    };
+
+    // ⭐ Recursive Renderer
     const renderMenu = (items, level = 1) => {
         return (
             <ul className={`${level > 1 ? "ml-6 border-l border-l-zinc-200 p-0" : "p-0 no-padding"} sidebar-level-${level}`}>
@@ -147,7 +175,7 @@ const Sidebar = () => {
 
                             {/* Menu Button */}
                             <div
-                                onClick={() => toggleMenu(item)}
+                                onClick={() => toggleMenu(item, level)}
                                 className={`flex items-center py-2 rounded cursor-pointer ${isOpen ? "justify-between px-3" : "justify-center px-2"}
                                 ${isActive
                                         ? "bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-medium"
@@ -203,4 +231,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar;
+export default Sidebar; 
