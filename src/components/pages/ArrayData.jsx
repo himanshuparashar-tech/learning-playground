@@ -171,11 +171,6 @@ export const ArrayData = {
             description: 'Here we can change light mode and dark mode'
         },
         {
-            id: 'accordionjavascript',
-            title: 'Accordion js',
-            description: 'Here we can make accordion in purely js'
-        },
-        {
             id: 'bootstrap_projects',
             title: 'Bootstrap Projects',
             description: 'List of Bootstrap projects'

@@ -111,6 +111,16 @@
     background-color: #90ee90;
   }
 
+  .rb_style {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px 10px
+  }
+
+  .rb_style:focus {
+    background-color: #cccccc96;
+  }
+
   button.cstm {
     border: 1px solid black;
     border-radius: 4px;
@@ -191,9 +201,11 @@
     }
 
   }
-.item-name{
-  text-align: left;
-}
+
+  .item-name {
+    text-align: left;
+  }
+
   .no-padding {
     padding: 0 !important;
   }
