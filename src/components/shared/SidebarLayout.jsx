@@ -12,6 +12,10 @@ import Faq from '../pages/Faq';
 import Introduction from '../pages/Introduction';
 import ProtectedRoute from './ProtectedRoute';
 
+// Project Category Pages
+import Bootstrap_Projects from '../projects/Bootstrap5/Bootstrap_Projects';
+import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
+
 const SidebarLayout = () => {
     return (
         <div className='flex' style={{
@@ -41,6 +45,8 @@ const SidebarLayout = () => {
                             </ProtectedRoute>
                         }
                     />
+                    {/* ALL PROJECT ROUTES */}
+                    {/* 1️⃣ Main Projects list */}
                     <Route
                         path="projects"
                         element={
@@ -49,8 +55,48 @@ const SidebarLayout = () => {
                             </ProtectedRoute>
                         }
                     />
+                    {/* 2️⃣ Single Project (normal) */}
                     <Route
                         path="projects/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ProjectDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* 3️⃣ Bootstrap Projects List */}
+                    <Route
+                        path="projects/bootstrap_projects"
+                        element={
+                            <ProtectedRoute>
+                                <Bootstrap_Projects />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* 4️⃣ Bootstrap Single Project */}
+                    <Route
+                        path="projects/bootstrap_projects/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ProjectDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* 5️⃣ ReactJS Projects List */}
+                    <Route
+                        path="projects/reactjs__projects"
+                        element={
+                            <ProtectedRoute>
+                                <ReactJs_Projects />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* 6️⃣ ReactJS Single Project */}
+                    <Route
+                        path="projects/reactjs__projects/:id"
                         element={
                             <ProtectedRoute>
                                 <ProjectDetails />

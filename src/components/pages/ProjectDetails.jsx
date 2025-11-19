@@ -11,9 +11,12 @@ import MiniChallenge2 from '../projects/MiniChallenge2';
 import MiniChallenge3 from '../projects/MiniChallenge3';
 import MiniChallenge4 from '../projects/MiniChallenge4';
 import { ArrayData } from './ArrayData';
-import Bootstrap5_Projects from '../projects/Bootstrap5/Bootstrap5_Projects';
 import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
+import Bootstrap_Projects from '../projects/Bootstrap5/Bootstrap_Projects';
 import BsSingleOpenAccordion from '../projects/Bootstrap5/BsSingleOpenAccordion';
+import RjsSingleOpenAccordion from '../projects/ReactJs/RjsSingleOpenAccordion';
+import BsMultipleOpenAccordion from '../projects/Bootstrap5/BsMultipleOpenAccordion';
+import BackButton from '../BackButton/BackButton';
 
 const projectMap = {
   todo: {
@@ -656,22 +659,33 @@ const projectMap = {
   // Bootstrap Projects
   bootstrap_projects: {
     title: 'Bootstrap Projects',
-    component: <Bootstrap5_Projects />,
+    component: <Bootstrap_Projects />,
     showCode: false,
     code: ``
   },
-
   bs_singleopenaccordion: {
-    title: 'comes from project details',
+    title: 'Bootstrap Single Open Accordion',
     component: <BsSingleOpenAccordion />,
     showCode: false,
+  },
+  bs_multipleopenaccordion: {
+    title: 'Bootstrap Multiple Open Accordion',
+    component: <BsMultipleOpenAccordion />,
+    showCode: false,
+  },
+
+
+  //  React Projects
+  reactjs_projects: {
+    title: 'React Js Projects',
+    component: <ReactJs_Projects />,
+    showCode: false,
     code: ``
   },
 
-  //  React Projects
-  reactjs__projects: {
-    title: 'React Js Projects',
-    component: <ReactJs_Projects />,
+  rjs_singleopenaccordion: {
+    title: 'comes from project details',
+    component: <RjsSingleOpenAccordion />,
     showCode: false,
     code: ``
   },
@@ -679,22 +693,34 @@ const projectMap = {
 
 const ProjectDetails = () => {
   const { id } = useParams();
+  // const isBootstrapProject = id.startsWith("bs_");
   const project = projectMap[id];
+
+  // Prefix → Back Route Mapping with plain object
+  const backRouteMap = {
+    bs_: '/projects/bootstrap_projects',
+    rjs_: '/projects/reactjs_projects'
+  }
+
+  // Find prefix matching the ID
+  const matchedPrefix = Object.keys(backRouteMap).find(prefix =>
+    id.startsWith(prefix)
+  )
+
+  // Choose back route also
+  const backRoute = matchedPrefix ? backRouteMap[matchedPrefix] : '/projects';
 
   if (!project) {
     return (
       <div className='p-6'>
-        <Link
-          to='/projects' className='text-indigo-600 mb-4'>
-          👈 Back
-        </Link>
+        <BackButton />
         <p className='text-center'> ❌ Project not Found</p>
       </div>
     )
   }
   return (
     <div className="p-6">
-      <Link to="/projects" className="text-indigo-600">
+      <Link to={backRoute} className="text-indigo-600">
         👈 Back to Projects
       </Link>
       <h1 className="text-3xl font-bold mt-4">{project.title}</h1>
@@ -722,25 +748,6 @@ const ProjectDetails = () => {
             <div className="p-4 bg-white dark:bg-gray-300 rounded-md">
               {project.component}
             </div>
-          </div>
-        )}
-
-        {/* Show projects cards only when showCode is  === false */}
-        {project.showCode === false && (
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {ArrayData.bs_projects.map(project => (
-              <div key={project.id} className="border p-4 rounded-lg shadow-md hover:shadow-lg transition">
-                <h2 className='text-xl font-semibold mb-4'>{project.title}</h2>
-                <p className='text-gray-600 mb-4'>{project.description}</p>
-                <Link
-                  to={`/projects/${project.id}`}
-                  className='text-indigo-600 hover:underline'
-                >
-                  View Details
-                </Link>
-              </div>
-            ))}
           </div>
         )}
 

@@ -176,17 +176,12 @@ export const ArrayData = {
             description: 'Here we can make accordion in purely js'
         },
         {
-            id: 'minichallenge4',
-            title: 'Mini Challenge on the questions',
-            description: 'Here we can change light mode and dark mode'
-        },
-        {
             id: 'bootstrap_projects',
             title: 'Bootstrap Projects',
             description: 'List of Bootstrap projects'
         },
         {
-            id: 'reactjs__projects',
+            id: 'reactjs_projects',
             title: 'React Js Projects',
             description: 'List of React js Projects.'
         }
@@ -198,11 +193,20 @@ export const ArrayData = {
             description: 'Single Accordion'
         },
         {
-            id: 'reactjs__projects2',
-            title: 'React Js Projects',
-            description: 'List of React js Projects.'
+            id: 'bs_multipleopenaccordion',
+            title: 'Multiple Accordion',
+            description: 'Multiple Accordion'
         }
     ],
+    rjs_projects: [
+        {
+            id: 'rjs_singleopenaccordion',
+            title: 'Single Accordion ',
+            description: 'Single Accordion'
+        },
+    ],
+
+    
     myRecipe: [
         {
             name: 'Spicy Pasta',
