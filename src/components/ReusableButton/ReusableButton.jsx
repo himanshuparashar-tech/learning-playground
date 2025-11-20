@@ -3,7 +3,7 @@ import React from 'react';
 
 const ReusableButton = ({
     children,
-    variant = "primary",
+    variant = "customPrimary",
     size = "md",
     full = false,
     disabled = false,
@@ -14,15 +14,24 @@ const ReusableButton = ({
     iconOnly = false,
     animation = true,
     type = "button",
+    btn_style = "rb_style",
     className = "",
     onClick,
 
 }) => {
     const baseStyles = "inline-flex item-center justify-center gap-2 rounded-md font-medium transition-all duration-200 select-none ";
 
-    const animations = animation
-        ? "active:scale-[0.97] hovr:opacity-90"
-        : "";
+    const rb_style = "rb_style";
+
+    // 🌟 Animations (Only when animation = true)
+    const animatedEffects = animation
+        ? `
+      hover:scale-[1.05]
+      active:scale-[0.96]
+      hover:shadow-lg
+      hover:opacity-95
+    `
+        : ""; // animation off
 
     const variants = {
         primary: "bg-blue-600 text-white hover:bg-blue-700",
@@ -37,6 +46,7 @@ const ReusableButton = ({
         warning: "bg-yellow-500 text-black hover:bg-yellow-600",
         dark: "bg-black text-white hover:bg-gray-900",
         light: "bg-white text-black border hover:bg-gray-100",
+        customPrimary: " text-[var(--btn-text)] bg-[var(--btn-bg)] hover:bg-[var(--btn-hover-bg)] bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)] transition-colors duration-300"
     };
 
     const sizes = {
@@ -58,9 +68,10 @@ const ReusableButton = ({
                 ${baseStyles}
                 ${variants[variant]}
                 ${finalSize}
-                ${animations}
+                ${animatedEffects}
                 ${full ? "w-full" : ""}
                 ${disabled || loading ? "opacity-50 cursor-not-allowed" : ""}
+                ${btn_style}
                 ${className}
 
             `}
@@ -71,7 +82,16 @@ const ReusableButton = ({
             )}
 
             {/* Start Icon */}
-            
+            {!loading && !iconOnly && startIcon}
+
+            {/* Main Text */}
+            {!iconOnly && (loading ? loadingText : children)}
+
+            {/* End Icon */}
+            {!loading && !iconOnly && endIcon}
+
+            {/* Icon Only Button */}
+            {iconOnly && !loading && children}
 
         </button>
     )

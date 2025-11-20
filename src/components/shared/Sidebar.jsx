@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // React Icons
 import { BiAbacus, BiAperture, BiCode, BiLeaf, BiMenu } from 'react-icons/bi';
-import { CgChevronRight, CgClose } from 'react-icons/cg';
+import { CgChevronRight, CgClose, CgDisplayGrid } from 'react-icons/cg';
 import { FaBookOpen } from 'react-icons/fa';
 import { HiHome } from 'react-icons/hi';
 
@@ -129,6 +129,12 @@ const Sidebar = () => {
             name: 'FAQ',
             icon: <BiAperture size={20} />,
             path: '/faq',
+        },
+        {
+            name: 'Display',
+            icon: <CgDisplayGrid size={20} />,
+            path: '/display'
+
         }
     ];
 

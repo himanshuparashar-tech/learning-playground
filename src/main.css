@@ -112,13 +112,17 @@
   }
 
   .rb_style {
-    border: 1px solid black;
+    border: 1px solid currentColor;
     border-radius: 4px;
-    padding: 5px 10px
+    padding: 5px 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .rb_style:focus {
-    background-color: #cccccc96;
+    border: 1px solid indigo;
   }
 
   button.cstm {

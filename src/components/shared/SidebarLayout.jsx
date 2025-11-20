@@ -15,6 +15,7 @@ import ProtectedRoute from './ProtectedRoute';
 // Project Category Pages
 import Bootstrap_Projects from '../projects/Bootstrap5/Bootstrap_Projects';
 import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
+import Display from '../Display/Display';
 
 const SidebarLayout = () => {
     return (
@@ -130,6 +131,14 @@ const SidebarLayout = () => {
                         element={
                             <ProtectedRoute>
                                 <Faq />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="display"
+                        element={
+                            <ProtectedRoute >
+                                <Display />
                             </ProtectedRoute>
                         }
                     />
