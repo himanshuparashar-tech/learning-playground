@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { href, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ReusableButton from '../ReusableButton/ReusableButton';
 
 
 
@@ -113,14 +114,14 @@ const Header = () => {
 
           {/* LOGOUT BUTTON */}
           {user && (
-            <button
+            <ReusableButton
               className="hidden sm:inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 
                          text-[var(--btn-text)] bg-[var(--btn-bg)] hover:bg-[var(--btn-hover-bg)]
                          bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)] transition-colors duration-300"
               onClick={handleLogout}
             >
               Log Out
-            </button>
+            </ReusableButton>
           )}
 
           {/* THEME TOGGLE */}
@@ -181,7 +182,7 @@ const Header = () => {
         </div>
       </div>
     )}
-</header>
+  </header>
 
 
 };
