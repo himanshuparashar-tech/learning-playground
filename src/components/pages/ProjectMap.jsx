@@ -15,6 +15,7 @@ import Bootstrap_Projects from '../projects/Bootstrap5/Bootstrap_Projects';
 import BsSingleOpenAccordion from '../projects/Bootstrap5/BsSingleOpenAccordion';
 import RjsSingleOpenAccordion from '../projects/ReactJs/RjsSingleOpenAccordion';
 import BsMultipleOpenAccordion from '../projects/Bootstrap5/BsMultipleOpenAccordion';
+import ReactJs_Counter from '../projects/ReactJs/ReactJs_Counter';
 
 export const projectMap = {
     todo: {
@@ -684,6 +685,12 @@ export const projectMap = {
     rjs_singleopenaccordion: {
         title: 'comes from project details',
         component: <RjsSingleOpenAccordion />,
+        showCode: false,
+        code: ``
+    },
+    rjs_counter: {
+        title: 'comes from project details',
+        component: <ReactJs_Counter />,
         showCode: false,
         code: ``
     },

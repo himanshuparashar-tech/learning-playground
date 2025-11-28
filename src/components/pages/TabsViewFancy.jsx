@@ -69,7 +69,7 @@ export default function TabsViewFancy() {
             </div>
 
             { }
-            <div className='flex-1 relative rounded-xl bg-white dark:bg-gray-900/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-auto fancy-view' style={{ maxHeight: 'calc(100vh - 160px) ', minHeight: 'calc(100vh - 278px)' }}>
+            <div className='flex-1 relative rounded-xl bg-white dark:bg-gray-200/80 backdrop-filter backdrop-blur-lg shadow-lg overflow-auto fancy-view' style={{ maxHeight: 'calc(100vh - 160px) ', minHeight: 'calc(100vh - 278px)' }}>
                 { }
                 <AnimatePresence>
                     {isLoading && <motion.div key='loader' className='absolute inset-0 z-20 flex items-center justify-center bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm' initial={{

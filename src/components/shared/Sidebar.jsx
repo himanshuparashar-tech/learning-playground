@@ -113,7 +113,8 @@ const Sidebar = () => {
                                     name: 'Multiple Open',
                                     icon: <BiAbacus size={20} />,
                                     path: '/projects/rjs_multiopenaccordion'
-                                }
+                                },
+                                
                             ]
                         }
                     ]

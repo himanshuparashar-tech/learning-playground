@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReusableButton from '../ReusableButton/ReusableButton';
-import ReusableFormControl from '../ReusableFormControl/ReusableFormControl';
 import { CgChevronRight } from 'react-icons/cg';
 import { BiLike } from 'react-icons/bi';
+import ReusableFormControl from '../ReusableFormControl/ReusableFormControl';
 
 
 const Display = () => {
+
+    // Form control useStates....
+    const [about, setAbout] = useState("");
+    const [name, setName] = useState("");
+    const [gender, setGender] = useState("");
+    const [lang, setLang] = useState("");
+    const [checked, setChecked] = useState("");
+    const [file, setFile] = useState("");
+
+
     return (
         <div className='flex flex-col p-3'>
             <div className="buttons-block bg-gradient-to-r from-indigo-600 to-purple-600 py-1">
@@ -13,7 +23,7 @@ const Display = () => {
                     <h6 className='font-semibold text-center'>Buttons Variations</h6>
                 </div>
             </div>
-            <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 py-2">
+            <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 py-2 px-3">
                 <div className="button-1">
                     <h6 className='font-semibold mb-1'>1. Primary Button</h6>
                     <ReusableButton>Click Me</ReusableButton>
@@ -91,9 +101,81 @@ const Display = () => {
 
             <br />
             <div className="buttons-block bg-gradient-to-r from-indigo-600 to-purple-600 py-1">
-                <div className="bg-white py-1">
-                    <h6 className='font-semibold text-center'>Form Controls</h6>
-                </div>
+                <h6 className='font-semibold text-center bg-white py-1'>Form Controls</h6>
+            </div>
+
+            <br />
+            <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2 py-2 px-3 bg-white">
+
+                {/* Textarea */}
+                <ReusableFormControl
+                    label="About You"
+                    type='textarea'
+                    value={about}
+                    onChange={(e) => setAbout(e.target.value)}
+                    placeholder='Write something'
+                />
+
+                {/* Text */}
+                <ReusableFormControl
+                    label="Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder='Enter your name'
+                    helper='Minimum 3 Characters'
+                    error={name.length > 0 && name.length <= 3 ? 'Too Short' : ''}
+                    success={name.length >= 3}
+                />
+
+                {/* Select */}
+                <ReusableFormControl
+                    label="Select language"
+                    type="select"
+                    value={lang}
+                    onChange={(e) => setLang(e.target.value)}
+                    options={[
+                        { label: 'JavaScript', value: 'js' },
+                        { label: 'Python', value: 'py' },
+                    ]}
+                />
+
+                {/* Radio */}
+                <ReusableFormControl
+                    label="Select Gender"
+                    type='radio'
+                    name='gender'
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    options={[
+                        { label: 'Male', value: 'male' },
+                        { label: 'Female', value: 'female' }
+                    ]}
+                />
+
+                {/* Checkbox */}
+                <ReusableFormControl
+                    label='Check the item'
+                    type='checkbox'
+                    value={checked}
+                    onChange={(e) => setChecked(e.target.value)}
+                    placeholder='Accept Terms and Conditions'
+                />
+
+                {/* File Upload */}
+                <ReusableFormControl
+                    label='Upload files'
+                    type='file'
+                    onChange={(e) => setFile(e.target.value[0])}
+                    placeholder='Upload File'
+                />
+
+                {/* Range */}
+                <ReusableFormControl
+                    label="Volume"
+                    type="range"
+                    value={50}
+                    onChange={() => { }}
+                />
             </div>
         </div>
     )

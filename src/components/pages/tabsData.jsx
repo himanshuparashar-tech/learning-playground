@@ -43,6 +43,11 @@ import ExampleOne from '../ExampleOne';
 import ExampleTwo from '../ExampleTwo';
 import ExampleThree from '../ExampleThree';
 import { ArrayData } from './ArrayData';
+import LocalStorage from '../projects/LocalStorage';
+import ReactJs_Counter from '../projects/ReactJs/ReactJs_Counter';
+import ReactJs_ArrayOfData from '../projects/ReactJs/ReactJs_ArrayOfData';
+import ReactJs_ObjectOfData from '../projects/ReactJs/ReactJs_ObjectOfData';
+import ReactJs_ArrayOfObjects from '../projects/ReactJs/ReactJs_ArrayOfObjects';
 
 export function getTabs() {
 
@@ -1561,7 +1566,228 @@ export function getTabs() {
                         <ExampleThree />
                     </div>
                 </div>
-        }
+        },
+        {
+            id: 54,
+            name: 'Eg : LS Again 281125',
+            type: 'codePreview',
+            code: `
+                import React, { useEffect, useState } from 'react'
+                
+                const LocalStorage = () => {
+                    const [name, setName] = useState(() => {
+                        const savedName = localStorage.getItem("name");
+                        return savedName ? JSON.parse(savedName) : ""
+                    })
+                
+                    useEffect(() => {
+                        localStorage.setItem("name", JSON.stringify(name))
+                    }, [name]);
+                
+                    const handleChange = (e) => {
+                        setName(e.target.value);
+                    }
+                
+                    const handleClear = () => {
+                        setName("");
+                    }
+                    return (
+                        <div>
+                            <h1>Your Name  :  {name}</h1>
+                            <input className="cstm-input" type="text" value={name} onChange={handleChange} placeholder='Enter your name' />
+                            <button className="cstm" type='button' onClick={handleClear}>Clear</button>
+                        </div>
+                    )
+                }
+                
+                export default LocalStorage
+            `,
+            preview:
+                <div>
+                    <LocalStorage />
+                </div>
+
+        },
+        {
+            id: 55,
+            name: 'Counter-Test',
+            type: 'codePreview',
+            code: `
+                import React, { useState } from 'react'
+                
+                const ReactJs_Counter = () => {
+                    const [count, setCount] = useState(0);
+                
+                    const incre = (e) => {
+                        setCount(prev => prev + 1)
+                    }
+                    const decre = (e) => {
+                        setCount(prev => prev - 1);
+                    }
+                    return (
+                        <div>
+                            <p>{count}</p>
+                            <button className='cstm' onClick={decre}>-</button>
+                            <button className='cstm' onClick={incre}>+</button>
+                        </div>
+                    )
+                }
+                
+                export default ReactJs_Counter
+            `,
+            preview:
+                <div>
+                    <ReactJs_Counter />
+                </div>
+        },
+        {
+            id: 56,
+            name: 'Todo-Test',
+            type: 'codePreview',
+            code: `
+                import React, { useState } from 'react'
+                import toast, { Toaster } from 'react-hot-toast';
+
+                const ReactJs_ArrayOfData = () => {
+                    const [item, setItem] = useState([]);
+                    const [input, setInput] = useState("");
+
+                    const addHandleChange = () => {
+                        if (!input.trim()) return;
+
+                        // Prevent Duplicate Items
+                        if (item.includes(input.trim())) {
+                            toast.error("Already available in the list");
+                            return;
+                        }
+
+                        setItem([...item, input])
+                        setInput("");
+                        toast.success("Item added!")
+                    }
+
+                    return (
+                        <div>
+                            <form action="">
+                                <Toaster position='bottom right' id='defaultId'></Toaster>
+                                <input type="text" className='cstm-input' placeholder='Please add a task' value={input} onChange={(e) => setInput(e.target.value)} />
+                                <button type='button' className='cstm' onClick={addHandleChange}>Add</button>
+
+                                <ul>
+                                    {item.map((t, i) => (
+                                        <li key={i}>{t}</li>
+                                    ))}
+                                </ul>
+                            </form>
+                        </div>
+                    )
+                }
+
+                export default ReactJs_ArrayOfData
+            `,
+            preview:
+                <div>
+                    <ReactJs_ArrayOfData />
+                </div>
+        },
+        {
+            id: 57,
+            name: 'Profile-Test',
+            type: 'codePreview',
+            code: `
+                import React, { useState } from 'react'
+                
+                const ReactJs_ObjectOfData = () => {
+                    const [profile, setProfile] = useState({
+                        name: '',
+                        age: ''
+                    });
+                
+                    const handleChange = (e) => {
+                        const { name, value } = e.target;
+                
+                        setProfile((prevProfile) => ({
+                            ...prevProfile, [name]: value,
+                        }))
+                    }
+                    return (
+                        <div>
+                            <h2>User Profile</h2>
+                            <div>
+                                <label>Name:
+                                    <input type="text" name='name' value={profile.name} placeholder='Enter your name' onChange={handleChange} />
+                                </label>
+                            </div>
+                            <div>
+                                <label>Age :
+                                    <input type="number" name='age' value={profile.age} placeholder='Enter your age' onChange={handleChange} />
+                                </label>
+                            </div>
+                            <h3>Profile Information</h3>
+                            <p>Name : {profile.name}</p>
+                            <p>Age: {profile.age}</p>
+                        </div>
+                    )
+                }
+                
+                export default ReactJs_ObjectOfData
+            `,
+            preview:
+                <div>
+                    <ReactJs_ObjectOfData />
+                </div>
+        },
+        {
+            id: 58,
+            name: 'ShoppingList-Test',
+            type: 'codePreview',
+            code: `
+            import React, { useState } from 'react'
+            
+            const ReactJs_ArrayOfObjects = () => {
+              const [items, setItems] = useState([]);
+              const [name, setName] = useState('');
+              const [quantity, setQuantity] = useState('');
+            
+              const handleSubmit = (e) => {
+                e.preventDefault()
+            
+                if (!name || !quantity) return;
+            
+            
+                const newItem = {
+                  name, quantity: parseInt(quantity)
+                };
+            
+                setItems((prevItems) => [...prevItems, newItem]);
+                setName("");
+                setQuantity("");
+              }
+              return (
+                <div>
+                  <h3>Shopping List</h3>
+                  <form onSubmit={handleSubmit}>
+                    <input className='cstm-input' type="text" placeholder='item name' value={name} onChange={(e) => setName(e.target.value)} />
+                    <input  className='cstm-input'type="number" placeholder='Quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+                    <button  className='cstm'type='submit'>Add Item</button>
+                  </form>
+            
+                  <ul>
+                    {items.map((item, index) => (
+                      <li key={index}>{item.name} - Quantity: {item.quantity}</li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+            
+            export default ReactJs_ArrayOfObjects`,
+            preview:
+                <div>
+                    <ReactJs_ArrayOfObjects />
+                </div>
+        },
+
     ];
 }
 

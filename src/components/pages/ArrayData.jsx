@@ -199,6 +199,17 @@ export const ArrayData = {
             title: 'Single Accordion ',
             description: 'Single Accordion'
         },
+        {
+            id: 'rjs_multipleopenaccordion',
+            title: 'Multiple Accordion',
+            description: 'Multiple Accordion'
+        },
+        {
+            id: 'rjs_counter',
+            title: 'Counter',
+            description: 'Counter'
+        },
+
     ],
 
     
