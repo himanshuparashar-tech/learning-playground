@@ -48,6 +48,7 @@ import ReactJs_Counter from '../projects/ReactJs/ReactJs_Counter';
 import ReactJs_ArrayOfData from '../projects/ReactJs/ReactJs_ArrayOfData';
 import ReactJs_ObjectOfData from '../projects/ReactJs/ReactJs_ObjectOfData';
 import ReactJs_ArrayOfObjects from '../projects/ReactJs/ReactJs_ArrayOfObjects';
+import CopyInput from '../Portal/CopyInput';
 
 export function getTabs() {
 
@@ -1787,6 +1788,48 @@ export function getTabs() {
                     <ReactJs_ArrayOfObjects />
                 </div>
         },
+        {
+            id: 59,
+            name: 'Portal',
+            type: 'codePreview',
+            code: `
+
+                W/O Portal
+                <div id="app">
+                <header>...</header>
+                <main>
+                    <div class="modal">...</div>
+                </main>
+                </div>
+
+                💠Z-index issues
+                💠Overflow hidden problems
+                💠Position fixed breaks
+                💠Modals, tooltips, dropdowns get clipped inside parents
+
+
+                With Portal We can do this :
+                React Tree:
+                App → Modal
+
+                DOM Tree:
+                <body>
+                <div id="root"></div>
+                <div id="modal-root"></div> ✅
+                </body>
+
+                💠So the modal:
+                💠Is logically inside App
+                💠But physically rendered at the end of body
+                💠 This avoids layout and CSS problems.
+
+                👉👉 It is a feature that allow you to render a child component into  a DOM node that exists outside the heirarchy of the parent component. THis can be usefull for scenerios like, modal, tooltip, or dropdown where you want to break the usual parent child structure and render in different parts of DOM. 
+            `,
+            preview:
+                <div>
+                    <CopyInput />
+                </div>
+        }
 
     ];
 }
