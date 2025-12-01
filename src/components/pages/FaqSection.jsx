@@ -33,7 +33,7 @@ const AccordionItem = ({ item, isOpen, onClick }) => (
                 }`}
         >
             <div className="p-5 pt-0 text-[var(--text-secondary)]">
-                <div className="whitespace-pre-line">{item.answer}</div>
+                <div className="whitespace-pre-line" style={{ maxHeight: '400px', overflow: 'auto' }}>{item.answer}</div>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@ const AccordionItem = ({ item, isOpen, onClick }) => (
 const FaqSection = ({ title, subtitle, data }) => {
     const [openIndex, setOpenIndex] = useState(null);
     const [search, setSearch] = useState("");
- 
+
     // FIlter Logic for Search
     const filteredData = SearchFilter(data, search, "question");  // ⬅ USE IT HERE
 

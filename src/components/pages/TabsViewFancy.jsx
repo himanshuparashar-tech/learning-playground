@@ -5,6 +5,7 @@ import { getTabs } from './tabsData.jsx';
 export default function TabsViewFancy() {
     const [activeTab, setActiveTab] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [search, setSearch] = useState("");
 
     // add per-tab view mode (either 'preview' or 'code')
     const [viewMode, setViewMode] = useState({ 1: 'preview' });
@@ -18,6 +19,8 @@ export default function TabsViewFancy() {
 
     // obtain tabs (computed in separate module)
     const tabs = getTabs();
+
+    const filteredTabs = tabs.filter(tab => tab.name.toLowerCase().includes(search.toLowerCase()));
 
     useEffect(() => {
 
@@ -37,35 +40,54 @@ export default function TabsViewFancy() {
         { }
         <div className='flex flex-col lg:flex-row gap-6 rounded-xl'>
             { }
-            <div className='max-w-full lg:w-64 flex lg:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg overflow-y-auto scrollbar-gradient' style={{ maxHeight: 'calc(100vh - 160px)' }}>
-                {tabs.map(tab => <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`
-                relative group flex flex-wrap break-words items-center sm:w-full lg:px-4 lg:py-3 px-2 py=2 min-w-[200px] transition-all
-                ${activeTab === tab.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300'}
-              `}>
-                    { }
-                    {activeTab === tab.id && <motion.div layoutId='tabBackground' className='absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg  ' initial={{
-                        opacity: 0
-                    }} animate={{
-                        opacity: 1
-                    }} transition={{
-                        duration: 0.2
-                    }} />}
+            <div className='max-w-full lg:w-64 flex lg:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg pr-2' >
 
-                    { }
-                    <div className='flex text-left items-center z-10'>
-                        {/* <span className='text-xl'>{tab.icon}</span> */}
-                        <p className='font-medium text-sm'>{tab.name}</p>
-                    </div>
+                <div className="searchBar">
+                    {/* Search Bar */}
+                    <input
+                        type="text"
+                        placeholder="Search tabs..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="my-3 px-3 py-2 rounded-lg border outline-none text-sm bg-white border-purple-500 border-2 w-full scrollbar-gradient "
+                    />
+                </div>
 
-                    { }
-                    {activeTab === tab.id ? <motion.div layoutId='activeDot' className='absolute right-3 w-2 h-2 rounded-full bg-white' initial={{
-                        scale: 0
-                    }} animate={{
-                        scale: 1
-                    }} transition={{
-                        delay: 0.1
-                    }} /> : <div className='absolute right-3 w-2 h-2 rounded-full bg-gray-400/0 group-hover:bg-gray-400/30 transition-colors' />}
-                </button>)}
+
+                <div className="overflow-y-auto " style={{ maxHeight: 'calc(100vh - 216px)' }}>
+                    {filteredTabs.map(tab =>
+                        <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`
+                    relative group flex flex-wrap break-words items-center sm:w-full lg:px-4 lg:py-3 px-2 py=2 min-w-[200px] transition-all
+                    ${activeTab === tab.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300'}`}>
+                            { }
+                            {activeTab === tab.id && <motion.div layoutId='tabBackground' className='absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg  ' initial={{
+                                opacity: 0
+                            }} animate={{
+                                opacity: 1
+                            }} transition={{
+                                duration: 0.2
+                            }} />}
+
+                            { }
+                            <div className='flex text-left items-center z-10'>
+                                {/* <span className='text-xl'>{tab.icon}</span> */}
+                                <p className='font-medium text-sm'>{tab.name}</p>
+                            </div>
+
+                            { }
+                            {activeTab === tab.id ? <motion.div layoutId='activeDot' className='absolute right-3 w-2 h-2 rounded-full bg-white' initial={{
+                                scale: 0
+                            }} animate={{
+                                scale: 1
+                            }} transition={{
+                                delay: 0.1
+                            }} /> : <div className='absolute right-3 w-2 h-2 rounded-full bg-gray-400/0 group-hover:bg-gray-400/30 transition-colors' />}
+                        </button>)
+                    }
+                    {filteredTabs.length === 0 && (
+                        <p className="text-center text-sm text-gray-400 py-4">No Tabs Found</p>
+                    )}
+                </div>
             </div>
 
             { }

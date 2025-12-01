@@ -1,6 +1,7 @@
 // src/data.js
 
 import React from "react";
+import Images from "../assets/images/images";
 
 
 export const ArrayData = {
@@ -212,7 +213,7 @@ export const ArrayData = {
 
     ],
 
-    
+
     myRecipe: [
         {
             name: 'Spicy Pasta',
@@ -718,6 +719,104 @@ export const ArrayData = {
                     <br />
                     <p><b>Logic:</b></p>
                     <p>When the button is clicked, the text color toggles between red and blue based on the isRed state.</p>
+                </>
+            )
+        },
+        {
+            question: '👉 What is UseEffect() Hook & Memory Leak in react JS?',
+            answer: (
+                <>
+                    <img src={Images.faq1} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq2} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq3} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq4} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq5} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq6} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq7} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq8} alt="faq 1" />
+                </>
+            )
+        },
+        {
+            question: '👉 to kya useEffect se performance par koi fark nai padta kya memory leak nahi hoti?',
+            answer: (
+                <>
+                    <img src={Images.faq9} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq10} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq11} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq12} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq13} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq14} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq15} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq16} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq17} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq18} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq19} alt="faq 1" />
+                    <br />
+                    <img src={Images.faq20} alt="faq 1" />
+                </>
+            )
+        },
+        {
+            question: '👉 Is the two block of code are same ?',
+            answer: (
+                <>
+                    {`
+                        const UseEffectBlock = () => {
+                        const [value, setValue] = useState(0);
+
+
+                        useEffect(() => {
+                            console.log("call useEffect")
+                            document.title = 'Increment <noscript>dollor{value}</noscript>
+                        }, []); 
+
+                        return (
+                            <div>
+                                <h2>{value}</h2>
+                                <button onClick={() => setValue(prev => prev + 1)} className='cstm'>Click</button>
+                            </div>
+                        )
+                    }
+
+                            const UseEffectBlock = () => {
+                                const [value, setValue] = useState(0);
+
+
+                                useEffect(() => {
+                                    console.log("call useEffect")
+                                    document.title = 'Increment <noscript>dollor{value}</noscript>
+                                }, [value]); 
+
+                                return (
+                                    <div>
+                                        <h2>{value}</h2>
+                                        <button onClick={() => setValue(prev => prev + 1)} className='cstm'>Click</button>
+                                    </div>
+                                )
+                            }
+
+                            Is these two block of code are same ?                    
+                    `}
+                   <img src={Images.faq21} alt="" />
+                   <img src={Images.faq22} alt="" />
                 </>
             )
         }

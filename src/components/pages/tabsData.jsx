@@ -49,6 +49,8 @@ import ReactJs_ArrayOfData from '../projects/ReactJs/ReactJs_ArrayOfData';
 import ReactJs_ObjectOfData from '../projects/ReactJs/ReactJs_ObjectOfData';
 import ReactJs_ArrayOfObjects from '../projects/ReactJs/ReactJs_ArrayOfObjects';
 import CopyInput from '../Portal/CopyInput';
+import Switcher from '../Switcher/Switcher';
+import UseEffectBlock from '../useEffectCode/UseEffectBlock';
 
 export function getTabs() {
 
@@ -1829,8 +1831,56 @@ export function getTabs() {
                 <div>
                     <CopyInput />
                 </div>
-        }
+        },
+        {
+            id: 60,
+            name: 'Switcher',
+            type: 'codePreview',
+            code: `
+            
+            `,
+            preview:
+                <div>
+                    <Switcher />
+                </div>
+        },
+        {
+            id: 61,
+            name: 'UseEffect Hooks',
+            type: 'codePreview',
+            code: `
+                     👉 It allows us to perform side effects in our componenet
+                         Some examples of side effects are :
+                            💠 Fetching Data
+                            💠 Directly Updating the DOM
+                            💠 localStorage
+                            💠 setTimeout
+                            💠 Event listener
+                            💠 Document title change
+                            💠 Data fetch
+                    
+                        👉 Ye sab kaam UI direct render karna ka hissa nahi hote, isliye inke liye useEffect use hota hai.
 
+                        👉 Socho:
+                                💠 Tum room me ghuste ho → ye render hai
+                                💠 Light on karte ho → ye useEffect hai
+                                💠 Room = Component
+                                💠 Light on = useEffect
+
+                        👉 Basic Syntax
+                                💠 useEffect(() => {
+                                        // side effect ka code
+                                    }, [])
+
+                                💠 () => {}	    Jo kaam karna hai
+                                💠 []	        Kab kaam chalega
+
+            `,
+            preview:
+                <div>
+                    <UseEffectBlock />
+                </div>
+        }
     ];
 }
 
