@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react'
 
-const Switcher = () => {
+const SwitchBlock = () => {
     const [sw, setSw] = useState(false);
 
 
@@ -20,4 +21,4 @@ const Switcher = () => {
     )
 }
 
-export default Switcher
+export default SwitchBlock

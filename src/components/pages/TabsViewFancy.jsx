@@ -199,7 +199,7 @@ export default function TabsViewFancy() {
                             {/* ✅ CODE / PREVIEW TOGGLE */}
                             {tabs.find(tab => tab.id === activeTab)?.type === 'codePreview' ? (
                                 <>
-                                    <div className='mb-4 flex gap-2'>
+                                    <div className='mb-4 flex gap-2 justify-between'>
                                         <button
                                             onClick={() => setTabView(activeTab, 'code')}
                                             className={`px-3 py-1 rounded ${viewMode[activeTab] === 'code' ? 'bg-indigo-600 text-white' : 'bg-gray-100'}`}

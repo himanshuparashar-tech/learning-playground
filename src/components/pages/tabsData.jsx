@@ -49,8 +49,8 @@ import ReactJs_ArrayOfData from '../projects/ReactJs/ReactJs_ArrayOfData';
 import ReactJs_ObjectOfData from '../projects/ReactJs/ReactJs_ObjectOfData';
 import ReactJs_ArrayOfObjects from '../projects/ReactJs/ReactJs_ArrayOfObjects';
 import CopyInput from '../Portal/CopyInput';
-import Switcher from '../Switcher/Switcher';
 import UseEffectBlock from '../useEffectCode/UseEffectBlock';
+import SwitchBlock from '../switchBlock/SwitchBlock';
 
 export function getTabs() {
 
@@ -1841,7 +1841,7 @@ export function getTabs() {
             `,
             preview:
                 <div>
-                    <Switcher />
+                    <SwitchBlock />
                 </div>
         },
         {
