@@ -72,40 +72,46 @@ export default function TabsViewFancy() {
             <div className='flex flex-col lg:flex-row gap-6 rounded-xl'>
 
                 {/* ✅ LEFT SIDEBAR */}
-                <div className='max-w-full lg:w-64 flex lg:flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg pr-2'>
+                <div className='max-w-full lg:w-64 flex flex-col rounded-xl bg-black/5 dark:bg-white/5 backdrop-filter backdrop-blur-lg pr-2' style={{
+                    background: '#fff',
+                    boxShadow: '0px 0px 10px 0px #6633990f',
+                    padding: '10px 15px'
+                }}>
 
-                    {/* ✅ SEARCH BAR */}
-                    <div className="searchBar">
-                        <input
-                            type="text"
-                            placeholder="Search tabs..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="my-3 px-3 py-2 rounded-lg border outline-none text-sm bg-white border-purple-500 border-2 w-full"
-                        />
-                    </div>
+                    <div className="">
+                        {/* ✅ SEARCH BAR */}
+                        <div className="searchBar">
+                            <input
+                                type="text"
+                                placeholder="Search tabs..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="my-3 px-3 py-2 rounded-lg border outline-none text-sm bg-white border-purple-500 border-2 w-full"
+                            />
+                        </div>
 
-                    <div className="flex gap-2 px-2 mb-3">
-                        {/* ✅ CLEAR SEARCH BUTTON */}
-                        <button
-                            onClick={() => setSearch("")}
-                            className="flex-1 py-2 text-sm rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90 transition"
-                        >
-                            Clear
-                        </button>
+                        <div className="flex gap-2 mb-3">
+                            {/* ✅ CLEAR SEARCH BUTTON */}
+                            <button
+                                onClick={() => setSearch("")}
+                                className="flex-1 py-2 text-sm rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90 transition"
+                            >
+                                Clear
+                            </button>
 
-                        {/* ✅ LAST TAB TOGGLE BUTTON */}
-                        <button
-                            onClick={handleLastTabToggle}
-                            className="flex-1 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition"
-                        >
-                            {isLastTabActive ? "First Tab" : "Last Tab"}
-                        </button>
+                            {/* ✅ LAST TAB TOGGLE BUTTON */}
+                            <button
+                                onClick={handleLastTabToggle}
+                                className="flex-1 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+                            >
+                                {isLastTabActive ? "First Tab" : "Last Tab"}
+                            </button>
+                        </div>
                     </div>
 
 
                     {/* ✅ TABS LIST */}
-                    <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 266px)' }}>
+                    <div className="overflow-y-auto pr-2" style={{ maxHeight: 'calc(100vh - 290px)' }}>
                         {filteredTabs.map(tab => (
                             <button
                                 key={tab.id}
@@ -233,6 +239,6 @@ export default function TabsViewFancy() {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

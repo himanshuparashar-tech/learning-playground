@@ -351,4 +351,30 @@
     display: none;
   }
 
+  /* body {
+    min-height: 100vh;
+    background: linear-gradient(135deg,
+        var(--color-indigo-600),
+        var(--color-purple-600));
+  } */
+
+  /* header {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .aside-block,
+  main {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  } */
+
   /* --- For Html Select End ----*/

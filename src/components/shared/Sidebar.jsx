@@ -214,9 +214,9 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="bg-[var(--bg)] overflow-auto text-[var(--text)]">
+        <div className="bg-[var(--bg)] overflow-auto text-[var(--text)] aside-block">
             <aside
-                className={`p-5 transition-all duration-300 bg-[var(--bg)]
+                className={`p-5 transition-all duration-300 bg-[var(--bg)] 
                 ${isOpen ? "w-64" : "w-20"}`}
             >
                 {/* Toggle Button */}
