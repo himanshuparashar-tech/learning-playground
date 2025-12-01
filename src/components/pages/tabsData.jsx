@@ -51,6 +51,10 @@ import ReactJs_ArrayOfObjects from '../projects/ReactJs/ReactJs_ArrayOfObjects';
 import CopyInput from '../Portal/CopyInput';
 import UseEffectBlock from '../useEffectCode/UseEffectBlock';
 import SwitchBlock from '../switchBlock/SwitchBlock';
+import FetchDataFromUseEffect from '../useEffectCode/FetchDataFromUseEffect';
+import BasicEffect from '../useEffectCode/BasicEffect';
+import CounterEffect from '../useEffectCode/CounterEffect';
+import FetchDataEffect from '../useEffectCode/FetchDataEffect';
 
 export function getTabs() {
 
@@ -1879,7 +1883,40 @@ export function getTabs() {
             preview:
                 <div>
                     <UseEffectBlock />
+
                 </div>
+        },
+        {
+            id: 62,
+            name: 'Fetch Data from UseEffect',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <FetchDataFromUseEffect />
+        },
+        {
+            id: 63,
+            name: 'UseEffect Tests',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <BasicEffect />
+        },
+        {
+            id: 64,
+            name: 'UseEffect Tests2',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <CounterEffect />
+        },
+        {
+            id: 65,
+            name: 'UseEffect Tests3',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <FetchDataEffect />
         }
     ];
 }

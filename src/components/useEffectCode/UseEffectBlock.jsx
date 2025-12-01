@@ -6,13 +6,16 @@ const UseEffectBlock = () => {
 
 
     useEffect(() => {
-        console.log("call useEffect")
-        document.title = `Increment ${value}`
+        if (value > 0) {
+            console.log("call useEffect")
+            document.title = `Increment ${value}`
+        }
     }, [value]);
 
     return (
         <div>
             <h2>{value}</h2>
+            <p>See the console please</p>
             <button onClick={() => setValue(prev => prev + 1)} className='cstm mr-3'>Click</button>
             <button onClick={() => setSome(prev => prev + 1)} className='cstm'>Incre by some</button>
         </div>
