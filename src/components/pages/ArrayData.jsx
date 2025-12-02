@@ -7,6 +7,11 @@ import Images from "../assets/images/images";
 export const ArrayData = {
     greetMessage: 'Hello, Welcome to World of R',
 
+    // NameType for prop drilling
+    nameType: 'Heller James',
+    ageType : 25,
+
+
     // dynamic values computed when the module loads (you can also turn these into functions if you want fresh values each call)
     currentDateTime: new Date().toLocaleString(),
     currentDateInString: new Date().toDateString(),

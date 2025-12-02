@@ -59,6 +59,15 @@ import FetchDataEffect2 from '../useEffectCode/FetchDataEffect2';
 import Images from '../assets/images/images';
 
 
+// Prop Drilling
+import ComponentA from '../PropDrilling/ComponentA';
+import { createContext } from 'react';
+import ComponentCC_A from '../CreateContext/ComponentCC_A';
+import ComponentCC_AM from '../CreateContextMultiple/ComponentCC_AM';
+
+export const Data = createContext();
+export const Data1 = createContext();
+
 export function getTabs() {
 
     return [
@@ -1926,12 +1935,86 @@ export function getTabs() {
         },
         {
             id: 66,
-            name: 'Context API',
+            name: 'Prop Drilling',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <>
+
+                    <ComponentA nameType={ArrayData.nameType} />
+
+                </>
+        },
+        {
+            id: 67,
+            name: 'Context API with Single Data',
             type: 'codePreview',
             code: ``,
             preview:
                 <>
                     <p>Context API is a feature that allows us to manage and share state across the components tree without having to pass props down manually at every level. It's useful for sceneios where you need to share data or functions accorss many components, especially when when these components are deeply nested.</p>
+                    <br />
+                    <Data.Provider value={ArrayData.nameType} >
+                        <ComponentCC_A />
+                    </Data.Provider>
+
+                    <p>If I have multiple data then I will duplicate this <br />
+                        <small><em>export const Data = createContext();</em></small><br />
+                        <small><em>export const Data1 = createContext();</em></small><br />
+
+                        and so on...
+                    </p>
+
+                </>
+        },
+        {
+            id: 68,
+            name: 'Context API with Multiple Data',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <>
+                    <p>Context API is a feature that allows us to manage and share state across the components tree without having to pass props down manually at every level. It's useful for sceneios where you need to share data or functions accorss many components, especially when when these components are deeply nested.</p>
+                    <br />
+                    <p>If I have multiple data then I will duplicate this <br />
+                        <small><em>export const Data = createContext();</em></small><br />
+                        <small><em>export const Data1 = createContext();</em></small><br />
+
+                        and so on...
+                    </p>
+
+                    <br />
+
+                    <Data.Provider value={ArrayData.nameType} >
+                        <Data1.Provider value={ArrayData.ageType}>
+                            <ComponentCC_AM />
+
+                        </Data1.Provider>
+                    </Data.Provider>
+
+
+                </>
+        },
+        {
+            id: 69,
+            name: 'Context API with UseContext',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <>
+                    <p>
+                        
+                    </p>
+                    <br />
+                    
+                    <Data.Provider value={ArrayData.nameType} >
+                        <Data1.Provider value={ArrayData.ageType}>
+                            <ComponentCC_AM />
+
+                        </Data1.Provider>
+                    </Data.Provider>
+
+
                 </>
         }
     ];
