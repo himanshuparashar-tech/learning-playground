@@ -55,6 +55,9 @@ import FetchDataFromUseEffect from '../useEffectCode/FetchDataFromUseEffect';
 import BasicEffect from '../useEffectCode/BasicEffect';
 import CounterEffect from '../useEffectCode/CounterEffect';
 import FetchDataEffect from '../useEffectCode/FetchDataEffect';
+import FetchDataEffect2 from '../useEffectCode/FetchDataEffect2';
+import Images from '../assets/images/images';
+
 
 export function getTabs() {
 
@@ -1916,7 +1919,20 @@ export function getTabs() {
             type: 'codePreview',
             code: ``,
             preview:
-                <FetchDataEffect />
+                <>
+                    <img src={Images.faq_useContextHook1} alt="" /><br />
+                </>
+
+        },
+        {
+            id: 66,
+            name: 'Context API',
+            type: 'codePreview',
+            code: ``,
+            preview:
+                <>
+                    <p>Context API is a feature that allows us to manage and share state across the components tree without having to pass props down manually at every level. It's useful for sceneios where you need to share data or functions accorss many components, especially when when these components are deeply nested.</p>
+                </>
         }
     ];
 }

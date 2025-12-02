@@ -815,8 +815,76 @@ export const ArrayData = {
 
                             Is these two block of code are same ?                    
                     `}
-                   <img src={Images.faq21} alt="" />
-                   <img src={Images.faq22} alt="" />
+                    <img src={Images.faq21} alt="" /><br />
+                    <img src={Images.faq22} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 What is prop Drilling in react js?',
+            answer: (
+                <>
+                    <img src={Images.faq_propDrilling1} alt="" /><br />
+                    <img src={Images.faq_propDrilling2} alt="" /><br />
+                    <img src={Images.faq_propDrilling3} alt="" /><br />
+                    <img src={Images.faq_propDrilling4} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 What is Context API in react js?',
+            answer: (
+                <>
+                    <img src={Images.faq_contextAPI1} alt="" /><br />
+                    <img src={Images.faq_contextAPI2} alt="" /><br />
+                    <img src={Images.faq_contextAPI3} alt="" /><br />
+                    <img src={Images.faq_contextAPI4} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 What is useContext Hook in react js?',
+            answer: (
+                <>
+                    <img src={Images.faq_contextAPI1} alt="" /><br />
+                    <img src={Images.faq_contextAPI2} alt="" /><br />
+                    <img src={Images.faq_contextAPI3} alt="" /><br />
+                    <img src={Images.faq_contextAPI4} alt="" /><br />
+                    <img src={Images.faq_contextAPI5} alt="" /><br />
+                    <img src={Images.faq_contextAPI6} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 to use useContext aur context api me kya antar hai?',
+            answer: (
+                <>
+                    <img src={Images.faq_contextAPI7} alt="" /><br />
+                    <img src={Images.faq_contextAPI8} alt="" /><br />
+                    <img src={Images.faq_contextAPI9} alt="" /><br />
+                    <img src={Images.faq_contextAPI10} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 and what is the createcontext and useContext?',
+            answer: (
+                <>
+                    <img src={Images.faq_contextAPI11} alt="" /><br />
+                    <img src={Images.faq_contextAPI12} alt="" /><br />
+                    <img src={Images.faq_contextAPI13} alt="" /><br />
+                    <img src={Images.faq_contextAPI14} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 yeh real time me kaha par use me aata hai ?',
+            answer: (
+                <>
+                    <img src={Images.faq_contextAPI15} alt="" /><br />
+                    <img src={Images.faq_contextAPI16} alt="" /><br />
+                    <img src={Images.faq_contextAPI17} alt="" /><br />
+                    <img src={Images.faq_contextAPI18} alt="" />
                 </>
             )
         }

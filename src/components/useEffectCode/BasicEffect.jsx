@@ -8,7 +8,7 @@ const BasicEffect = () => {
 
     return (
         <div>
-            <h2></h2>
+            <h2>Please see the console</h2>
         </div>
     )
 }
