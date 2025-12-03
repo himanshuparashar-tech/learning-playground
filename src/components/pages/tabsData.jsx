@@ -1940,9 +1940,7 @@ export function getTabs() {
             code: ``,
             preview:
                 <>
-
                     <ComponentA nameType={ArrayData.nameType} />
-
                 </>
         },
         {
