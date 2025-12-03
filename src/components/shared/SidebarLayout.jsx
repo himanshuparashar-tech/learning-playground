@@ -32,7 +32,7 @@ const SidebarLayout = () => {
                         path="/"
                         element={
                             <ProtectedRoute>
-                                <Navigate to="/tabsLayout" replace />
+                                <Navigate to="/intro" replace />
                             </ProtectedRoute>
                         }
                     />
@@ -142,6 +142,9 @@ const SidebarLayout = () => {
                             </ProtectedRoute>
                         }
                     />
+                    {/* ✅ ✅ CATCH ALL WRONG AUTH ROUTES → /intro */}
+                    <Route path="*" element={<Navigate to="/intro" replace />} />
+
 
                 </Routes>
 

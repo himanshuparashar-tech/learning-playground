@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext"; // adjust path if needed
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MenuIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
   <line x1="4" x2="20" y1="12" y2="12" />
@@ -42,6 +41,8 @@ const Header = () => {
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -63,11 +64,15 @@ const Header = () => {
 
 
   const handleLogout = () => {
-    logout();                // ✅ clears context + localStorage
+    // ✅ Save the EXACT current route before auth state changes
+    localStorage.setItem("lastRoute", location.pathname);
+
+    logout();                      // clear auth
     setIsDropdownOpen(false);
     setIsMenuOpen(false);
-    navigate("/login");      // ✅ redirect after logout
+    navigate("/login");            // go to login
   };
+
 
   useEffect(() => {
     // run once on mount to determine initial theme and apply it
@@ -98,7 +103,7 @@ const Header = () => {
     } catch (e) { /* ignore */ }
   }, [theme, mounted]);
 
-  const navLinks = [{ href: "/home", label: "Home" }, { href: "#", label: "About" }, { href: "/projects", label: "Projects" }];
+  const navLinks = [{ href: "/intro", label: "Home" }, { href: "#", label: "About" }, { href: "/projects", label: "Projects" }];
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
@@ -167,7 +172,7 @@ const Header = () => {
         {user && (
           <button
             onClick={handleLogout}
-            className="w-full mt-2 text-center items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-white text-white hover:bg-red-700 block transition-colors duration-300"
+            className="w-full mt-2 text-center items-center border-2 border-white justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-transparent text-white hover:bg-red-700 block transition-colors duration-300"
           >
             Logout
           </button>

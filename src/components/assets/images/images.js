@@ -62,12 +62,27 @@ import faq_useContextHook16 from './faq/faq_useContextHook16.png'
 import faq_useContextHook17 from './faq/faq_useContextHook17.png'
 import faq_useContextHook18 from './faq/faq_useContextHook18.png'
 
+// Reusable Auth System
+import faq_ras1 from './faq/faq_ras1.png'
+import faq_ras2 from './faq/faq_ras2.png'
+import faq_ras3 from './faq/faq_ras3.png'
+import faq_ras4 from './faq/faq_ras4.png'
+import faq_ras5 from './faq/faq_ras5.png'
+import faq_ras6 from './faq/faq_ras6.png'
+import faq_ras7 from './faq/faq_ras7.png'
+import faq_ras8 from './faq/faq_ras8.png'
+import faq_ras9 from './faq/faq_ras9.png'
+import faq_ras10_11 from './faq/faq_ras10_11.png'
+import faq_ras12 from './faq/faq_ras12.png'
+import faq_ras13 from './faq/faq_ras13.png'
+
+
 
 
 // Export as a single Object
 const Images = {
     react1, react2, react3, react4, illustration1, faq1, faq2, faq3, faq4, faq5, faq6, faq7, faq8, faq9, faq10, faq11, faq12, faq13, faq14, faq15, faq16, faq17, faq18, faq19, faq20, faq21, faq22, img1, img2, img3, img4, faq_propDrilling1, faq_propDrilling2, faq_propDrilling3, faq_propDrilling4, faq_contextAPI1, faq_contextAPI2, faq_contextAPI3, faq_contextAPI4, faq_contextAPI5, faq_useContextHook1, faq_useContextHook2, faq_useContextHook3, faq_useContextHook4, faq_useContextHook5, faq_useContextHook5, faq_useContextHook6, faq_useContextHook7, faq_useContextHook8, faq_useContextHook9, faq_useContextHook10, faq_useContextHook11, faq_useContextHook12, faq_useContextHook13, faq_useContextHook14, faq_useContextHook15, faq_useContextHook16, faq_useContextHook17,
-    faq_useContextHook18
+    faq_useContextHook18,faq_ras1, faq_ras2, faq_ras3, faq_ras4, faq_ras5, faq_ras6, faq_ras7, faq_ras8, faq_ras9, faq_ras10_11, faq_ras12, faq_ras13
 }
 
 export default Images;

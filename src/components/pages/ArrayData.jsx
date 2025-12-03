@@ -851,12 +851,12 @@ export const ArrayData = {
             question: '👉 What is useContext Hook in react js?',
             answer: (
                 <>
-                    <img src={Images.faq_contextAPI1} alt="" /><br />
-                    <img src={Images.faq_contextAPI2} alt="" /><br />
-                    <img src={Images.faq_contextAPI3} alt="" /><br />
-                    <img src={Images.faq_contextAPI4} alt="" /><br />
-                    <img src={Images.faq_contextAPI5} alt="" /><br />
-                    <img src={Images.faq_contextAPI6} alt="" />
+                    <img src={Images.faq_useContextHook1} alt="" /><br />
+                    <img src={Images.faq_useContextHook2} alt="" /><br />
+                    <img src={Images.faq_useContextHook3} alt="" /><br />
+                    <img src={Images.faq_useContextHook4} alt="" /><br />
+                    <img src={Images.faq_useContextHook5} alt="" /><br />
+                    <img src={Images.faq_useContextHook6} alt="" />
                 </>
             )
         },
@@ -864,10 +864,10 @@ export const ArrayData = {
             question: '👉 to use useContext aur context api me kya antar hai?',
             answer: (
                 <>
-                    <img src={Images.faq_contextAPI7} alt="" /><br />
-                    <img src={Images.faq_contextAPI8} alt="" /><br />
-                    <img src={Images.faq_contextAPI9} alt="" /><br />
-                    <img src={Images.faq_contextAPI10} alt="" />
+                    <img src={Images.faq_useContextHook7} alt="" /><br />
+                    <img src={Images.faq_useContextHook8} alt="" /><br />
+                    <img src={Images.faq_useContextHook9} alt="" /><br />
+                    <img src={Images.faq_useContextHook10} alt="" />
                 </>
             )
         },
@@ -875,10 +875,10 @@ export const ArrayData = {
             question: '👉 and what is the createcontext and useContext?',
             answer: (
                 <>
-                    <img src={Images.faq_contextAPI11} alt="" /><br />
-                    <img src={Images.faq_contextAPI12} alt="" /><br />
-                    <img src={Images.faq_contextAPI13} alt="" /><br />
-                    <img src={Images.faq_contextAPI14} alt="" />
+                    <img src={Images.faq_useContextHook11} alt="" /><br />
+                    <img src={Images.faq_useContextHook12} alt="" /><br />
+                    <img src={Images.faq_useContextHook13} alt="" /><br />
+                    <img src={Images.faq_useContextHook14} alt="" />
                 </>
             )
         },
@@ -886,10 +886,30 @@ export const ArrayData = {
             question: '👉 yeh real time me kaha par use me aata hai ?',
             answer: (
                 <>
-                    <img src={Images.faq_contextAPI15} alt="" /><br />
-                    <img src={Images.faq_contextAPI16} alt="" /><br />
-                    <img src={Images.faq_contextAPI17} alt="" /><br />
-                    <img src={Images.faq_contextAPI18} alt="" />
+                    <img src={Images.faq_useContextHook15} alt="" /><br />
+                    <img src={Images.faq_useContextHook16} alt="" /><br />
+                    <img src={Images.faq_useContextHook17} alt="" /><br />
+                    <img src={Images.faq_useContextHook18} alt="" />
+                </>
+            )
+        },
+        {
+            question: '👉 REUSABLE AUTH SYSTEM ',
+            answer: (
+                <>
+                    <img src={Images.faq_ras1} alt="" /><br />
+                    <img src={Images.faq_ras2} alt="" /><br />
+                    <img src={Images.faq_ras3} alt="" /><br />
+                    <img src={Images.faq_ras4} alt="" /><br />
+                    <img src={Images.faq_ras5} alt="" /><br />
+                    <img src={Images.faq_ras6} alt="" /><br />
+                    <img src={Images.faq_ras7} alt="" /><br />
+                    <img src={Images.faq_ras8} alt="" /><br />
+                    <img src={Images.faq_ras9} alt="" /><br />
+                    <img src={Images.faq_ras10} alt="" /><br />
+                    <img src={Images.faq_ras11} alt="" /><br />
+                    <img src={Images.faq_ras12} alt="" /><br />
+                    <img src={Images.faq_ras13} alt="" />
                 </>
             )
         }

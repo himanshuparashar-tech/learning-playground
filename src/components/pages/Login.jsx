@@ -22,11 +22,22 @@ const Login = () => {
         if (email === "hp" && password === "hp") {
             toast.success("Login Successful!");
             login(email);
-            navigate('/intro');
+
+            // ✅ SAFE last-route redirect
+            const lastRoute = localStorage.getItem("lastRoute");
+
+            if (lastRoute && lastRoute !== "/login") {
+                navigate(lastRoute);
+            } else {
+                navigate("/intro");
+            }
+
+            localStorage.removeItem("lastRoute"); // ✅ cleanup
         } else {
             toast.error("Invalid Credentials");
         }
     };
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600">
