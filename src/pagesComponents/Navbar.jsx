@@ -88,7 +88,7 @@ const Navbar = () => {
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <i className="fa-solid fa-link text-lg text-white"></i>
+              <i className="fa-solid fa-link text-lg text-black"></i>
 
               <motion.span
                 className="absolute inset-0 rounded-xl border border-white/20"
@@ -99,7 +99,7 @@ const Navbar = () => {
 
             {/* TEXT */}
             <div className="flex flex-col items-start z-10">
-              <span className="text-sm font-semibold">ecommerce demo</span>
+              <span className="text-sm font-semibold font-serif">E-commerce App</span>
               <span className="text-[11px] text-white/90 truncate max-w-[220px]">
                 ecommerce-phi-lilac.vercel.app
               </span>

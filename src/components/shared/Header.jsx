@@ -114,7 +114,7 @@ const Header = () => {
         <div className="flex-shrink-0">
           <a href="#" className="flex items-center gap-2">
             <MountainIcon className="h-6 w-6 text-gray-900 dark:text-white" />
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">Learn</span>
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">E-Learning</span>
           </a>
         </div>
 

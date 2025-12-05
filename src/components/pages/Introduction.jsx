@@ -26,7 +26,7 @@ const Introduction = () => {
         <Instructors />
         {/* <FAQ /> */}
         <Events />
-        <Contact />
+        {/* <Contact /> */}
         <Blog />
       </main>
       {/* <Footer />   */}

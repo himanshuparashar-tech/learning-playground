@@ -11,7 +11,7 @@ const Banner = () => {
                     Excepteur sint occaecat cupidatat non provident sunt in culpa.
                 </p>
 
-                <a className="bg-green-600 px-12 py-4 rounded-lg text-lg text-white flex gap-2 items-center hover:bg-green-700 duration-300">
+                <a href="https://ecommerce-phi-lilac.vercel.app/" className="bg-green-600 px-12 py-4 rounded-lg text-lg text-white flex gap-2 items-center hover:bg-green-700 duration-300">
                     <span>explore</span>
                     <i className="fa-solid fa-arrow-right-long"></i>
                 </a>
