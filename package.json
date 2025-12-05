@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.14",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.23.25",
     "npx": "^10.2.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

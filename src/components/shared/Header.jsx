@@ -103,7 +103,7 @@ const Header = () => {
     } catch (e) { /* ignore */ }
   }, [theme, mounted]);
 
-  const navLinks = [{ href: "/intro", label: "Home" }, { href: "#", label: "About" }, { href: "/projects", label: "Projects" }];
+  const navLinks = [{ href: "/intro", label: "Home" }, { href: "/about", label: "About" }, { href: "/projects", label: "Projects" }];
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
