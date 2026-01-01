@@ -12,6 +12,7 @@ import FAQ from "../../pagesComponents/FAQ";
 import Blog from "../../pagesComponents/Blog";
 import Footer from "../shared/Footer";
 import Navbar from "../../pagesComponents/Navbar";
+import HBC from "../../pagesComponents/HBC";
 
 const Introduction = () => {
 
@@ -28,6 +29,7 @@ const Introduction = () => {
         <Events />
         {/* <Contact /> */}
         <Blog />
+        <HBC />
       </main>
       {/* <Footer />   */}
     </div>
