@@ -9,7 +9,8 @@ import ProjectDetails from '../pages/ProjectDetails';
 import About from '../pages/About';
 import Demo from '../pages/Demo';
 import Faq from '../pages/Faq';
-import Introduction from '../pages/Introduction';
+import Introduction from '../pages/Introduction'; 
+import HBC from '../../pagesComponents/HBC';
 import ProtectedRoute from './ProtectedRoute';
 
 // Project Category Pages
@@ -139,6 +140,14 @@ const SidebarLayout = () => {
                         element={
                             <ProtectedRoute >
                                 <Display />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="hbc"
+                        element={
+                            <ProtectedRoute>
+                                <HBC />
                             </ProtectedRoute>
                         }
                     />
