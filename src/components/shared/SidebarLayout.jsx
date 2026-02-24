@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from '../shared/Sidebar';
 
 // Import Pages
@@ -19,10 +19,16 @@ import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
 import Display from '../Display/Display';
 
 const SidebarLayout = () => {
+    const location = useLocation();
+    const isHBCPage = location.pathname.includes('hbc');
+
     return (
-        <div className='flex' style={{
-            maxHeight: 'calc(100vh - 7rem)', overflow: 'hidden'
-        }} >
+        <div
+            className={`flex ${isHBCPage ? 'layout-hbc' : ''}`}
+            style={{
+                maxHeight: 'calc(100vh - 7rem)', overflow: 'hidden'
+            }}
+        >
             <Sidebar />
 
             <main className="flex-1 p-2 bg-zinc-50 overflow-auto" style={{ minHeight: 'calc(100vh - 7rem)' }}>

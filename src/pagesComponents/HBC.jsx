@@ -1,14 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import html2canvas from 'html2canvas'
 import '../../calculator.css'
 
 const MEMBERS = [
-    { id: 'ashu', name: 'Ashu' },
-    { id: 'jay', name: 'Jay' },
-    { id: 'bhaiya', name: 'Bhaiya' },
-    { id: 'aunty', name: 'Aunty' }
+    { id: 'ashu', name: 'Himanshu Bhai' },
+    { id: 'jay', name: 'Jay Bhai' },
+    { id: 'sudhir', name: 'Sudhir Bhai' },
+    { id: 'govind', name: 'Govind Bhai' }
 ];
 
 const TOTAL_MEMBERS = MEMBERS.length;
+
+const fadeInUp = {
+    initial: { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }
+};
+const staggerContainer = {
+    animate: {
+        transition: { staggerChildren: 0.08, delayChildren: 0.05 }
+    }
+};
+const staggerItem = {
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 }
+};
+const resultsVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0, transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } }
+};
+const buttonTap = { scale: 0.98 };
+const buttonHover = { scale: 1.02 };
 
 const HBC = () => {
     // Electricity Bill State
@@ -23,8 +49,8 @@ const HBC = () => {
     const [memberReadings, setMemberReadings] = useState({
         ashu: { previous: '', current: '' },
         jay: { previous: '', current: '' },
-        bhaiya: { previous: '', current: '' },
-        aunty: { previous: '', current: '' }
+        sudhir: { previous: '', current: '' },
+        govind: { previous: '', current: '' }
     });
 
     // Water Bill State
@@ -243,7 +269,7 @@ const HBC = () => {
         ) {
             const previousReading = getNumericValue(
                 waterPreviousReading,
-                'Water Previous Reading',
+                'Motor previous reading',
                 'water-previous'
             );
 
@@ -251,14 +277,14 @@ const HBC = () => {
 
             const currentReading = getNumericValue(
                 waterCurrentReading,
-                'Water Current Reading',
+                'Motor current reading',
                 'water-current'
             );
 
             if (currentReading === null) return null;
 
             if (currentReading < previousReading) {
-                showError('water-current', 'Current reading cannot be less than previous reading');
+                showError('water-current', 'Motor current reading cannot be less than previous');
                 return null;
             }
 
@@ -269,7 +295,7 @@ const HBC = () => {
         else {
             const providedUnits = getNumericValue(
                 totalWaterUnits,
-                'Total Water Units',
+                'Motor total units',
                 'water-units'
             );
 
@@ -280,7 +306,7 @@ const HBC = () => {
 
         const waterPricePerUnitValue = getNumericValue(
             waterPricePerUnit,
-            'Water Price per Unit',
+            'Motor price per unit',
             'water-price'
         );
 
@@ -357,67 +383,251 @@ const HBC = () => {
         }
     };
 
+    // Price per unit section is disabled until all cards have previous + current readings
+    const allReadingsFilled = (() => {
+        for (const member of MEMBERS) {
+            const r = memberReadings[member.id];
+            if (r.previous.trim() === '' || r.current.trim() === '') return false;
+        }
+        if (waterPreviousReading.trim() === '' || waterCurrentReading.trim() === '') return false;
+        return true;
+    })();
+
+    // Motor meter difference (current - previous) when both valid
+    const motorDifference = (() => {
+        const prev = parseFloat(waterPreviousReading);
+        const curr = parseFloat(waterCurrentReading);
+        if (waterPreviousReading === '' || waterCurrentReading === '' || isNaN(prev) || isNaN(curr) || curr < prev) return null;
+        return roundToTwoDecimals(curr - prev);
+    })();
+
+    // Total of all differences: sub-meters total + motor difference
+    const totalAllDifferences = (() => {
+        const subTotal = totalUnits ? parseFloat(totalUnits) : 0;
+        const motor = motorDifference != null ? motorDifference : 0;
+        const combined = subTotal + motor;
+        return (subTotal > 0 || motor > 0) ? roundToTwoDecimals(combined).toFixed(2) : null;
+    })();
+
+    // Copy total of all differences (sub-meters + motor) to "Total units" at the top (section 1)
+    const handleCalculateTotalUnits = () => {
+        if (totalAllDifferences && parseFloat(totalAllDifferences) > 0) {
+            setPerUnitTotal(totalAllDifferences);
+        }
+    };
+
+    const resultsSectionRef = useRef(null);
+
+    const getTableBodyData = () => {
+        if (!results) return { headers: [], body: [] };
+        const headers = ['Member', 'Sub-meter units', 'Sub-meter (₹)', 'Motor (₹)', 'Total (₹)'];
+        const body = [];
+        let grandTotal = 0;
+        MEMBERS.forEach(member => {
+            let electricityAmount = 0, waterAmount = 0, electricityUnits = 0;
+            if (results.type !== 'water-only' && results.electricity) {
+                const r = results.electricity.results[member.id];
+                electricityAmount = r.electricityAmount;
+                electricityUnits = r.units;
+            }
+            if (results.type !== 'electricity-only' && results.water) {
+                waterAmount = results.water.waterBillPerMember;
+            }
+            const totalPayable = electricityAmount + waterAmount;
+            grandTotal += totalPayable;
+            body.push([
+                member.name,
+                results.type === 'water-only' ? 'N/A' : roundToTwoDecimals(electricityUnits).toFixed(2),
+                results.type === 'water-only' ? 'N/A' : formatCurrency(electricityAmount),
+                results.type === 'electricity-only' ? 'N/A' : formatCurrency(waterAmount),
+                formatCurrency(totalPayable)
+            ]);
+        });
+        const totalSub = results.electricity ? roundToTwoDecimals(results.electricity.totalUnits).toFixed(2) : 'N/A';
+        const totalSubAmt = results.electricity ? formatCurrency(results.electricity.totalUnits * results.electricity.perUnitCost) : 'N/A';
+        const totalMotor = results.water ? formatCurrency(results.water.waterBillPerMember * TOTAL_MEMBERS) : 'N/A';
+        body.push(['TOTAL', totalSub, totalSubAmt, totalMotor, formatCurrency(grandTotal)]);
+        return { headers, body };
+    };
+
+    const downloadAsPDF = () => {
+        if (!results) return;
+        const doc = new jsPDF();
+        const left = 14;
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const marginBottom = 20;
+        let y = 18;
+        const lineHeight = 6;
+        const sectionGap = 6;
+
+        const addPageIfNeeded = (requiredSpace = lineHeight) => {
+            if (y + requiredSpace > pageH - marginBottom) {
+                doc.addPage();
+                y = 18;
+            }
+        };
+
+        const fmt = (v) => {
+            if (v === '' || v == null) return '—';
+            const n = parseFloat(v);
+            return isNaN(n) ? '—' : (Number.isInteger(n) ? String(n) : n.toFixed(2));
+        };
+
+        doc.setFontSize(10);
+        const centerX = pageW / 2;
+
+        // ——— Section 1: Meter Readings (table, centered) ———
+        addPageIfNeeded(lineHeight * 12);
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(11);
+        doc.text('Meter Readings', centerX, y, { align: 'center' });
+        y += lineHeight + 2;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(10);
+
+        const meterRows = [];
+        MEMBERS.forEach((member, i) => {
+            const prev = memberReadings[member.id].previous;
+            const curr = memberReadings[member.id].current;
+            const prevN = prev !== '' ? parseFloat(prev) : NaN;
+            const currN = curr !== '' ? parseFloat(curr) : NaN;
+            const diff = (!isNaN(prevN) && !isNaN(currN) && currN >= prevN) ? roundToTwoDecimals(currN - prevN) : null;
+            meterRows.push([`${i + 1} house ${member.name}`, fmt(prev), fmt(curr), diff != null ? diff.toFixed(2) : '—']);
+        });
+        const motorPrevN = waterPreviousReading !== '' ? parseFloat(waterPreviousReading) : NaN;
+        const motorCurrN = waterCurrentReading !== '' ? parseFloat(waterCurrentReading) : NaN;
+        const motorDiff = (!isNaN(motorPrevN) && !isNaN(motorCurrN) && motorCurrN >= motorPrevN) ? roundToTwoDecimals(motorCurrN - motorPrevN) : null;
+        meterRows.push(['MOTOR', fmt(waterPreviousReading), fmt(waterCurrentReading), motorDiff != null ? motorDiff.toFixed(2) : '—']);
+
+        autoTable(doc, {
+            head: [['Meter', 'Previous', 'Current', 'Difference']],
+            body: meterRows,
+            startY: y,
+            theme: 'grid',
+            headStyles: { fontStyle: 'bold', halign: 'center' },
+            bodyStyles: { halign: 'center' },
+            columnStyles: { 0: { halign: 'center' }, 1: { halign: 'center' }, 2: { halign: 'center' }, 3: { halign: 'center' } }
+        });
+        y = doc.lastAutoTable.finalY + sectionGap;
+
+        // ——— Section 2: Total used Unit & Unit wise bill (centered, bold heading) ———
+        addPageIfNeeded(lineHeight * 4);
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(11);
+        doc.text('Total used Unit & Unit wise bill', centerX, y, { align: 'center' });
+        y += lineHeight + 2;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(10);
+
+        const perUnitCost = results.electricity ? results.electricity.perUnitCost : parseFloat(waterPricePerUnit || 0);
+        const motorUnitsPerMember = results.water ? roundToTwoDecimals(results.water.totalWaterUnits / TOTAL_MEMBERS) : 0;
+
+        MEMBERS.forEach((member, i) => {
+            addPageIfNeeded(lineHeight * 4);
+            const subUnits = results.type !== 'water-only' && results.electricity
+                ? roundToTwoDecimals(results.electricity.results[member.id].units)
+                : 0;
+            const totalUnitsPerson = roundToTwoDecimals(subUnits + motorUnitsPerMember);
+            const amount = results.type === 'water-only'
+                ? roundToTwoDecimals(results.water.waterBillPerMember)
+                : roundToTwoDecimals(totalUnitsPerson * perUnitCost);
+
+            doc.text(`${i + 1} house ${member.name} -`, centerX, y, { align: 'center' });
+            y += lineHeight;
+            doc.text(`${subUnits.toFixed(2)} + ${motorUnitsPerMember.toFixed(2)} (motor) = ${totalUnitsPerson.toFixed(2)}`, centerX, y, { align: 'center' });
+            y += lineHeight;
+            doc.text(`${totalUnitsPerson.toFixed(2)} x ${perUnitCost.toFixed(2)} = ₹${amount.toFixed(2)}`, centerX, y, { align: 'center' });
+            y += lineHeight + 2;
+        });
+        y += sectionGap - 2;
+
+        // ——— Section 3: Total bill / Total unit consumed (centered, bold heading) ———
+        addPageIfNeeded(lineHeight * 4);
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(11);
+        doc.text('Total bill / Total unit consumed', centerX, y, { align: 'center' });
+        y += lineHeight + 2;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(10);
+
+        const totalUnitsConsumed = results.electricity
+            ? roundToTwoDecimals(results.electricity.totalUnits + (results.water ? results.water.totalWaterUnits : 0))
+            : (results.water ? roundToTwoDecimals(results.water.totalWaterUnits) : 0);
+        let totalBillAmount = 0;
+        if (results.electricity && results.water) {
+            totalBillAmount = roundToTwoDecimals(
+                results.electricity.totalUnits * results.electricity.perUnitCost +
+                results.water.totalWaterUnits * parseFloat(waterPricePerUnit || 0)
+            );
+        } else if (results.electricity) {
+            totalBillAmount = roundToTwoDecimals(results.electricity.totalUnits * results.electricity.perUnitCost);
+        } else if (results.water) {
+            totalBillAmount = roundToTwoDecimals(results.water.totalWaterUnits * parseFloat(waterPricePerUnit || 0));
+        }
+        const perUnitDisplay = totalUnitsConsumed > 0 ? roundToTwoDecimals(totalBillAmount / totalUnitsConsumed) : perUnitCost;
+
+        doc.text(`= ₹${totalBillAmount.toFixed(2)} / ${totalUnitsConsumed.toFixed(2)}`, centerX, y, { align: 'center' });
+        y += lineHeight;
+        doc.text(`= ₹${perUnitDisplay.toFixed(2)} per unit price`, centerX, y, { align: 'center' });
+
+        doc.save('hbc-results.pdf');
+    };
+
+    const downloadAsJPG = async () => {
+        if (!resultsSectionRef.current) return;
+        try {
+            const canvas = await html2canvas(resultsSectionRef.current, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+            const link = document.createElement('a');
+            link.download = 'hbc-results.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.92);
+            link.click();
+        } catch (e) {
+            console.error('JPG export failed', e);
+        }
+    };
+
     return (
         <div className="main-body">
-            <div className="calculator-container">
-                <h1>🏠 HBC</h1>
-                {/* <p className="calculator-subtitle">Calculate Electricity & Water Bills for 4 Members</p> */}
-
-                {/* Electricity Bill Section */}
-                <div className="calculator-section">
-                    <h2 className="calculator-section-title">⚡ Electricity Bill</h2>
-
-                    <div className={`calculator-input-group ${errors['total-electricity-bill'] ? 'calculator-error' : ''}`}>
-                        <label htmlFor="total-electricity-bill">
-                            Total Electricity Bill Amount (₹)
-                            {savedPerUnitPrice !== null && (
-                                <span style={{ color: '#92400e', fontSize: '0.85em', marginLeft: '8px' }}>
-                                    (Optional - Using saved per unit: ₹{savedPerUnitPrice.toFixed(2)})
-                                </span>
-                            )}
-                        </label>
-                        <input
-                            type="number"
-                            id="total-electricity-bill"
-                            step="0.01"
-                            min="0"
-                            placeholder={savedPerUnitPrice !== null ? "Optional - Saved per unit price will be used" : "Enter total bill amount"}
-                            value={totalElectricityBill}
-                            onChange={(e) => {
-                                setTotalElectricityBill(e.target.value);
-                                clearError('total-electricity-bill');
-                            }}
-                            onKeyPress={(e) => handleKeyPress(e, calculateElectricityOnly)}
-                        />
-                        {errors['total-electricity-bill'] && (
-                            <span className="calculator-error-message show">{errors['total-electricity-bill']}</span>
-                        )}
+            <motion.div
+                className="calculator-container"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+                <motion.div initial={fadeInUp.initial} animate={fadeInUp.animate} transition={fadeInUp.transition}>
+                    <h1>🏠 HBC</h1>
+                    <p className="calculator-intro">
+                        One main meter bill, <strong>4 sub-meters</strong> (pay by your units), and <strong>1 motor meter</strong> (split equally). Set the rate, enter readings, then click <strong>Calculate Bills</strong>.
+                    </p>
+                    <div className="calculator-steps-pill">
+                        <span className="calculator-step-dot">1</span>
+                        <span className="calculator-step-label">Rate</span>
+                        <span className="calculator-step-arrow">→</span>
+                        <span className="calculator-step-dot">2</span>
+                        <span className="calculator-step-label">Readings</span>
+                        <span className="calculator-step-arrow">→</span>
+                        <span className="calculator-step-dot">3</span>
+                        <span className="calculator-step-label">Calculate</span>
                     </div>
+                </motion.div>
 
-                    {/* <div className={`calculator-input-group ${errors['total-units'] ? 'calculator-error' : ''}`}>
-                        <label htmlFor="total-units">Total Units (Optional - For Reference Only)</label>
-                        <input
-                            type="number"
-                            id="total-units"
-                            step="0.01"
-                            min="0"
-                            placeholder="Auto-calculated from meter readings"
-                            value={totalUnits}
-                            onChange={(e) => {
-                                setTotalUnits(e.target.value);
-                                clearError('total-units');
-                            }}
-                            readOnly
-                        />
-                        {errors['total-units'] && (
-                            <span className="calculator-error-message show">{errors['total-units']}</span>
-                        )}
-                        <small style={{ color: '#6b7280', fontSize: '0.85em', marginTop: '4px', display: 'block' }}>
-                            Note: Calculation uses individual meter readings (Current - Previous) for each member
-                        </small>
-                    </div> */}
-
-                    {/* Per Unit Calculator */}
+                {/* Step 1: Price per unit — from main bill (disabled until all readings filled) */}
+                <motion.div
+                    className={`calculator-section calculator-section-per-unit ${!allReadingsFilled ? 'calculator-section-disabled' : ''}`}
+                    initial={fadeInUp.initial}
+                    animate={fadeInUp.animate}
+                    transition={{ ...fadeInUp.transition, delay: 0.1 }}
+                >
+                    <h2 className="calculator-section-title">1. Price per unit (from main bill)</h2>
+                    <p className="calculator-section-hint">
+                        {allReadingsFilled ? 'Use your main meter bill to get ₹/unit; same rate for sub-meters and motor.' : 'Fill previous & current readings in every card (4 sub-meters + motor) to enable this section.'}
+                    </p>
                     <div className="calculator-per-unit-calculator">
                         <div className="calculator-input-group">
                             <label htmlFor="per-unit-bill">Bill Amount (₹)</label>
@@ -439,6 +649,7 @@ const HBC = () => {
                                     setPerUnitResult({ show: false, value: '', color: '' });
                                 }}
                                 onKeyPress={(e) => handleKeyPress(e, calculatePerUnit)}
+                                disabled={!allReadingsFilled}
                             />
                         </div>
                         <div className="calculator-input-group">
@@ -461,27 +672,73 @@ const HBC = () => {
                                     setPerUnitResult({ show: false, value: '', color: '' });
                                 }}
                                 onKeyPress={(e) => handleKeyPress(e, calculatePerUnit)}
+                                disabled={!allReadingsFilled}
                             />
                         </div>
-                        <button className="calculator-per-unit-btn" onClick={calculatePerUnit}>
+                        <motion.button
+                            type="button"
+                            className="calculator-per-unit-btn"
+                            onClick={calculatePerUnit}
+                            whileHover={allReadingsFilled ? buttonHover : undefined}
+                            whileTap={allReadingsFilled ? buttonTap : undefined}
+                            disabled={!allReadingsFilled}
+                        >
                             Calculate Per Unit
-                        </button>
+                        </motion.button>
                     </div>
                     {perUnitResult.show && (
-                        <div
+                        <motion.div
                             className="calculator-per-unit-result show"
                             style={{ color: perUnitResult.color }}
                             dangerouslySetInnerHTML={{ __html: perUnitResult.value }}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
                         />
                     )}
+                </motion.div>
 
-                    <div className="calculator-members-grid">
-                        {MEMBERS.map(member => (
-                            <div key={member.id} className="calculator-member-card">
-                                <h3>{member.name}</h3>
+                {/* Step 2: Sub-meters — pay by your units */}
+                <motion.div
+                    className="calculator-section"
+                    initial={fadeInUp.initial}
+                    animate={fadeInUp.animate}
+                    transition={{ ...fadeInUp.transition, delay: 0.15 }}
+                >
+                    <h2 className="calculator-section-title">2. Sub-meters (pay by your units)</h2>
+                    <p className="calculator-section-hint">Enter each person’s sub-meter readings. Bill is split by who used how many units.</p>
+                    <div className={`calculator-input-group ${errors['total-electricity-bill'] ? 'calculator-error' : ''}`}>
+                        <label htmlFor="total-electricity-bill">
+                            Main meter total bill (₹) <span className="calculator-label-optional"></span>
+                            {savedPerUnitPrice !== null && (
+                                <span className="calculator-saved-rate">Using saved rate: ₹{savedPerUnitPrice.toFixed(2)}/unit</span>
+                            )}
+                        </label>
+                        <input
+                            type="number"
+                            id="total-electricity-bill"
+                            step="0.01"
+                            min="0"
+                            placeholder={savedPerUnitPrice !== null ? "Leave blank to use saved rate" : "Enter main bill to derive rate"}
+                            value={totalElectricityBill}
+                            onChange={(e) => {
+                                setTotalElectricityBill(e.target.value);
+                                clearError('total-electricity-bill');
+                            }}
+                            onKeyPress={(e) => handleKeyPress(e, calculateElectricityOnly)}
+                        />
+                        {errors['total-electricity-bill'] && (
+                            <span className="calculator-error-message show">{errors['total-electricity-bill']}</span>
+                        )}
+                    </div>
+
+                    <motion.div className="calculator-members-grid" variants={staggerContainer} initial="initial" animate="animate">
+                        {MEMBERS.map((member, index) => (
+                            <motion.div key={member.id} className="calculator-member-card" variants={staggerItem} custom={index}>
+                                <h3>{member.name} — sub-meter</h3>
                                 <div className="calculator-member-inputs">
                                     <div className={`calculator-input-group ${errors[`${member.id}-previous`] ? 'calculator-error' : ''}`}>
-                                        <label htmlFor={`${member.id}-previous`}>Previous Reading</label>
+                                        <label htmlFor={`${member.id}-previous`}>Previous reading</label>
                                         <input
                                             type="number"
                                             id={`${member.id}-previous`}
@@ -500,7 +757,7 @@ const HBC = () => {
                                         )}
                                     </div>
                                     <div className={`calculator-input-group ${errors[`${member.id}-current`] ? 'calculator-error' : ''}`}>
-                                        <label htmlFor={`${member.id}-current`}>Current Reading</label>
+                                        <label htmlFor={`${member.id}-current`}>Current reading</label>
                                         <input
                                             type="number"
                                             id={`${member.id}-current`}
@@ -518,154 +775,171 @@ const HBC = () => {
                                             <span className="calculator-error-message show">{errors[`${member.id}-current`]}</span>
                                         )}
                                     </div>
+                                    {(() => {
+                                        const prev = parseFloat(memberReadings[member.id].previous);
+                                        const curr = parseFloat(memberReadings[member.id].current);
+                                        if (memberReadings[member.id].previous === '' || memberReadings[member.id].current === '' || isNaN(prev) || isNaN(curr) || curr < prev) return null;
+                                        return (
+                                            <div className="calculator-member-diff-inline">
+                                                Difference: <strong>{roundToTwoDecimals(curr - prev).toFixed(2)}</strong>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
-                </div>
 
-                {/* Water Bill Section */}
-                <div className="calculator-section">
-                    <h2 className="calculator-section-title">💧 Water Bill</h2>
+                        {/* Motor meter card — same grid */}
+                        <motion.div className="calculator-member-card calculator-motor-card" variants={staggerItem}>
+                            <h3>Motor meter (split equally)</h3>
+                            <div className="calculator-member-inputs">
+                                <div className={`calculator-input-group ${errors['water-previous'] ? 'calculator-error' : ''}`}>
+                                    <label htmlFor="water-previous-reading">Previous reading</label>
+                                    <input
+                                        type="number"
+                                        id="water-previous-reading"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="Previous"
+                                        value={waterPreviousReading}
+                                        onChange={(e) => {
+                                            setWaterPreviousReading(e.target.value);
+                                            clearError('water-previous');
+                                        }}
+                                        onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
+                                    />
+                                    {errors['water-previous'] && (
+                                        <span className="calculator-error-message show">{errors['water-previous']}</span>
+                                    )}
+                                </div>
+                                <div className={`calculator-input-group ${errors['water-current'] ? 'calculator-error' : ''}`}>
+                                    <label htmlFor="water-current-reading">Current reading</label>
+                                    <input
+                                        type="number"
+                                        id="water-current-reading"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="Current"
+                                        value={waterCurrentReading}
+                                        onChange={(e) => {
+                                            setWaterCurrentReading(e.target.value);
+                                            clearError('water-current');
+                                        }}
+                                        onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
+                                    />
+                                    {errors['water-current'] && (
+                                        <span className="calculator-error-message show">{errors['water-current']}</span>
+                                    )}
+                                </div>
+                                {motorDifference != null && (
+                                    <div className="calculator-motor-diff-inline">
+                                        Difference: <strong>{motorDifference.toFixed(2)}</strong>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
 
-                    <div className={`calculator-input-group ${errors['water-previous'] ? 'calculator-error' : ''}`}>
-                        <label htmlFor="water-previous-reading">Previous Water Reading</label>
-                        <input
-                            type="number"
-                            id="water-previous-reading"
-                            step="0.01"
-                            min="0"
-                            placeholder="Enter previous water reading"
-                            value={waterPreviousReading}
-                            onChange={(e) => {
-                                setWaterPreviousReading(e.target.value);
-                                clearError('water-previous');
-                            }}
-                            onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
-                        />
-                        {errors['water-previous'] && (
-                            <span className="calculator-error-message show">{errors['water-previous']}</span>
-                        )}
-                    </div>
-
-                    <div className={`calculator-input-group ${errors['water-current'] ? 'calculator-error' : ''}`}>
-                        <label htmlFor="water-current-reading">Current Water Reading</label>
-                        <input
-                            type="number"
-                            id="water-current-reading"
-                            step="0.01"
-                            min="0"
-                            placeholder="Enter current water reading"
-                            value={waterCurrentReading}
-                            onChange={(e) => {
-                                setWaterCurrentReading(e.target.value);
-                                clearError('water-current');
-                            }}
-                            onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
-                        />
-                        {errors['water-current'] && (
-                            <span className="calculator-error-message show">{errors['water-current']}</span>
-                        )}
-                    </div>
-
-                    <div className="calculator-members-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                        <div className={`calculator-input-group ${errors['water-units'] ? 'calculator-error' : ''}`}>
-                            <label htmlFor="total-water-units">
-                                Total Water Units (Optional - Auto-calculated if readings provided)
-                            </label>
-                            <input
-                                type="number"
-                                id="total-water-units"
-                                step="0.01"
-                                min="0"
-                                placeholder="Enter total water units (optional)"
-                                value={totalWaterUnits}
-                                onChange={(e) => {
-                                    setTotalWaterUnits(e.target.value);
-                                    clearError('water-units');
-                                }}
-                                onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
-                            />
-                            {errors['water-units'] && (
-                                <span className="calculator-error-message show">{errors['water-units']}</span>
+                    <div className="calculator-submeter-total-row">
+                        <span className="calculator-submeter-total-label">
+                            {totalUnits && <>Sub-meters total: <strong>{totalUnits}</strong></>}
+                            {totalUnits && motorDifference != null && ' · '}
+                            {totalAllDifferences && (
+                                <>Total of all (sub-meters + motor): <strong>{totalAllDifferences}</strong></>
                             )}
-                        </div>
-                        <div className={`calculator-input-group ${errors['water-price'] ? 'calculator-error' : ''}`}>
-                            <label htmlFor="water-price-per-unit">Water Price per Unit (₹)</label>
-                            <input
-                                type="number"
-                                id="water-price-per-unit"
-                                step="0.01"
-                                min="0"
-                                placeholder="Enter price per unit"
-                                value={waterPricePerUnit}
-                                onChange={(e) => {
-                                    setWaterPricePerUnit(e.target.value);
-                                    clearError('water-price');
-                                }}
-                                onKeyPress={(e) => handleKeyPress(e, calculateWaterOnly)}
-                            />
-                            {errors['water-price'] && (
-                                <span className="calculator-error-message show">{errors['water-price']}</span>
-                            )}
-                        </div>
+                        </span>
+                        <motion.button
+                            type="button"
+                            className="calculator-per-unit-btn calculator-total-units-btn"
+                            onClick={handleCalculateTotalUnits}
+                            disabled={!totalAllDifferences || parseFloat(totalAllDifferences) <= 0}
+                            aria-label="Copy total of all differences to top section"
+                            whileHover={buttonHover}
+                            whileTap={buttonTap}
+                        >
+                            Add total Units
+                        </motion.button>
                     </div>
-                </div>
+                </motion.div>
 
-                {/* Calculate Buttons */}
-                <div className="calculator-button-group">
-                    <button className="calculator-calculate-btn" onClick={calculateElectricityOnly}>
-                        ⚡ Calculate Electricity Bill
-                    </button>
-                    <button className="calculator-calculate-btn-secondary" onClick={calculateWaterOnly}>
-                        💧 Calculate Water Bill
-                    </button>
-                </div>
+                {/* Primary action: sub-meter + motor; secondary: motor only */}
+                <motion.div
+                    className="calculator-button-group"
+                    initial={fadeInUp.initial}
+                    animate={fadeInUp.animate}
+                    transition={{ ...fadeInUp.transition, delay: 0.2 }}
+                >
+                    <motion.button type="button" className="calculator-calculate-btn" onClick={calculateElectricityOnly} aria-label="Calculate sub-meter and motor bills" whileHover={buttonHover} whileTap={buttonTap}>
+                        Calculate Bills
+                    </motion.button>
+                    <motion.button type="button" className="calculator-calculate-btn-secondary" onClick={calculateWaterOnly} aria-label="Calculate motor meter only" whileHover={buttonHover} whileTap={buttonTap}>
+                        Motor only
+                    </motion.button>
+                </motion.div>
 
                 {/* Results Section */}
+                <AnimatePresence mode="wait">
                 {results && (
-                    <div className="calculator-results-section show">
-                        <h2 className="calculator-section-title">📊 Calculation Results</h2>
+                    <motion.div
+                        className="calculator-results-section show"
+                        variants={resultsVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                    >
+                        <h2 className="calculator-section-title">📊 Your results</h2>
 
-                        <div className="calculator-summary-box">
-                            <div className="calculator-summary-card">
-                                <h4>Total Electricity Units</h4>
+                        <motion.div className="calculator-download-row" variants={staggerItem}>
+                            <span className="calculator-download-label">Download:</span>
+                            <motion.button type="button" className="calculator-download-btn calculator-download-pdf" onClick={downloadAsPDF} aria-label="Download as PDF" whileHover={buttonHover} whileTap={buttonTap}>
+                                PDF
+                            </motion.button>
+                            <motion.button type="button" className="calculator-download-btn calculator-download-jpg" onClick={downloadAsJPG} aria-label="Download as JPG" whileHover={buttonHover} whileTap={buttonTap}>
+                                JPG
+                            </motion.button>
+                        </motion.div>
+
+                        <motion.div ref={resultsSectionRef} className="calculator-results-download-area" variants={staggerContainer} initial="initial" animate="animate">
+                        <motion.div className="calculator-summary-box" variants={staggerContainer} initial="initial" animate="animate">
+                            <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                <h4>Total sub-meter units</h4>
                                 <div className="calculator-value">
                                     {results.type === 'water-only' ? 'N/A' :
                                         roundToTwoDecimals(results.electricity.totalUnits).toFixed(2)}
                                 </div>
-                            </div>
-                            <div className="calculator-summary-card">
-                                <h4>Per Unit Cost</h4>
+                            </motion.div>
+                            <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                <h4>Per unit cost (₹)</h4>
                                 <div className="calculator-value">
                                     {results.type === 'water-only' ? 'N/A' :
                                         formatCurrency(results.electricity.perUnitCost)}
                                 </div>
-                            </div>
-                            <div className="calculator-summary-card">
-                                <h4>Total Water Units</h4>
+                            </motion.div>
+                            <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                <h4>Motor total units</h4>
                                 <div className="calculator-value">
                                     {results.type === 'electricity-only' ? 'N/A' :
                                         roundToTwoDecimals(results.water.totalWaterUnits).toFixed(2)}
                                 </div>
-                            </div>
-                            <div className="calculator-summary-card">
-                                <h4>Water Units Per Member</h4>
+                            </motion.div>
+                            <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                <h4>Motor per person (equal)</h4>
                                 <div className="calculator-value">
                                     {results.type === 'electricity-only' ? 'N/A' :
                                         roundToTwoDecimals(results.water.waterUnitsPerMember).toFixed(2)}
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
 
+                        <motion.div className="calculator-table-wrapper" variants={staggerItem}>
                         <table className="calculator-results-table">
                             <thead>
                                 <tr>
-                                    <th>Member Name</th>
-                                    <th>Electricity Units</th>
-                                    <th>Electricity Amount (₹)</th>
-                                    <th>Water Amount (₹)</th>
-                                    <th>Total Payable (₹)</th>
+                                    <th>Member</th>
+                                    <th>Sub-meter units</th>
+                                    <th>Sub-meter (₹)</th>
+                                    <th>Motor (₹)</th>
+                                    <th>Total (₹)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -739,9 +1013,12 @@ const HBC = () => {
                                 })()}
                             </tbody>
                         </table>
-                    </div>
+                        </motion.div>
+                        </motion.div>
+                    </motion.div>
                 )}
-            </div>
+                </AnimatePresence>
+            </motion.div>
         </div>
     )
 }
