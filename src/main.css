@@ -430,3 +430,10 @@
   .animate-slide-in {
     animation: slideInRight 0.25s ease-out;
   }
+
+  /* Hide sidebar on HBC page when viewport < 767px */
+  @media (max-width: 766px) {
+    .layout-hbc > .aside-block {
+      display: none !important;
+    }
+  }
