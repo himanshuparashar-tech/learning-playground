@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* Touch device: reduce hover effects, improve tap feedback */
+@media (hover: none) and (pointer: coarse) {
+    .calculator-member-card:hover {
+        transform: none;
+    }
+    .calculator-section:hover {
+        transform: none;
+    }
+    .calculator-summary-card:hover {
+        transform: none;
+    }
+    .calculator-results-table tbody tr:hover {
+        transform: none;
+    }
+    * {
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+    }
+}
 
 .main-body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -182,6 +200,12 @@ h1 {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.calculator-person-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .calculator-input-group {
@@ -434,6 +458,13 @@ h1 {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid rgba(102, 126, 234, 0.15);
+}
+
+.calculator-submeter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .calculator-submeter-total-label {
@@ -739,38 +770,52 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-@media (max-width: 768px) {
+/* ========== TABLET (768px - 1024px) ========== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-body {
+        padding: 16px;
+    }
+
     .calculator-container {
-        padding: 24px;
+        padding: 28px 24px;
         border-radius: 20px;
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 2.1em;
+    }
+
+    .calculator-intro {
+        font-size: 0.95em;
+        line-height: 1.6;
+    }
+
+    .calculator-steps-pill {
+        padding: 14px 24px;
+        gap: 8px 16px;
     }
 
     .calculator-section {
-        padding: 24px;
-        border-radius: 16px;
+        padding: 24px 20px;
+        border-radius: 18px;
+    }
+
+    .calculator-section-title {
+        font-size: 1.5em;
     }
 
     .calculator-members-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
 
-    .calculator-water-fields {
-        grid-template-columns: 1fr;
+    .calculator-member-card h3 {
+        font-size: 1.15em;
     }
 
-    .calculator-results-table {
-        font-size: 0.85em;
-        border-radius: 12px;
-    }
-
-    .calculator-results-table th,
-    .calculator-results-table td {
-        padding: 12px 14px;
+    .calculator-button-group {
+        grid-template-columns: 1fr auto;
+        gap: 16px;
     }
 
     .calculator-summary-box {
@@ -778,71 +823,350 @@ h1 {
         gap: 16px;
     }
 
-    .calculator-summary-card {
-        padding: 20px 16px;
+    .calculator-results-table th,
+    .calculator-results-table td {
+        padding: 14px 16px;
+        font-size: 0.9em;
+    }
+}
+
+/* Hide mobile cards on tablet/desktop */
+.calculator-results-cards-mobile {
+    display: none;
+}
+
+/* ========== MOBILE (max 768px) ========== */
+@media (max-width: 768px) {
+    .main-body {
+        padding: 12px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
     }
 
-    .calculator-summary-card .value {
-        font-size: 1.5em;
+    .calculator-container {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 1.85em;
+        margin-bottom: 10px;
+    }
+
+    .calculator-intro {
+        font-size: 0.9em;
+        line-height: 1.55;
+        margin-bottom: 16px;
+    }
+
+    .calculator-steps-pill {
+        padding: 10px 14px;
+        gap: 6px 10px;
+        margin-bottom: 20px;
+        font-size: 0.85em;
+    }
+
+    .calculator-step-dot {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8em;
+    }
+
+    .calculator-section {
+        padding: 20px 16px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+    }
+
+    .calculator-section-title {
+        font-size: 1.35em;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+
+    .calculator-section-hint {
+        font-size: 0.85em;
+        margin-bottom: 16px;
+    }
+
+    .calculator-input-group {
+        margin-bottom: 18px;
+    }
+
+    .calculator-input-group label {
+        font-size: 0.95em;
+        margin-bottom: 8px;
+    }
+
+    /* Touch-friendly inputs: min 44px height for accessibility */
+    .calculator-input-group input {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 48px;
+    }
+
+    .calculator-members-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-top: 18px;
+    }
+
+    .calculator-water-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .calculator-member-card {
+        padding: 18px;
+    }
+
+    .calculator-member-card h3 {
+        font-size: 1.15em;
     }
 
     .calculator-button-group {
         grid-template-columns: 1fr;
         gap: 12px;
+        margin-top: 24px;
+    }
+
+    /* Touch-friendly buttons: min 48px height */
+    .calculator-calculate-btn {
+        padding: 16px 24px;
+        font-size: 1.15em;
+        min-height: 52px;
+    }
+
+    .calculator-calculate-btn-secondary {
+        padding: 16px 24px;
+        min-height: 52px;
+        font-size: 1em;
     }
 
     .calculator-per-unit-calculator {
         flex-direction: column;
         align-items: stretch;
+        padding: 16px;
+        gap: 16px;
     }
 
     .calculator-per-unit-btn {
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 12px;
+        padding: 16px 20px;
+        min-height: 48px;
+        font-size: 1em;
     }
 
-    .main-body {
-        padding: 12px;
+    .calculator-submeter-total-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
     }
 
-    .calculator-container {
-        padding: 20px;
+    .calculator-submeter-buttons {
+        flex-direction: column;
+        width: 100%;
     }
 
-    h1 {
-        font-size: 1.75em;
+    .calculator-submeter-buttons button {
+        width: 100%;
     }
 
-    .calculator-section-title {
-        font-size: 1.4em;
+    .calculator-submeter-total-row .calculator-per-unit-btn {
+        width: 100%;
+    }
+
+    /* Person selector: full-width buttons for easier tapping */
+    .calculator-person-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .calculator-person-buttons button {
+        width: 100%;
+        min-height: 48px;
+        padding: 14px 16px;
+        font-size: 1em;
+    }
+
+    /* Hide table, show mobile cards */
+    .calculator-results-table-desktop {
+        display: none !important;
+    }
+
+    .calculator-results-cards-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .calculator-result-card-mobile {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+        border-radius: 14px;
+        border: 2px solid rgba(102, 126, 234, 0.15);
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+
+    .calculator-result-card-mobile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 14px 18px;
+        font-weight: 700;
+        font-size: 1.1em;
+    }
+
+    .calculator-result-card-total-row .calculator-result-card-mobile-header {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .calculator-result-card-mobile-body {
+        padding: 16px 18px;
+    }
+
+    .calculator-result-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 0.95em;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+    }
+
+    .calculator-result-card-row:last-child {
+        border-bottom: none;
+    }
+
+    .calculator-result-card-total {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #1a1a2e;
+        padding-top: 12px;
+        margin-top: 4px;
+        border-top: 2px solid rgba(102, 126, 234, 0.2);
     }
 
     .calculator-summary-box {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 
-    .calculator-results-table {
+    .calculator-summary-card {
+        padding: 18px 14px;
+    }
+
+    .calculator-summary-card h4 {
         font-size: 0.8em;
     }
 
-    .calculator-results-table th,
-    .calculator-results-table td {
-        padding: 10px 8px;
+    .calculator-summary-card .value {
+        font-size: 1.4em;
+    }
+
+    .calculator-download-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .calculator-download-btn {
+        padding: 14px 20px;
+        min-height: 48px;
+        font-size: 1em;
     }
 }
 
-@media (max-width: 360px) {
+/* ========== SMALL MOBILE (max 480px) ========== */
+@media (max-width: 480px) {
     .main-body {
-        padding: 12px 8px;
+        padding: 10px;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
     }
 
     .calculator-container {
         padding: 16px 12px;
+    }
+
+    h1 {
+        font-size: 1.65em;
+    }
+
+    .calculator-intro {
+        font-size: 0.88em;
+    }
+
+    .calculator-steps-pill {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+
+    .calculator-step-dot {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75em;
+    }
+
+    .calculator-section {
+        padding: 16px 12px;
+        margin-bottom: 20px;
+    }
+
+    .calculator-section-title {
+        font-size: 1.25em;
+        margin-bottom: 10px;
+    }
+
+    .calculator-input-group input {
+        padding: 14px 16px;
+        min-height: 48px;
+    }
+
+    .calculator-member-card {
+        padding: 16px;
+    }
+
+    .calculator-member-card h3 {
+        font-size: 1.05em;
+    }
+
+    .calculator-summary-box {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .calculator-summary-card {
+        padding: 16px 14px;
+    }
+
+    .calculator-summary-card .value {
+        font-size: 1.35em;
+    }
+
+    .calculator-result-card-mobile-header {
+        padding: 12px 16px;
+        font-size: 1.05em;
+    }
+
+    .calculator-result-card-mobile-body {
+        padding: 14px 16px;
+    }
+
+    .calculator-result-card-row {
+        font-size: 0.9em;
+        padding: 8px 0;
+    }
+}
+
+/* ========== EXTRA SMALL (max 360px) ========== */
+@media (max-width: 360px) {
+    .main-body {
+        padding: 8px 6px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    .calculator-container {
+        padding: 14px 10px;
         border-radius: 16px;
     }
 
@@ -850,81 +1174,293 @@ h1 {
         font-size: 1.5em;
     }
 
+    .calculator-intro {
+        font-size: 0.85em;
+    }
+
+    .calculator-steps-pill {
+        padding: 8px 10px;
+        font-size: 0.78em;
+    }
+
+    .calculator-step-dot {
+        width: 22px;
+        height: 22px;
+        font-size: 0.7em;
+    }
+
     .calculator-section {
-        padding: 16px 12px;
-        margin-bottom: 24px;
+        padding: 14px 10px;
+        margin-bottom: 18px;
     }
 
     .calculator-section-title {
-        font-size: 1.2em;
-        margin-bottom: 20px;
+        font-size: 1.15em;
+        margin-bottom: 8px;
     }
 
     .calculator-input-group input {
         padding: 12px 14px;
-        font-size: 0.95em;
+        font-size: 16px;
+        min-height: 46px;
     }
 
     .calculator-members-grid {
-        gap: 16px;
+        gap: 14px;
     }
 
     .calculator-member-card {
-        padding: 16px;
+        padding: 14px;
     }
 
-    .calculator-summary-box {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .calculator-summary-card {
-        padding: 16px 12px;
-    }
-
-    .calculator-summary-card .value {
-        font-size: 1.25em;
+    .calculator-member-card h3 {
+        font-size: 1em;
     }
 
     .calculator-calculate-btn,
     .calculator-calculate-btn-secondary {
-        padding: 14px 20px;
+        padding: 14px 18px;
         font-size: 1em;
+        min-height: 48px;
     }
 
     .calculator-per-unit-calculator {
         padding: 12px;
     }
 
-    .calculator-results-table th,
-    .calculator-results-table td {
-        padding: 8px 6px;
-        font-size: 0.75em;
+    .calculator-per-unit-btn {
+        padding: 14px 16px;
+        min-height: 46px;
+    }
+
+    .calculator-summary-card {
+        padding: 14px 12px;
+    }
+
+    .calculator-summary-card .value {
+        font-size: 1.25em;
+    }
+
+    .calculator-result-card-mobile-header {
+        padding: 10px 14px;
+        font-size: 1em;
+    }
+
+    .calculator-result-card-mobile-body {
+        padding: 12px 14px;
+    }
+
+    .calculator-result-card-row {
+        font-size: 0.88em;
     }
 }
 
+/* ========== MINIMUM WIDTH (320px) - Maximum accessibility ========== */
 @media (max-width: 320px) {
     .main-body {
-        padding: 8px 6px;
+        padding: 6px 4px;
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
     }
 
     .calculator-container {
         padding: 12px 8px;
+        border-radius: 14px;
     }
 
     h1 {
-        font-size: 1.35em;
+        font-size: 1.4em;
+    }
+
+    .calculator-intro {
+        font-size: 0.82em;
+        line-height: 1.5;
+    }
+
+    .calculator-steps-pill {
+        padding: 6px 8px;
+        font-size: 0.75em;
+    }
+
+    .calculator-step-label {
+        font-size: 0.9em;
+    }
+
+    .calculator-step-dot {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65em;
     }
 
     .calculator-section {
         padding: 12px 8px;
+        margin-bottom: 16px;
     }
 
     .calculator-section-title {
         font-size: 1.1em;
+        margin-bottom: 6px;
     }
 
-    .calculator-results-table {
-        min-width: 480px;
+    .calculator-section-hint {
+        font-size: 0.8em;
     }
+
+    .calculator-input-group label {
+        font-size: 0.9em;
+    }
+
+    .calculator-input-group input {
+        padding: 12px 12px;
+        min-height: 44px;
+    }
+
+    .calculator-member-card {
+        padding: 12px;
+    }
+
+    .calculator-member-card h3 {
+        font-size: 0.95em;
+    }
+
+    .calculator-person-buttons button {
+        min-height: 44px;
+        padding: 12px 14px;
+    }
+
+    .calculator-calculate-btn,
+    .calculator-calculate-btn-secondary {
+        padding: 14px 16px;
+        font-size: 0.95em;
+        min-height: 48px;
+    }
+
+    .calculator-per-unit-btn {
+        padding: 12px 14px;
+        min-height: 44px;
+    }
+
+    .calculator-summary-card {
+        padding: 12px 10px;
+    }
+
+    .calculator-summary-card h4 {
+        font-size: 0.75em;
+    }
+
+    .calculator-summary-card .value {
+        font-size: 1.15em;
+    }
+
+    .calculator-download-btn {
+        padding: 12px 16px;
+        min-height: 44px;
+    }
+
+    .calculator-result-card-mobile-header {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+
+    .calculator-result-card-mobile-body {
+        padding: 10px 12px;
+    }
+
+    .calculator-result-card-row {
+        font-size: 0.85em;
+        padding: 6px 0;
+    }
+
+    .calculator-result-card-total {
+        font-size: 1em;
+    }
+}
+
+/* ========== DARK/LIGHT THEME - Calculator uses CSS variables ========== */
+.main-body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+.dark .main-body {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+}
+
+.calculator-container {
+    background: var(--bg);
+    box-shadow: 0 20px 60px var(--shadow-color), 0 0 0 1px var(--border);
+}
+
+.calculator-section,
+.calculator-member-card,
+.calculator-summary-card {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-section-title,
+h1,
+.calculator-input-group label,
+.calculator-member-card h3 {
+    color: var(--text) !important;
+}
+
+.calculator-intro,
+.calculator-section-hint,
+.calculator-subtitle,
+.calculator-step-label,
+.calculator-label-optional,
+.calculator-submeter-total-label {
+    color: var(--text-secondary) !important;
+}
+
+.calculator-step-arrow,
+.calculator-input-group input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.calculator-input-group input {
+    background: var(--input-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+}
+
+.calculator-steps-pill {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-results-table,
+.calculator-table-wrapper {
+    background: var(--bg) !important;
+}
+
+.calculator-results-table th {
+    background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%) !important;
+}
+
+.calculator-results-table td {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-total-row {
+    background: color-mix(in srgb, var(--accent) 15%, var(--bg)) !important;
+    color: var(--text) !important;
+}
+
+.calculator-result-card-mobile {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-result-card-mobile-header {
+    background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%) !important;
+}
+
+.calculator-result-card-row {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-per-unit-calculator {
+    background: color-mix(in srgb, #f59e0b 20%, var(--bg)) !important;
+    border-color: var(--border) !important;
 }
