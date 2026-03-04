@@ -4,8 +4,10 @@
     :root {
       --bg: #ffffff;
       --bg-secondary: #f8f9fa;
+      --bg-tertiary: #f3f4f6;
       --text: #111111;
       --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
       --border: #e5e7eb;
       --hover-bg: #f3f4f6;
       --hover-bg1: #f3f4f6;
@@ -21,27 +23,71 @@
       /* Gradient */
       --gradient-from: #4f46e5;
       --gradient-to: #9333ea;
+
+      /* Accent / Active */
+      --accent: #4f46e5;
+      --accent-hover: #6366f1;
+
+      /* Scrollbar */
+      --scrollbar-thumb: #c9c9c9;
+      --scrollbar-thumb-hover: #6c6b6b;
+
+      /* Input / Form */
+      --input-bg: #ffffff;
+      --input-border: #d1d5db;
+      --input-text: #333333;
+
+      /* Accordion */
+      --accordion-header: #0d6efd;
+      --accordion-body: #f9f9f9;
+
+      /* Misc */
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
     .dark {
-      --bg: #000000;
-      --bg-secondary: #111111;
-      --text: #ffffff;
-      --text-secondary: #d1d5db;
-      --border: #374151;
-      --hover-bg: #1f2937;
-      --hover-bg1: #f3f4f6;
+      --bg: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #262626;
+      --text: #f5f5f5;
+      --text-secondary: #a3a3a3;
+      --text-muted: #737373;
+      --border: #404040;
+      --hover-bg: #262626;
+      --hover-bg1: #262626;
 
+      --btn-bg: #f5f5f5;
+      --btn-text: #0f0f0f;
+      --btn-hover-bg: #e5e5e5;
 
-      /* Buttons */
-      --btn-bg: #ffffff;
-      --btn-text: #000000;
-      --btn-hover-bg: #e5e7eb;
+      --menu-bg: #1a1a1a;
 
-      --menu-bg: #111111;
+      --gradient-from: #6366f1;
+      --gradient-to: #a855f7;
 
-      --gradient-from: #4f46e5;
-      --gradient-to: #9333ea;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+
+      --scrollbar-thumb: #525252;
+      --scrollbar-thumb-hover: #737373;
+
+      --input-bg: #262626;
+      --input-border: #404040;
+      --input-text: #f5f5f5;
+
+      --accordion-header: #3b82f6;
+      --accordion-body: #262626;
+
+      --shadow-color: rgba(0, 0, 0, 0.4);
+    }
+
+    :root {
+      --sidebar-width: 260px;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
     }
   }
 
@@ -61,13 +107,12 @@
     }
 
     .scrollbar-gradient::-webkit-scrollbar-thumb {
-      background: linear-gradient(to right, #c9c9c9, #c9c9c9);
-      /* from-indigo-600 to-purple-600 */
+      background: var(--scrollbar-thumb);
       border-radius: 8px;
     }
 
     .scrollbar-gradient::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(to right, #6c6b6b, #6c6b6b);
+      background: var(--scrollbar-thumb-hover);
     }
   }
 
@@ -87,6 +132,17 @@
     }
   }
 
+  /* Sidebar nav: no list bullets (override global ul li) */
+  .sidebar-nav ul {
+    padding: 0;
+    margin: 0;
+  }
+  .sidebar-nav ul li,
+  .sidebar-nav li {
+    list-style: none !important;
+    list-style-type: none !important;
+  }
+
 
   .container {
     display: flex;
@@ -97,48 +153,53 @@
   .box {
     width: 200px;
     padding: 20px;
-    border: 5px solid black;
-    background-color: lightblue;
+    border: 2px solid var(--border);
+    background-color: var(--bg-tertiary);
   }
 
   .content-box {
     box-sizing: content-box;
-    background-color: #ffb3b3;
+    background-color: var(--hover-bg);
   }
 
   .border-box {
     box-sizing: border-box;
-    background-color: #90ee90;
+    background-color: var(--bg-secondary);
   }
 
   .rb_style {
-    border: 1px solid currentColor;
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 5px 10px;
     text-align: center;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--text);
   }
 
   .rb_style:focus {
-    border: 1px solid indigo;
+    border-color: var(--accent);
   }
 
   button.cstm {
-    border: 1px solid black;
+    border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 5px 10px
+    padding: 5px 10px;
+    background: var(--bg);
+    color: var(--text);
   }
 
   button.cstm:focus {
-    background-color: #cccccc96;
+    background-color: var(--hover-bg);
   }
 
   .cstm-input {
-    border: 1px solid rgb(99, 98, 98);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
-    padding: 5px 10px
+    padding: 5px 10px;
+    background: var(--input-bg);
+    color: var(--input-text);
   }
 
   .cstm-input:focus {
@@ -163,14 +224,14 @@
 
   /* Projects Css for Accordions */
   .accordion-box {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin-bottom: 10px;
     overflow: hidden;
   }
 
   .accordion-header {
-    background: #0d6efd;
+    background: var(--accordion-header);
     color: #ffffff;
     padding: 10px 15px;
     cursor: pointer;
@@ -192,8 +253,9 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    background: #f9f9f9;
+    background: var(--accordion-body);
     padding: 0 15px;
+    color: var(--text);
   }
 
 
@@ -237,6 +299,12 @@
   .sidebar-level-3 .item-name,
   .sidebar-level-4 .item-name {
     font-size: 14px;
+  }
+
+  /* Sidebar nav scroll */
+  .scrollbar-gradient {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
   }
 
   /* --- For Html Select Start ----*/
@@ -312,7 +380,7 @@
     content: "";
     width: 7px;
     height: 7px;
-    border: solid #666;
+    border: solid var(--text-muted);
     border-width: 0 2px 2px 0;
     display: inline-block;
     transform: rotate(45deg);
@@ -339,11 +407,11 @@
   }
 
   option:hover {
-    background: #f2f2f2;
+    background: var(--hover-bg);
   }
 
   option:checked {
-    background: #eaf5ff;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
     border-radius: 6px;
   }
 
@@ -431,9 +499,14 @@
     animation: slideInRight 0.25s ease-out;
   }
 
-  /* Hide sidebar on HBC page when viewport < 767px */
-  @media (max-width: 766px) {
-    .layout-hbc > .aside-block {
-      display: none !important;
+  /* Mobile: add padding for floating menu button */
+  @media (max-width: 767px) {
+    main {
+      padding-bottom: 5rem;
     }
+  }
+
+  /* Introduction / Landing page */
+  .intro-page {
+    scroll-behavior: smooth;
   }

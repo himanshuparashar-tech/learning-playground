@@ -14,22 +14,22 @@ const Categories = () => {
   ];
 
   return (
-    <section className="pt-32 pb-8 space-y-16" id="categories">
+    <section className="pt-16 sm:pt-24 pb-12 space-y-12" id="categories">
       <div className="space-y-4 text-center px-4">
-        <span className="text-xl capitalize text-green-600 font-semibold">categories</span>
-        <h2 className="text-2xl md:text-4xl lg:text-5xl capitalize font-bold">
-          Online <span className="text-green-500">Classes</span> For Remote Learning.
+        <span className="text-lg capitalize font-semibold" style={{ color: 'var(--accent)' }}>categories</span>
+        <h2 className="text-2xl md:text-4xl lg:text-5xl capitalize font-bold" style={{ color: 'var(--text)' }}>
+          Online <span style={{ color: 'var(--accent)' }}>Classes</span> For Remote Learning.
         </h2>
-        <p className="text-lg md:text-xl">Consectetur adipiscing elit sed do eiusmod tempor.</p>
+        <p className="text-lg md:text-xl" style={{ color: 'var(--text-secondary)' }}>Consectetur adipiscing elit sed do eiusmod tempor.</p>
       </div>
 
       <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 w-full px-4 sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 mx-auto capitalize">
         {items.map((c, i) => (
-          <div key={i} className="rounded-md flex justify-center items-center flex-col shadow-sm border h-52 space-y-2 group hover:shadow-md duration-300">
+          <div key={i} className="rounded-xl flex justify-center items-center flex-col shadow-sm h-52 space-y-2 group hover:shadow-lg duration-300 transition-all hover:scale-[1.02]" style={{ border: '1px solid var(--border)', background: 'var(--bg-secondary)' }}>
             <div className={`w-[80px] h-[80px] flex justify-center items-center rounded-full ${c.bg} ${c.hover} duration-300`}>
               <i className={`fa-solid ${c.icon} text-3xl ${c.color} group-hover:text-white duration-300`}></i>
             </div>
-            <span className="text-xl font-semibold capitalize">{c.text}</span>
+            <span className="text-xl font-semibold capitalize" style={{ color: 'var(--text)' }}>{c.text}</span>
           </div>
         ))}
       </div>

@@ -1374,3 +1374,93 @@ h1 {
         font-size: 1em;
     }
 }
+
+/* ========== DARK/LIGHT THEME - Calculator uses CSS variables ========== */
+.main-body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+.dark .main-body {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+}
+
+.calculator-container {
+    background: var(--bg);
+    box-shadow: 0 20px 60px var(--shadow-color), 0 0 0 1px var(--border);
+}
+
+.calculator-section,
+.calculator-member-card,
+.calculator-summary-card {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-section-title,
+h1,
+.calculator-input-group label,
+.calculator-member-card h3 {
+    color: var(--text) !important;
+}
+
+.calculator-intro,
+.calculator-section-hint,
+.calculator-subtitle,
+.calculator-step-label,
+.calculator-label-optional,
+.calculator-submeter-total-label {
+    color: var(--text-secondary) !important;
+}
+
+.calculator-step-arrow,
+.calculator-input-group input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.calculator-input-group input {
+    background: var(--input-bg) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+}
+
+.calculator-steps-pill {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-results-table,
+.calculator-table-wrapper {
+    background: var(--bg) !important;
+}
+
+.calculator-results-table th {
+    background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%) !important;
+}
+
+.calculator-results-table td {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-total-row {
+    background: color-mix(in srgb, var(--accent) 15%, var(--bg)) !important;
+    color: var(--text) !important;
+}
+
+.calculator-result-card-mobile {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-result-card-mobile-header {
+    background: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%) !important;
+}
+
+.calculator-result-card-row {
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+.calculator-per-unit-calculator {
+    background: color-mix(in srgb, #f59e0b 20%, var(--bg)) !important;
+    border-color: var(--border) !important;
+}

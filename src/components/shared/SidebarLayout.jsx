@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../shared/Sidebar';
 
 // Import Pages
@@ -19,19 +19,13 @@ import ReactJs_Projects from '../projects/ReactJs/ReactJs_Projects';
 import Display from '../Display/Display';
 
 const SidebarLayout = () => {
-    const location = useLocation();
-    const isHBCPage = location.pathname.includes('hbc');
-
     return (
-        <div
-            className={`flex ${isHBCPage ? 'layout-hbc' : ''}`}
-            style={{
-                maxHeight: 'calc(100vh - 7rem)', overflow: 'hidden'
-            }}
-        >
+        <div className="flex h-screen overflow-hidden">
             <Sidebar />
-
-            <main className="flex-1 p-2 bg-zinc-50 overflow-auto" style={{ minHeight: 'calc(100vh - 7rem)' }}>
+            <main
+                className="flex-1 min-h-screen overflow-y-auto overflow-x-hidden p-4 md:p-6 md:ml-[var(--sidebar-width,260px)]"
+                style={{ background: 'var(--bg-secondary)' }}
+            >
                 <Routes>
                     {/* Default redirect inside sidebar layout */}
 
