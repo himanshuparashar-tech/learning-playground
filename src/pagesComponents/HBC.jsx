@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
@@ -11,6 +12,7 @@ import {
   STORAGE_KEY_PREVIOUS_READINGS,
   STORAGE_KEY_MEMBERS,
   STORAGE_KEY_SELECTED_HOUSE,
+  STORAGE_KEY_SAVE_PASSWORD,
   generateMemberId,
   getInitialMembers,
   getCurrentPeriod,
@@ -91,6 +93,19 @@ const HBC = () => {
   });
   const [newHouseName, setNewHouseName] = useState("");
   const [addingHouse, setAddingHouse] = useState(false);
+  const [userConfirmedOverwrite, setUserConfirmedOverwrite] = useState(false);
+  const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+  const [savedPassword, setSavedPassword] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY_SAVE_PASSWORD) || "";
+    } catch (e) {
+      return "";
+    }
+  });
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordInputValue, setPasswordInputValue] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [pendingAction, setPendingAction] = useState(null);
 
   // Persist members when they change (localStorage + Supabase, per house)
   useEffect(() => {
@@ -755,6 +770,14 @@ const HBC = () => {
     if (isSupabaseConfigured() && selectedHouseId) fetchSavedPeriods();
   }, [selectedHouseId, fetchSavedPeriods]);
 
+  const period = readingPeriodDate || getCurrentPeriod();
+  const periodHasExistingData = savedPeriods.includes(period);
+  const canSaveWithoutConfirm = !periodHasExistingData || userConfirmedOverwrite;
+
+  useEffect(() => {
+    setUserConfirmedOverwrite(false);
+  }, [readingPeriodDate, selectedHouseId]);
+
   const saveReadingsToSupabase = async () => {
     if (!supabase || !allReadingsFilled || !selectedHouseId) return;
     setCloudSaving(true);
@@ -832,6 +855,7 @@ const HBC = () => {
         if (billErr) throw billErr;
       }
       await fetchSavedPeriods();
+      setUserConfirmedOverwrite(false);
       const [y, m] = period.split("-");
       const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
       const monthLabel = monthNames[parseInt(m, 10) - 1] || m;
@@ -915,6 +939,54 @@ const HBC = () => {
     } finally {
       setCloudLoading(false);
     }
+  };
+
+  const handleSaveClick = () => {
+    setPendingAction("save");
+    setPasswordInputValue("");
+    setPasswordError("");
+    setShowPasswordModal(true);
+  };
+
+  const handleAddHouseClick = () => {
+    if (!newHouseName.trim()) return;
+    setPendingAction("addHouse");
+    setPasswordInputValue("");
+    setPasswordError("");
+    setShowPasswordModal(true);
+  };
+
+  const handlePasswordConfirm = () => {
+    const input = passwordInputValue.trim();
+    if (!input) {
+      setPasswordError("Please enter password");
+      return;
+    }
+    if (!savedPassword) {
+      try {
+        localStorage.setItem(STORAGE_KEY_SAVE_PASSWORD, input);
+        setSavedPassword(input);
+        setShowPasswordModal(false);
+        setPasswordInputValue("");
+        const action = pendingAction;
+        setPendingAction(null);
+        if (action === "save") saveReadingsToSupabase();
+        else if (action === "addHouse") addHouse();
+      } catch (e) {
+        setPasswordError("Failed to save password");
+      }
+      return;
+    }
+    if (input !== savedPassword) {
+      setPasswordError("Incorrect password");
+      return;
+    }
+    setShowPasswordModal(false);
+    setPasswordInputValue("");
+    const action = pendingAction;
+    setPendingAction(null);
+    if (action === "save") saveReadingsToSupabase();
+    else if (action === "addHouse") addHouse();
   };
 
   const addHouse = async () => {
@@ -1083,9 +1155,146 @@ const HBC = () => {
     });
   };
 
+  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const [y, m] = (period || "").split("-");
+  const periodLabel = y && m ? `${monthNames[parseInt(m, 10) - 1] || m} ${y}` : period;
+
+  const modalsPortal = createPortal(
+    <AnimatePresence>
+      {showOverwriteModal && (
+        <motion.div
+            className="calculator-overwrite-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowOverwriteModal(false)}
+          >
+            <motion.div
+              className="calculator-overwrite-modal"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="calculator-overwrite-modal-title">
+                Edit this month&apos;s details?
+              </h3>
+              <p className="calculator-overwrite-modal-text">
+                Details for {periodLabel} are already saved. Do you want to overwrite them?
+              </p>
+              <div className="calculator-overwrite-modal-actions">
+                <motion.button
+                  type="button"
+                  className="calculator-overwrite-modal-btn calculator-overwrite-modal-no"
+                  onClick={() => setShowOverwriteModal(false)}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
+                >
+                  No
+                </motion.button>
+                <motion.button
+                  type="button"
+                  className="calculator-overwrite-modal-btn calculator-overwrite-modal-yes"
+                  onClick={() => {
+                    setUserConfirmedOverwrite(true);
+                    setShowOverwriteModal(false);
+                  }}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
+                >
+                  Yes
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+        {showPasswordModal && (
+          <motion.div
+            key="password-modal"
+            className="calculator-overwrite-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setShowPasswordModal(false);
+              setPasswordError("");
+              setPasswordInputValue("");
+              setPendingAction(null);
+            }}
+          >
+            <motion.div
+              key="password-modal-inner"
+              className="calculator-overwrite-modal calculator-password-modal-red-alert"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="calculator-overwrite-modal-title calculator-password-modal-title-red">
+                {savedPassword
+                  ? (pendingAction === "addHouse" ? "🔒 Enter password to add house" : "🔒 Enter password to save")
+                  : "🔒 Set save password"}
+              </h3>
+              <p className="calculator-overwrite-modal-text">
+                {savedPassword
+                  ? (pendingAction === "addHouse"
+                      ? "Enter your password to add a new house."
+                      : "Enter your password to save readings to the cloud.")
+                  : "Set a password to protect your cloud saves. You'll need it each time you save or add a house."}
+              </p>
+              <input
+                type="password"
+                className="calculator-password-input"
+                placeholder="Password"
+                value={passwordInputValue}
+                onChange={(e) => {
+                  setPasswordInputValue(e.target.value);
+                  setPasswordError("");
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handlePasswordConfirm()}
+                autoFocus
+              />
+              {passwordError && (
+                <p className="calculator-password-error">{passwordError}</p>
+              )}
+              <div className="calculator-overwrite-modal-actions">
+                <motion.button
+                  type="button"
+                  className="calculator-overwrite-modal-btn calculator-overwrite-modal-no"
+                  onClick={() => {
+                    setShowPasswordModal(false);
+                    setPasswordError("");
+                    setPasswordInputValue("");
+                    setPendingAction(null);
+                  }}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
+                >
+                  Cancel
+                </motion.button>
+                <motion.button
+                  type="button"
+                  className="calculator-overwrite-modal-btn calculator-overwrite-modal-yes"
+                  onClick={handlePasswordConfirm}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
+                >
+                  {savedPassword
+                  ? (pendingAction === "addHouse" ? "Confirm & Add" : "Confirm")
+                  : (pendingAction === "addHouse" ? "Set & Add house" : "Set & Save")}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>,
+    document.body
+  );
+
   return (
     <div className="main-body">
       <Toaster position="top-right" />
+      {modalsPortal}
       <motion.div
         className="calculator-container"
         initial={{ opacity: 0, y: 20 }}
@@ -1138,13 +1347,13 @@ const HBC = () => {
                       placeholder="House name"
                       value={newHouseName}
                       onChange={(e) => setNewHouseName(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && addHouse()}
+                      onKeyDown={(e) => e.key === "Enter" && newHouseName.trim() && handleAddHouseClick()}
                     />
                   </div>
                   <motion.button
                     type="button"
                     className="calculator-add-member-btn"
-                    onClick={addHouse}
+                    onClick={handleAddHouseClick}
                     disabled={!newHouseName.trim() || addingHouse}
                     whileHover={
                       newHouseName.trim() && !addingHouse
@@ -1365,19 +1574,60 @@ const HBC = () => {
                       }))}
                       disabled={cloudLoading || savedPeriods.length === 0}
                     />
-                    <div>
+                    <div className="calculator-save-cloud-actions">
+                      {savedPassword && (
+                        <button
+                          type="button"
+                          className="calculator-change-password-btn"
+                          onClick={() => {
+                            try {
+                              localStorage.removeItem(STORAGE_KEY_SAVE_PASSWORD);
+                              setSavedPassword("");
+                              setPasswordInputValue("");
+                              setPasswordError("");
+                              setShowPasswordModal(true);
+                            } catch (e) { /* ignore */ }
+                          }}
+                        >
+                          Change password
+                        </button>
+                      )}
+                      {periodHasExistingData && !userConfirmedOverwrite && (
+                        <button
+                          type="button"
+                          className="calculator-edit-month-btn"
+                          onClick={() => setShowOverwriteModal(true)}
+                        >
+                          Edit this month
+                        </button>
+                      )}
                       <motion.button
                         type="button"
                         className="calculator-save-cloud-btn"
-                        onClick={saveReadingsToSupabase}
-                        disabled={!allReadingsFilled || cloudSaving}
+                        onClick={handleSaveClick}
+                        disabled={
+                          !allReadingsFilled ||
+                          cloudSaving ||
+                          (periodHasExistingData && !userConfirmedOverwrite)
+                        }
+                        title={
+                          !allReadingsFilled
+                            ? "Fill all readings first"
+                            : periodHasExistingData && !userConfirmedOverwrite
+                              ? "Click 'Edit this month' to overwrite"
+                              : undefined
+                        }
                         whileHover={
-                          allReadingsFilled && !cloudSaving
+                          allReadingsFilled &&
+                          !cloudSaving &&
+                          canSaveWithoutConfirm
                             ? buttonHover
                             : undefined
                         }
                         whileTap={
-                          allReadingsFilled && !cloudSaving
+                          allReadingsFilled &&
+                          !cloudSaving &&
+                          canSaveWithoutConfirm
                             ? buttonTap
                             : undefined
                         }

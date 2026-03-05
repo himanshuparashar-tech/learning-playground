@@ -21,6 +21,8 @@ const MonthlyBillingHistory = () => {
     const [houses, setHouses] = useState([])
     const [selectedHouseId, setSelectedHouseId] = useState('')
     const [readings, setReadings] = useState([])
+    const [motorReadings, setMotorReadings] = useState(null)
+    const [billPeriod, setBillPeriod] = useState(null)
     const [selectedMonth, setSelectedMonth] = useState('')
     const [perUnitRate, setPerUnitRate] = useState('')
     const [loading, setLoading] = useState(true)
@@ -42,6 +44,8 @@ const MonthlyBillingHistory = () => {
         const fetchReadings = async () => {
             if (!supabase || !selectedHouseId) {
                 setReadings([])
+                setMotorReadings(null)
+                setBillPeriod(null)
                 setLoading(false)
                 return
             }
@@ -68,12 +72,51 @@ const MonthlyBillingHistory = () => {
         fetchReadings()
     }, [selectedHouseId])
 
+    useEffect(() => {
+        const fetchMotorAndBill = async () => {
+            if (!supabase || !selectedHouseId || !selectedMonth) {
+                setMotorReadings(null)
+                setBillPeriod(null)
+                setPerUnitRate('')
+                return
+            }
+            try {
+                const [motorRes, billRes] = await Promise.allSettled([
+                    supabase
+                        .from('motor_readings')
+                        .select('*')
+                        .eq('house_id', selectedHouseId)
+                        .eq('reading_period', selectedMonth)
+                        .maybeSingle(),
+                    supabase
+                        .from('bill_periods')
+                        .select('total_bill, per_unit_cost')
+                        .eq('house_id', selectedHouseId)
+                        .eq('reading_period', selectedMonth)
+                        .maybeSingle(),
+                ])
+                const motor = motorRes.status === 'fulfilled' ? motorRes.value?.data : null
+                const bill = billRes.status === 'fulfilled' ? billRes.value?.data : null
+                setMotorReadings(motor || null)
+                setBillPeriod(bill || null)
+                if (bill?.per_unit_cost != null) {
+                    setPerUnitRate(String(bill.per_unit_cost))
+                } else {
+                    setPerUnitRate('')
+                }
+            } catch (e) { /* ignore */ }
+        }
+        fetchMotorAndBill()
+    }, [selectedHouseId, selectedMonth])
+
     const filteredReadings = selectedMonth
         ? readings.filter(r => r.reading_period === selectedMonth)
         : readings
 
     const rate = parseFloat(perUnitRate)
     const hasValidRate = !isNaN(rate) && rate > 0
+    const motorUnits = motorReadings?.units != null ? Number(motorReadings.units) : 0
+    const motorBillTotal = hasValidRate && motorUnits > 0 ? motorUnits * rate : 0
 
     return (
         <div className="main-body">
@@ -115,13 +158,19 @@ const MonthlyBillingHistory = () => {
                                     />
                                 </div>
                                 <div className="calculator-input-group">
-                                    <label htmlFor="per-unit-rate">Rate per unit (₹) — optional</label>
+                                    <label htmlFor="per-unit-rate">
+                                        Rate per unit (₹) {billPeriod?.per_unit_cost != null && (
+                                            <span className="calculator-label-optional" style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>
+                                                — loaded for {formatMonth(selectedMonth)}
+                                            </span>
+                                        )}
+                                    </label>
                                     <input
                                         id="per-unit-rate"
                                         type="number"
                                         step="0.01"
                                         min="0"
-                                        placeholder="e.g. 4.50"
+                                        placeholder="e.g. 4.50 (auto-filled when month has saved data)"
                                         value={perUnitRate}
                                         onChange={(e) => setPerUnitRate(e.target.value)}
                                         className="calculator-history-rate-input"
@@ -147,64 +196,136 @@ const MonthlyBillingHistory = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {filteredReadings.length === 0 ? (
+                                            {filteredReadings.length === 0 && !motorReadings ? (
                                                 <tr>
                                                     <td colSpan={6} style={{ textAlign: 'center', padding: '32px', color: '#6b7280' }}>
                                                         No readings found. Save readings from the HBC calculator first.
                                                     </td>
                                                 </tr>
                                             ) : (
-                                                filteredReadings.map((row, i) => {
-                                                    const units = Number(row.units) || 0
-                                                    const billAmount = hasValidRate ? units * rate : null
-                                                    return (
-                                                        <tr key={`${row.reading_period}-${row.member_name}-${i}`}>
-                                                            <td>{formatMonth(row.reading_period)}</td>
-                                                            <td><strong>{row.member_name || '—'}</strong></td>
-                                                            <td>{row.previous_reading != null ? Number(row.previous_reading).toFixed(2) : '—'}</td>
-                                                            <td>{row.current_reading != null ? Number(row.current_reading).toFixed(2) : '—'}</td>
-                                                            <td>{units.toFixed(2)}</td>
-                                                            <td>{hasValidRate ? formatCurrency(billAmount) : '—'}</td>
+                                                <>
+                                                    {filteredReadings.map((row, i) => {
+                                                        const units = Number(row.units) || 0
+                                                        const billAmount = hasValidRate ? units * rate : null
+                                                        return (
+                                                            <tr key={`${row.reading_period}-${row.member_name}-${i}`}>
+                                                                <td>{formatMonth(row.reading_period)}</td>
+                                                                <td><strong>{row.member_name || '—'}</strong></td>
+                                                                <td>{row.previous_reading != null ? Number(row.previous_reading).toFixed(2) : '—'}</td>
+                                                                <td>{row.current_reading != null ? Number(row.current_reading).toFixed(2) : '—'}</td>
+                                                                <td>{units.toFixed(2)}</td>
+                                                                <td>{hasValidRate ? formatCurrency(billAmount) : '—'}</td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                    {motorReadings && (
+                                                        <tr>
+                                                            <td>{formatMonth(selectedMonth)}</td>
+                                                            <td><strong>Motor (shared)</strong></td>
+                                                            <td>{motorReadings.previous_reading != null ? Number(motorReadings.previous_reading).toFixed(2) : '—'}</td>
+                                                            <td>{motorReadings.current_reading != null ? Number(motorReadings.current_reading).toFixed(2) : '—'}</td>
+                                                            <td>{motorUnits.toFixed(2)}</td>
+                                                            <td>{hasValidRate ? formatCurrency(motorBillTotal) : '—'}</td>
                                                         </tr>
-                                                    )
-                                                })
+                                                    )}
+                                                    {(filteredReadings.length > 0 || motorReadings) && hasValidRate && (
+                                                        <tr className="calculator-total-row">
+                                                            <td colSpan={4}><strong>Total</strong></td>
+                                                            <td>
+                                                                {(filteredReadings.reduce((s, r) => s + (Number(r.units) || 0), 0) + motorUnits).toFixed(2)}
+                                                            </td>
+                                                            <td>
+                                                                {formatCurrency(
+                                                                    filteredReadings.reduce((s, r) => s + (Number(r.units) || 0) * rate, 0) + motorBillTotal
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </>
                                             )}
                                         </tbody>
                                     </table>
                                 </div>
                                     <div className="calculator-history-cards-mobile">
-                                        {filteredReadings.length === 0 ? (
+                                        {filteredReadings.length === 0 && !motorReadings ? (
                                             <div className="calculator-history-empty">No readings found. Save readings from the HBC calculator first.</div>
-                                        ) : filteredReadings.map((row, i) => {
-                                            const units = Number(row.units) || 0
-                                            const billAmount = hasValidRate ? units * rate : null
-                                            return (
-                                                <div key={`${row.reading_period}-${row.member_name}-${i}`} className="calculator-history-card-mobile">
-                                                    <div className="calculator-history-card-header">
-                                                        <strong>{row.member_name || '—'}</strong>
-                                                        <span>{formatMonth(row.reading_period)}</span>
+                                        ) : (
+                                            <>
+                                                {filteredReadings.map((row, i) => {
+                                                    const units = Number(row.units) || 0
+                                                    const billAmount = hasValidRate ? units * rate : null
+                                                    return (
+                                                        <div key={`${row.reading_period}-${row.member_name}-${i}`} className="calculator-history-card-mobile">
+                                                            <div className="calculator-history-card-header">
+                                                                <strong>{row.member_name || '—'}</strong>
+                                                                <span>{formatMonth(row.reading_period)}</span>
+                                                            </div>
+                                                            <div className="calculator-history-card-body">
+                                                                <div className="calculator-history-card-row">
+                                                                    <span>Previous</span>
+                                                                    <span>{row.previous_reading != null ? Number(row.previous_reading).toFixed(2) : '—'}</span>
+                                                                </div>
+                                                                <div className="calculator-history-card-row">
+                                                                    <span>Current</span>
+                                                                    <span>{row.current_reading != null ? Number(row.current_reading).toFixed(2) : '—'}</span>
+                                                                </div>
+                                                                <div className="calculator-history-card-row">
+                                                                    <span>Units</span>
+                                                                    <span>{units.toFixed(2)}</span>
+                                                                </div>
+                                                                <div className="calculator-history-card-row calculator-history-card-total">
+                                                                    <span>Bill</span>
+                                                                    <span>{hasValidRate ? formatCurrency(billAmount) : '—'}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                                {motorReadings && (
+                                                    <div className="calculator-history-card-mobile">
+                                                        <div className="calculator-history-card-header">
+                                                            <strong>Motor (shared)</strong>
+                                                            <span>{formatMonth(selectedMonth)}</span>
+                                                        </div>
+                                                        <div className="calculator-history-card-body">
+                                                            <div className="calculator-history-card-row">
+                                                                <span>Previous</span>
+                                                                <span>{motorReadings.previous_reading != null ? Number(motorReadings.previous_reading).toFixed(2) : '—'}</span>
+                                                            </div>
+                                                            <div className="calculator-history-card-row">
+                                                                <span>Current</span>
+                                                                <span>{motorReadings.current_reading != null ? Number(motorReadings.current_reading).toFixed(2) : '—'}</span>
+                                                            </div>
+                                                            <div className="calculator-history-card-row">
+                                                                <span>Units</span>
+                                                                <span>{motorUnits.toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="calculator-history-card-row calculator-history-card-total">
+                                                                <span>Bill</span>
+                                                                <span>{hasValidRate ? formatCurrency(motorBillTotal) : '—'}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="calculator-history-card-body">
-                                                        <div className="calculator-history-card-row">
-                                                            <span>Previous</span>
-                                                            <span>{row.previous_reading != null ? Number(row.previous_reading).toFixed(2) : '—'}</span>
+                                                )}
+                                                {(filteredReadings.length > 0 || motorReadings) && hasValidRate && (
+                                                    <div className="calculator-history-card-mobile calculator-history-card-total">
+                                                        <div className="calculator-history-card-header">
+                                                            <strong>Total</strong>
                                                         </div>
-                                                        <div className="calculator-history-card-row">
-                                                            <span>Current</span>
-                                                            <span>{row.current_reading != null ? Number(row.current_reading).toFixed(2) : '—'}</span>
-                                                        </div>
-                                                        <div className="calculator-history-card-row">
-                                                            <span>Units</span>
-                                                            <span>{units.toFixed(2)}</span>
-                                                        </div>
-                                                        <div className="calculator-history-card-row calculator-history-card-total">
-                                                            <span>Bill</span>
-                                                            <span>{hasValidRate ? formatCurrency(billAmount) : '—'}</span>
+                                                        <div className="calculator-history-card-body">
+                                                            <div className="calculator-history-card-row calculator-history-card-total">
+                                                                <span>Total units</span>
+                                                                <span>{(filteredReadings.reduce((s, r) => s + (Number(r.units) || 0), 0) + motorUnits).toFixed(2)}</span>
+                                                            </div>
+                                                            <div className="calculator-history-card-row calculator-history-card-total">
+                                                                <span>Total bill</span>
+                                                                <span>{formatCurrency(filteredReadings.reduce((s, r) => s + (Number(r.units) || 0) * rate, 0) + motorBillTotal)}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        })}
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 </>
                             )}
