@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import './main.css';
 
 import SidebarLayout from './components/shared/SidebarLayout';
-import ThemeInit from './components/shared/ThemeInit';
+import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/pages/Login';
 
@@ -32,12 +32,13 @@ const AppLayout = () => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <ThemeInit />
-      <Router>
-        <AppLayout />
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <AppLayout />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

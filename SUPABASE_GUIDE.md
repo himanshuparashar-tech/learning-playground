@@ -1,5 +1,27 @@
 # Supabase Integration Guide for HBC
 
+## Quick fix: "Could not find the table 'public.houses'"
+
+If you see this error when adding a house, create the table in Supabase:
+
+1. Open **Supabase Dashboard** → **SQL Editor** → **New query**
+2. Paste and run the SQL from `supabase/create_houses_table.sql`
+3. Click **Run** (or Ctrl+Enter)
+4. Refresh your app and try adding a house again
+
+---
+
+## Quick fix: "column readings.house_id does not exist"
+
+If you see this error in the Dashboard:
+
+1. Open **Supabase Dashboard** → **SQL Editor** → **New query**
+2. Paste and run the SQL from `supabase/add_house_id_to_readings.sql`
+3. Click **Run** (or Ctrl+Enter)
+4. Refresh your app
+
+---
+
 ## What is Supabase?
 
 **Supabase** is an open-source Firebase alternative. It provides:
@@ -60,46 +82,108 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
 In Supabase Dashboard → **SQL Editor**, run:
 
 ```sql
--- Members table (for each household)
+-- Houses table (multi-house support)
+CREATE TABLE houses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  house_name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Members table (per house)
 CREATE TABLE members (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id TEXT,  -- optional: link to auth user
+  house_id UUID REFERENCES houses(id) ON DELETE CASCADE,
+  user_id TEXT,
   name TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Readings history (monthly records)
+-- Readings history (monthly records, per house)
 CREATE TABLE readings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  house_id UUID NOT NULL REFERENCES houses(id) ON DELETE CASCADE,
   user_id TEXT,
-  reading_period TEXT,  -- e.g. '2025-03'
+  reading_period TEXT,
   member_id TEXT NOT NULL,
   member_name TEXT NOT NULL,
   previous_reading DECIMAL,
   current_reading DECIMAL,
   units DECIMAL,
+  meter_image_url TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Motor readings
+-- Motor readings (per house)
 CREATE TABLE motor_readings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  house_id UUID NOT NULL REFERENCES houses(id) ON DELETE CASCADE,
   user_id TEXT,
   reading_period TEXT,
   previous_reading DECIMAL,
   current_reading DECIMAL,
   units DECIMAL,
+  meter_image_url TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Enable Row Level Security (RLS) - allow all for now (you can restrict later)
+-- Enable Row Level Security (RLS)
+ALTER TABLE houses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE readings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE motor_readings ENABLE ROW LEVEL SECURITY;
 
+CREATE POLICY "Allow all" ON houses FOR ALL USING (true);
 CREATE POLICY "Allow all" ON members FOR ALL USING (true);
 CREATE POLICY "Allow all" ON readings FOR ALL USING (true);
 CREATE POLICY "Allow all" ON motor_readings FOR ALL USING (true);
+
+-- Enable Realtime for Dashboard
+ALTER PUBLICATION supabase_realtime ADD TABLE readings;
+```
+
+### Storage: Meter images bucket
+
+1. In Supabase Dashboard → **Storage** → **New bucket**
+2. Name: `meter-images`
+3. Set to **Public** (so getPublicUrl works without signed URLs)
+4. Create bucket
+5. Path structure: `{house_id}/{period}/{member_id}.{ext}` (e.g. `uuid/2025-03/m_ashu.jpg`)
+
+### Migration: Add meter_image_url to existing tables
+
+```sql
+ALTER TABLE readings ADD COLUMN IF NOT EXISTS meter_image_url TEXT;
+ALTER TABLE motor_readings ADD COLUMN IF NOT EXISTS meter_image_url TEXT;
+```
+
+### Migration: Add multi-house to existing project
+
+If you already have `members`, `readings`, `motor_readings` without `houses`, run:
+
+```sql
+-- 1. Create houses table
+CREATE TABLE IF NOT EXISTS houses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  house_name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 2. Insert default house for existing data
+INSERT INTO houses (house_name) VALUES ('Default House');
+
+-- 3. Add house_id to readings
+ALTER TABLE readings ADD COLUMN IF NOT EXISTS house_id UUID REFERENCES houses(id) ON DELETE CASCADE;
+UPDATE readings SET house_id = (SELECT id FROM houses LIMIT 1) WHERE house_id IS NULL;
+ALTER TABLE readings ALTER COLUMN house_id SET NOT NULL;
+
+-- 4. Add house_id to motor_readings
+ALTER TABLE motor_readings ADD COLUMN IF NOT EXISTS house_id UUID REFERENCES houses(id) ON DELETE CASCADE;
+UPDATE motor_readings SET house_id = (SELECT id FROM houses LIMIT 1) WHERE house_id IS NULL;
+ALTER TABLE motor_readings ALTER COLUMN house_id SET NOT NULL;
+
+-- 5. Add house_id to members (optional, for per-house members)
+ALTER TABLE members ADD COLUMN IF NOT EXISTS house_id UUID REFERENCES houses(id) ON DELETE CASCADE;
+UPDATE members SET house_id = (SELECT id FROM houses LIMIT 1) WHERE house_id IS NULL;
 ```
 
 ---

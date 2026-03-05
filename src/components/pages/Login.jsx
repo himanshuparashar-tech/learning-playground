@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import { useTheme } from '../../context/ThemeContext'
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const Login = () => {
     const { login } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [theme, setTheme] = useState('light');
-
-    useEffect(() => {
-        setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    }, []);
-
-    const toggleTheme = () => {
-        const next = theme === 'dark' ? 'light' : 'dark';
-        setTheme(next);
-        document.documentElement.classList.toggle('dark', next === 'dark');
-        localStorage.setItem('theme', next);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -56,8 +46,9 @@ const Login = () => {
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 relative">
             <button
                 onClick={toggleTheme}
-                className="absolute top-4 right-4 p-2 rounded-lg text-white/90 hover:bg-white/20 transition"
+                className="absolute top-4 right-4 p-2 rounded-lg text-white/90 hover:bg-white/20 transition-colors duration-300"
                 aria-label="Toggle theme"
+                title={theme === 'dark' ? '☀ Light mode' : '🌙 Dark mode'}
             >
                 {theme === 'dark' ? <MdLightMode size={24} /> : <MdDarkMode size={24} />}
             </button>

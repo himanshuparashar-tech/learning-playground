@@ -1,0 +1,97 @@
+/* Custom animated dropdown */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.custom-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--border, #e5e7eb);
+    border-radius: 10px;
+    font-size: 0.95em;
+    background: var(--input-bg, #fff);
+    color: var(--text, #111);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.3s, box-shadow 0.2s, background-color 0.3s, color 0.3s;
+    min-height: 44px;
+}
+
+.custom-dropdown-trigger:hover:not(:disabled) {
+    border-color: var(--accent, #4f46e5);
+}
+
+.custom-dropdown-trigger:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+.custom-dropdown-trigger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.custom-dropdown-value {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-dropdown-chevron {
+    flex-shrink: 0;
+    font-size: 0.7em;
+    opacity: 0.7;
+    margin-left: 8px;
+}
+
+.custom-dropdown-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 50;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: var(--input-bg, #fff);
+    border: 2px solid var(--border, #e5e7eb);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    max-height: 240px;
+    overflow-y: auto;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-dropdown-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.3s;
+    color: var(--text, #111);
+}
+
+.custom-dropdown-option:hover {
+    background: var(--hover-bg, #f3f4f6);
+}
+
+.custom-dropdown-option-selected {
+    background: color-mix(in srgb, var(--accent, #4f46e5) 12%, transparent);
+    font-weight: 500;
+}
+
+/* Calculator-specific: match calculator-load-history-select */
+.calculator-load-history-select .custom-dropdown-trigger {
+    min-width: 160px;
+}
+
+/* cstm-input compatibility (tabsComponents, etc.) */
+.custom-dropdown.cstm-input .custom-dropdown-trigger {
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    padding: 5px 10px;
+    min-height: auto;
+}

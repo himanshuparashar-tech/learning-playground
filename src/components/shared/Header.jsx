@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from "../../context/AuthContext"; // adjust path if needed
+import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const MenuIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -32,13 +33,7 @@ const MoonIcon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" widt
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // more robust theme handling:
-  // - detect saved theme or system preference on mount
-  // - apply/remove 'dark' class immediately when detected
-  // - persist changes to localStorage
-  const [theme, setTheme] = useState('light');
-  const [mounted, setMounted] = useState(false);
-
+  const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,41 +69,9 @@ const Header = () => {
   };
 
 
-  useEffect(() => {
-    // run once on mount to determine initial theme and apply it
-    try {
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light') {
-        setTheme(saved);
-        document.documentElement.classList.toggle('dark', saved === 'dark');
-      } else {
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setTheme(prefersDark ? 'dark' : 'light');
-        document.documentElement.classList.toggle('dark', prefersDark);
-      }
-    } catch (e) {
-      // fallback to light if anything fails
-      setTheme('light');
-      document.documentElement.classList.remove('dark');
-    }
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    // only persist / apply after initial mount detection
-    if (!mounted) return;
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (e) { /* ignore */ }
-  }, [theme, mounted]);
-
   const navLinks = [{ href: "/intro", label: "Home" }, { href: "/about", label: "About" }, { href: "/projects", label: "Projects" }];
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
 
-  return <header className="bg-black/80  backdrop-blur-sm sticky top-0 z-50 w-full border-b border-gray-200 ">
+  return <header className="bg-black/80 backdrop-blur-sm sticky top-0 z-50 w-full border-b border-gray-200 dark:border-neutral-700 transition-colors duration-300">
     <div className="   mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
         <div className="flex-shrink-0">
@@ -137,10 +100,10 @@ const Header = () => {
 
               {/* Dropdown */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-30 bg-white dark:bg-gray-900 rounded-md shadow-lg border dark:border-gray-700 z-50">
+                <div className="absolute right-0 mt-2 w-30 bg-white dark:bg-neutral-900 rounded-md shadow-lg border border-gray-200 dark:border-neutral-700 z-50 transition-colors duration-300">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors duration-300 cursor-pointer"
                   >
                     Logout
                   </button>
@@ -150,12 +113,12 @@ const Header = () => {
           )}
 
 
-          <button onClick={toggleTheme} className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-300" aria-label="Toggle theme">
+          <button onClick={toggleTheme} className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-300" aria-label="Toggle theme" title={theme === 'dark' ? '☀ Light mode' : '🌙 Dark mode'}>
             {theme === 'dark' ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
           </button>
 
           <div className="md:hidden">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-300" aria-expanded={isMenuOpen}>
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 dark:focus:ring-gray-400 transition-colors duration-300" aria-expanded={isMenuOpen}>
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
             </button>
@@ -164,9 +127,9 @@ const Header = () => {
       </div>
     </div>
 
-    {isMenuOpen && <div className="md:hidden border-t border-gray-200 dark:border-gray-700" id="mobile-menu">
+    {isMenuOpen && <div className="md:hidden border-t border-gray-200 dark:border-neutral-700" id="mobile-menu">
       <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        {navLinks.map(link => <Link key={link.label} to={link.href} className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
+        {navLinks.map(link => <Link key={link.label} to={link.href} className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
           {link.label}
         </Link>)}
         {user && (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BiAbacus, BiAperture, BiCalculator, BiCode, BiLeaf, BiMenu } from 'react-icons/bi';
+import { BiAbacus, BiAperture, BiCalculator, BiCode, BiHistory, BiLeaf, BiMenu } from 'react-icons/bi';
 import { CgChevronRight, CgDisplayGrid } from 'react-icons/cg';
 import { FaBookOpen } from 'react-icons/fa';
 import { HiHome } from 'react-icons/hi';
@@ -8,6 +8,7 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const menuItems = [
   {
@@ -75,6 +76,7 @@ const menuItems = [
   { name: 'FAQ', icon: <BiAperture size={20} />, path: '/faq' },
   { name: 'Display', icon: <CgDisplayGrid size={20} />, path: '/display' },
   { name: 'HBC', icon: <BiCalculator size={20} />, path: '/hbc' },
+  { name: 'Billing History', icon: <BiHistory size={20} />, path: '/billing-history' },
 ];
 
 const flattenMenu = (items, level = 1) => {
@@ -92,8 +94,7 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
   const [isMobile, setIsMobile] = useState(false);
-  const [theme, setTheme] = useState('light');
-  const [mounted, setMounted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -105,31 +106,6 @@ const Sidebar = () => {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light') {
-        setTheme(saved);
-        document.documentElement.classList.toggle('dark', saved === 'dark');
-      } else {
-        const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-        setTheme(prefersDark ? 'dark' : 'light');
-        document.documentElement.classList.toggle('dark', prefersDark);
-      }
-    } catch (_) {
-      setTheme('light');
-    }
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (_) {}
-  }, [theme, mounted]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -258,11 +234,12 @@ const Sidebar = () => {
 
       <div className="p-3 border-t border-[var(--border)] bg-[var(--bg)] space-y-1">
         <motion.button
-          onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-          className={`w-full flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:text-[var(--text)] transition-colors ${!isOpen ? 'justify-center' : ''}`}
+          onClick={toggleTheme}
+          className={`w-full flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:text-[var(--text)] transition-colors duration-300 ${!isOpen ? 'justify-center' : ''}`}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           aria-label="Toggle theme"
+          title={theme === 'dark' ? '☀ Light mode' : '🌙 Dark mode'}
         >
           {theme === 'dark' ? <MdLightMode size={20} /> : <MdDarkMode size={20} />}
           {isOpen && <span className="text-sm">Theme</span>}
