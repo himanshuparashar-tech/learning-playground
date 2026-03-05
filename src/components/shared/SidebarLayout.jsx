@@ -11,6 +11,7 @@ import Demo from '../pages/Demo';
 import Faq from '../pages/Faq';
 import Introduction from '../pages/Introduction'; 
 import HBC from '../../pagesComponents/HBC';
+import MonthlyBillingHistory from '../../pagesComponents/MonthlyBillingHistory';
 import ProtectedRoute from './ProtectedRoute';
 
 // Project Category Pages
@@ -23,7 +24,7 @@ const SidebarLayout = () => {
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
             <main
-                className="flex-1 min-h-screen overflow-y-auto overflow-x-hidden p-4 md:p-6 md:ml-[var(--sidebar-width,260px)]"
+                className="flex-1 min-h-screen overflow-y-auto overflow-x-hidden p-4 md:p-6 md:ml-[var(--sidebar-width,260px)] transition-colors duration-300"
                 style={{ background: 'var(--bg-secondary)' }}
             >
                 <Routes>
@@ -148,6 +149,14 @@ const SidebarLayout = () => {
                         element={
                             <ProtectedRoute>
                                 <HBC />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="billing-history"
+                        element={
+                            <ProtectedRoute>
+                                <MonthlyBillingHistory />
                             </ProtectedRoute>
                         }
                     />

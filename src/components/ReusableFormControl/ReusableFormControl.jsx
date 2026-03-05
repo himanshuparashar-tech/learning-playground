@@ -1,4 +1,5 @@
 import React from 'react'
+import CustomDropdown from '../shared/CustomDropdown'
 
 const ReusableFormControl = ({
     label,
@@ -41,29 +42,13 @@ const ReusableFormControl = ({
 
             {/* Select */}
             {type === "select" && (
-                <select
+                <CustomDropdown
                     value={value}
-                    onChange={onChange}
-                    className={`${baseClasses} ${stateClasses} custom-select`}
-                >
-                    <button>
-                        <selectedcontent></selectedcontent>
-                    </button>
-                    <option value="">
-                        <div>
-                            <span>Select</span>
-                        </div>
-                    </option>
-                    {options.map((item) => {
-                        return (
-                            <option key={item.value} value={item.value}>
-                                <div>
-                                    <span>{item.label}</span>
-                                </div>
-                            </option>
-                        )
-                    })}
-                </select>
+                    onChange={(val) => onChange({ target: { value: val, name } })}
+                    placeholder="Select"
+                    options={options}
+                    triggerClassName={`${baseClasses} ${stateClasses}`}
+                />
             )}
 
             {/* Radio Button */}

@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { FcHome } from "react-icons/fc";
+import CustomDropdown from '../shared/CustomDropdown';
 import toast, { Toaster } from 'react-hot-toast';
 import ComponentOne from '../ComponentOne';
 import ComponentTwo from '../ComponentTwo';
@@ -728,12 +728,17 @@ export const FormControlled = () => {
                     <hr className='border border-dashed' />
                     <h6 className='font-semibold'>Select Dropdown :</h6>
                     <div className="flex justify-between  items-center gap-5">
-                        <select className='cstm-input' name="" id="" value={color} onChange={handleChangeDropdown}>
-                            <option value="">Choose Color</option>
-                            <option value="blue">Blue</option>
-                            <option value="red">Red</option>
-                            <option value="green">Green</option>
-                        </select>
+                        <CustomDropdown
+                            className="cstm-input"
+                            value={color}
+                            onChange={(val) => setColor(val)}
+                            placeholder="Choose Color"
+                            options={[
+                                { value: 'blue', label: 'Blue' },
+                                { value: 'red', label: 'Red' },
+                                { value: 'green', label: 'Green' }
+                            ]}
+                        />
                         <p className='flex-1'><span style={{ backgroundColor: color || 'transparent', padding: '5px', color: 'white' }}>Selected Color : {color}</span></p>
                     </div>
 

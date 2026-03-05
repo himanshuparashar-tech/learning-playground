@@ -1,4 +1,5 @@
 import React from "react";
+import CustomDropdown from "../shared/CustomDropdown";
 
 export default function ReusableInput({
   label,
@@ -46,20 +47,15 @@ export default function ReusableInput({
 
         {/* ✅ SELECT */}
         {type === "select" ? (
-          <select
+          <CustomDropdown
             name={name}
             value={value}
-            onChange={onChange}
+            onChange={(val) => onChange({ target: { value: val, name } })}
+            placeholder="Select"
+            options={options}
             disabled={disabled}
-            className={`${baseClass} ${stateClass}`}
-          >
-            <option value="">Select</option>
-            {options.map((opt, i) => (
-              <option key={i} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            triggerClassName={`${baseClass} ${stateClass}`}
+          />
         ) : type === "textarea" ? (
           <textarea
             name={name}
