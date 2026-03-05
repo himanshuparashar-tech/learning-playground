@@ -199,11 +199,8 @@ const Introduction = () => {
 
       {/* Content Sections */}
       <div className="max-w-7xl mx-auto">
-        <Categories />
-        <Courses />
-        <Partners />
+        
         <Instructors />
-        <Events />
         <Blog />
       </div>
     </div>
