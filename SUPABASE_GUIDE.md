@@ -1,5 +1,16 @@
 # Supabase Integration Guide for HBC
 
+## Quick fix: Total bill not saving
+
+If readings save but the total bill does not persist when you load:
+
+1. Open **Supabase Dashboard** → **SQL Editor** → **New query**
+2. Paste and run the SQL from `supabase/add_bill_periods_table.sql`
+3. Click **Run** (or Ctrl+Enter)
+4. Refresh your app — total bill will now save and load with readings
+
+---
+
 ## Quick fix: "Could not find the 'meter_image_url' column"
 
 If you see this error when saving readings:

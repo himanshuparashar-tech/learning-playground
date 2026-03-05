@@ -780,6 +780,12 @@ const HBC = () => {
         .eq("house_id", selectedHouseId)
         .eq("reading_period", period);
       if (deleteMotorErr) throw deleteMotorErr;
+      const { error: deleteBillErr } = await supabase
+        .from("bill_periods")
+        .delete()
+        .eq("house_id", selectedHouseId)
+        .eq("reading_period", period);
+      if (deleteBillErr) throw deleteBillErr;
       for (const member of members) {
         const r = memberReadings[member.id];
         if (!r?.previous || !r?.current) continue;
@@ -814,6 +820,17 @@ const HBC = () => {
         });
         if (motorErr) throw motorErr;
       }
+      const totalBillVal = parseFloat(totalElectricityBill);
+      if (!isNaN(totalBillVal) && totalBillVal > 0) {
+        const perUnit = results?.electricity?.perUnitCost;
+        const { error: billErr } = await supabase.from("bill_periods").insert({
+          house_id: selectedHouseId,
+          reading_period: period,
+          total_bill: totalBillVal,
+          per_unit_cost: perUnit != null ? perUnit : null,
+        });
+        if (billErr) throw billErr;
+      }
       await fetchSavedPeriods();
       const [y, m] = period.split("-");
       const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -843,6 +860,20 @@ const HBC = () => {
         .eq("reading_period", period)
         .maybeSingle();
       if (motorErr) throw motorErr;
+      const { data: billPeriod, error: billErr } = await supabase
+        .from("bill_periods")
+        .select("total_bill, per_unit_cost")
+        .eq("house_id", selectedHouseId)
+        .eq("reading_period", period)
+        .maybeSingle();
+      if (!billErr && billPeriod) {
+        if (billPeriod.total_bill != null) {
+          setTotalElectricityBill(String(billPeriod.total_bill));
+        }
+        if (billPeriod.per_unit_cost != null) {
+          setSavedPerUnitPrice(parseFloat(billPeriod.per_unit_cost));
+        }
+      }
       setReadingPeriodDate(period);
       if (readings?.length) {
         setMemberReadings((prev) => {
