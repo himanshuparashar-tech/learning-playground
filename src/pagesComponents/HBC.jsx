@@ -663,7 +663,7 @@ const HBC = () => {
   };
 
   const handleRemoveMeterImage = (meterId) => {
-    setMeterImages((prev) => ({ ...prev, [meterId]: null }));
+    setMeterImages((prev) => ({ ...prev, [meterId]: null })); 
   };
 
   // Save current readings as previous for next month (auto-storage, per house)
