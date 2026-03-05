@@ -663,7 +663,7 @@ const HBC = () => {
   };
 
   const handleRemoveMeterImage = (meterId) => {
-    setMeterImages((prev) => ({ ...prev, [meterId]: null }));
+    setMeterImages((prev) => ({ ...prev, [meterId]: null })); 
   };
 
   // Save current readings as previous for next month (auto-storage, per house)
@@ -760,18 +760,26 @@ const HBC = () => {
     setCloudSaving(true);
     try {
       const period = readingPeriodDate || getCurrentPeriod();
-      const { data: existing } = await supabase
+      const { data: existing, error: selectErr } = await supabase
         .from("readings")
         .select("id")
         .eq("house_id", selectedHouseId)
         .eq("reading_period", period);
+      if (selectErr) throw selectErr;
       if (existing?.length) {
-        await supabase
+        const { error: deleteErr } = await supabase
           .from("readings")
           .delete()
           .eq("house_id", selectedHouseId)
           .eq("reading_period", period);
+        if (deleteErr) throw deleteErr;
       }
+      const { error: deleteMotorErr } = await supabase
+        .from("motor_readings")
+        .delete()
+        .eq("house_id", selectedHouseId)
+        .eq("reading_period", period);
+      if (deleteMotorErr) throw deleteMotorErr;
       for (const member of members) {
         const r = memberReadings[member.id];
         if (!r?.previous || !r?.current) continue;
@@ -779,7 +787,7 @@ const HBC = () => {
         const imgUrl = meterImages[member.id]?.startsWith?.("http")
           ? meterImages[member.id]
           : null;
-        await supabase.from("readings").insert({
+        const { error: insertErr } = await supabase.from("readings").insert({
           house_id: selectedHouseId,
           reading_period: period,
           member_id: member.id,
@@ -789,12 +797,13 @@ const HBC = () => {
           units,
           meter_image_url: imgUrl,
         });
+        if (insertErr) throw insertErr;
       }
       if (waterPreviousReading && waterCurrentReading) {
         const motorImgUrl = meterImages.motor?.startsWith?.("http")
           ? meterImages.motor
           : null;
-        await supabase.from("motor_readings").insert({
+        const { error: motorErr } = await supabase.from("motor_readings").insert({
           house_id: selectedHouseId,
           reading_period: period,
           previous_reading: parseFloat(waterPreviousReading),
@@ -803,6 +812,7 @@ const HBC = () => {
             parseFloat(waterCurrentReading) - parseFloat(waterPreviousReading),
           meter_image_url: motorImgUrl,
         });
+        if (motorErr) throw motorErr;
       }
       await fetchSavedPeriods();
       const [y, m] = period.split("-");
@@ -820,17 +830,19 @@ const HBC = () => {
     if (!supabase || !period || !selectedHouseId) return;
     setCloudLoading(true);
     try {
-      const { data: readings } = await supabase
+      const { data: readings, error: readingsErr } = await supabase
         .from("readings")
         .select("*")
         .eq("house_id", selectedHouseId)
         .eq("reading_period", period);
-      const { data: motor } = await supabase
+      if (readingsErr) throw readingsErr;
+      const { data: motor, error: motorErr } = await supabase
         .from("motor_readings")
         .select("*")
         .eq("house_id", selectedHouseId)
         .eq("reading_period", period)
         .maybeSingle();
+      if (motorErr) throw motorErr;
       setReadingPeriodDate(period);
       if (readings?.length) {
         setMemberReadings((prev) => {

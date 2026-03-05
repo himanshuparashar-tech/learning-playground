@@ -1,5 +1,16 @@
 # Supabase Integration Guide for HBC
 
+## Quick fix: "Could not find the 'meter_image_url' column"
+
+If you see this error when saving readings:
+
+1. Open **Supabase Dashboard** → **SQL Editor** → **New query**
+2. Paste and run the SQL from `supabase/add_meter_image_url.sql`
+3. Click **Run** (or Ctrl+Enter)
+4. Refresh your app and try saving again
+
+---
+
 ## Quick fix: "Could not find the table 'public.houses'"
 
 If you see this error when adding a house, create the table in Supabase:
