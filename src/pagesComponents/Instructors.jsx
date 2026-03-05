@@ -1,9 +1,9 @@
 import React from "react";
 
 const instructors = [
-  { name: "json jhonson", role: "full stack developer", img: "https://i.postimg.cc/rmpq4WKv/smartboy.jpg" },
-  { name: "orobindu neel", role: "prompt engineer", img: "https://i.postimg.cc/FHtF67BL/aifemale.jpg" },
-  { name: "alex homonis", role: "blockchain developer", img: "https://i.postimg.cc/6pd6xtk1/handsome.jpg" },
+  { name: "Huxn WebDev", role: "Youtuber", img: "https://i.postimg.cc/rmpq4WKv/smartboy.jpg" },
+  { name: "Chaos Code", role: "Youtuber", img: "https://i.postimg.cc/FHtF67BL/aifemale.jpg" },
+  { name: "Code with Harry", role: "Youtuber", img: "https://i.postimg.cc/6pd6xtk1/handsome.jpg" },
 ];
 
 const InstructorCard = ({ item }) => {

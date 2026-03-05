@@ -3,14 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import html2canvas from 'html2canvas'
+import * as XLSX from 'xlsx'
 import '../../calculator.css'
 
-const MEMBERS = [
-    { id: 'ashu', name: 'Himanshu Bhai' },
-    { id: 'jay', name: 'Jay Bhai' },
-    { id: 'sudhir', name: 'Sudhir Bhai' },
-    { id: 'govind', name: 'Govind Bhai' }
+const DEFAULT_MEMBERS = [
+    { id: 'm_ashu', name: 'Ashu' },
+    { id: 'm_jay', name: 'Jay' },
+    { id: 'm_bhaiya', name: 'Bhaiya' },
+    { id: 'm_aunty', name: 'Aunty' }
 ];
+
+const STORAGE_KEY_PREVIOUS_READINGS = 'hbc_previous_readings';
+const STORAGE_KEY_MEMBERS = 'hbc_members';
+
+const generateMemberId = () => `m_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
 const fadeInUp = {
     initial: { opacity: 0, y: 24 },
@@ -56,6 +62,17 @@ const motorCardFocusVariants = {
     }
 };
 
+const getInitialMembers = () => {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY_MEMBERS);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+    } catch (e) { /* ignore */ }
+    return [...DEFAULT_MEMBERS];
+};
+
 const HBC = () => {
     // Electricity Bill State
     const [totalElectricityBill, setTotalElectricityBill] = useState('');
@@ -65,12 +82,13 @@ const HBC = () => {
     const [perUnitResult, setPerUnitResult] = useState({ show: false, value: '', color: '' });
     const [savedPerUnitPrice, setSavedPerUnitPrice] = useState(null);
 
-    // Member readings state
-    const [memberReadings, setMemberReadings] = useState({
-        ashu: { previous: '', current: '' },
-        jay: { previous: '', current: '' },
-        sudhir: { previous: '', current: '' },
-        govind: { previous: '', current: '' }
+    // Dynamic members (add/remove)
+    const [members, setMembers] = useState(getInitialMembers);
+    const [memberReadings, setMemberReadings] = useState(() => {
+        const m = getInitialMembers();
+        const obj = {};
+        m.forEach(mem => { obj[mem.id] = { previous: '', current: '' }; });
+        return obj;
     });
 
     // Water Bill State
@@ -78,9 +96,6 @@ const HBC = () => {
     const [waterCurrentReading, setWaterCurrentReading] = useState('');
     const [totalWaterUnits, setTotalWaterUnits] = useState('');
     const [waterPricePerUnit, setWaterPricePerUnit] = useState('');
-
-    // Number of active persons (1–4) — motor split and calculations use this
-    const [activeMembersCount, setActiveMembersCount] = useState(4);
 
     // Errors State
     const [errors, setErrors] = useState({});
@@ -91,47 +106,85 @@ const HBC = () => {
     // Track which card is focused (for focus animation)
     const [focusedCardId, setFocusedCardId] = useState(null);
 
-    // Active members based on count (first N persons)
-    const activeMembers = MEMBERS.slice(0, activeMembersCount);
+    // Meter photos (optional — record proof, monthly history)
+    const [meterImages, setMeterImages] = useState(() => {
+        const m = getInitialMembers();
+        const obj = { motor: null };
+        m.forEach(mem => { obj[mem.id] = null; });
+        return obj;
+    });
+    const [readingPeriodDate, setReadingPeriodDate] = useState('');
 
-    // Clear results when person count changes (user must recalculate)
+    // Persist members when they change
+    useEffect(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY_MEMBERS, JSON.stringify(members));
+        } catch (e) { /* ignore */ }
+    }, [members]);
+
+    // Clear results when members change (user must recalculate)
     useEffect(() => {
         setResults(null);
-    }, [activeMembersCount]);
+    }, [members]);
+
+    // Load stored previous readings on mount (auto-fill for next month)
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY_PREVIOUS_READINGS);
+            if (stored) {
+                const data = JSON.parse(stored);
+                setMemberReadings(prev => {
+                    const next = { ...prev };
+                    members.forEach(m => {
+                        if (data[m.id] != null && data[m.id] !== '') {
+                            next[m.id] = { ...next[m.id], previous: String(data[m.id]) };
+                        }
+                    });
+                    return next;
+                });
+                if (data.motor != null && data.motor !== '') {
+                    setWaterPreviousReading(String(data.motor));
+                }
+            }
+        } catch (e) {
+            /* ignore parse errors */
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- load once on mount
 
     // Helper Functions (defined before useEffect to avoid hoisting issues)
     const roundToTwoDecimals = (value) => {
         return Math.round(value * 100) / 100;
     };
 
-    // Auto-calculate total units when member readings change (only active members)
+    // Auto-calculate total units when member readings change
     useEffect(() => {
         let total = 0;
         let allReadingsValid = true;
         let hasAnyReading = false;
 
-        for (const member of activeMembers) {
-            const previous = parseFloat(memberReadings[member.id].previous);
-            const current = parseFloat(memberReadings[member.id].current);
+        for (const member of members) {
+            const r = memberReadings[member.id];
+            if (!r) continue;
+            const previous = parseFloat(r.previous);
+            const current = parseFloat(r.current);
 
-            if (memberReadings[member.id].previous !== '' || memberReadings[member.id].current !== '') {
+            if (r.previous !== '' || r.current !== '') {
                 hasAnyReading = true;
             }
 
             if (!isNaN(previous) && !isNaN(current) && current >= previous) {
                 total += (current - previous);
-            } else if (memberReadings[member.id].previous !== '' || memberReadings[member.id].current !== '') {
+            } else if (r.previous !== '' || r.current !== '') {
                 allReadingsValid = false;
             }
         }
 
         if (!hasAnyReading) {
-            // Clear total units if all readings are cleared
             setTotalUnits('');
         } else if (allReadingsValid && total > 0) {
             setTotalUnits(roundToTwoDecimals(total).toFixed(2));
         }
-    }, [memberReadings, activeMembersCount]);
+    }, [memberReadings, members]);
 
     const formatCurrency = (amount) => {
         return `₹${roundToTwoDecimals(amount).toFixed(2)}`;
@@ -229,7 +282,7 @@ const HBC = () => {
         const readings = {};
         let totalUnitsValue = 0;
 
-        for (const member of activeMembers) {
+        for (const member of members) {
             const memberReadingsData = validateMeterReadings(member.id, member.name);
             if (memberReadingsData === null) {
                 return null;
@@ -271,7 +324,7 @@ const HBC = () => {
         }
 
         const electricityResults = {};
-        for (const member of activeMembers) {
+        for (const member of members) {
             const memberData = readings[member.id];
             const electricityAmount = memberData.units * perUnitCost;
 
@@ -353,7 +406,7 @@ const HBC = () => {
 
         // ✅ Divide ONLY for per-member calculation (among active members)
         const waterUnitsPerMember = roundToTwoDecimals(
-            totalWaterUnitsValue / activeMembersCount
+            totalWaterUnitsValue / members.length
         );
 
         const waterBillPerMember = roundToTwoDecimals(
@@ -387,6 +440,7 @@ const HBC = () => {
         } else {
             setResults({ type: 'electricity-only', electricity: electricityData });
         }
+        savePreviousReadings();
     };
 
     // Calculate Water Only
@@ -402,6 +456,7 @@ const HBC = () => {
         }
 
         setResults({ type: 'water-only', water: waterData });
+        savePreviousReadings();
     };
 
     // Handle member reading change
@@ -415,6 +470,76 @@ const HBC = () => {
         }));
     };
 
+    // Handle meter photo upload (record proof, monthly history)
+    const handleMeterImageUpload = (meterId, e) => {
+        const file = e?.target?.files?.[0];
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            setMeterImages(prev => ({ ...prev, [meterId]: reader.result }));
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+    };
+
+    const handleRemoveMeterImage = (meterId) => {
+        setMeterImages(prev => ({ ...prev, [meterId]: null }));
+    };
+
+    // Save current readings as previous for next month (auto-storage)
+    const savePreviousReadings = () => {
+        try {
+            const data = {};
+            members.forEach(m => {
+                const curr = memberReadings[m.id]?.current;
+                if (curr != null && curr !== '') data[m.id] = curr;
+            });
+            if (waterCurrentReading != null && waterCurrentReading !== '') {
+                data.motor = waterCurrentReading;
+            }
+            if (Object.keys(data).length > 0) {
+                localStorage.setItem(STORAGE_KEY_PREVIOUS_READINGS, JSON.stringify(data));
+            }
+        } catch (e) {
+            /* ignore storage errors */
+        }
+    };
+
+    // Add new member
+    const addMember = (name) => {
+        const trimmed = (name || '').trim();
+        if (!trimmed) return;
+        const id = generateMemberId();
+        setMembers(prev => [...prev, { id, name: trimmed }]);
+        setMemberReadings(prev => ({ ...prev, [id]: { previous: '', current: '' } }));
+        setMeterImages(prev => ({ ...prev, [id]: null }));
+    };
+
+    // Remove member (require at least 1)
+    const removeMember = (id) => {
+        if (members.length <= 1) return;
+        setMembers(prev => prev.filter(m => m.id !== id));
+        setMemberReadings(prev => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+        });
+        setMeterImages(prev => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+        });
+        clearError(`${id}-previous`);
+        clearError(`${id}-current`);
+    };
+
+    // Update member name
+    const updateMemberName = (id, newName) => {
+        const trimmed = (newName || '').trim();
+        if (!trimmed) return;
+        setMembers(prev => prev.map(m => m.id === id ? { ...m, name: trimmed } : m));
+    };
+
     // Handle key press for Enter key
     const handleKeyPress = (e, action) => {
         if (e.key === 'Enter') {
@@ -424,7 +549,7 @@ const HBC = () => {
 
     // Price per unit section is disabled until all active cards have previous + current readings
     const allReadingsFilled = (() => {
-        for (const member of activeMembers) {
+        for (const member of members) {
             const r = memberReadings[member.id];
             if (r.previous.trim() === '' || r.current.trim() === '') return false;
         }
@@ -465,7 +590,7 @@ const HBC = () => {
         const headers = ['Member', 'Sub-meter units', 'Sub-meter (₹)', 'Motor (₹)', 'Total (₹)'];
         const body = [];
         let grandTotal = 0;
-        activeMembers.forEach(member => {
+        members.forEach(member => {
             let electricityAmount = 0, waterAmount = 0, electricityUnits = 0;
             if (results.type !== 'water-only' && results.electricity) {
                 const r = results.electricity.results[member.id];
@@ -487,7 +612,7 @@ const HBC = () => {
         });
         const totalSub = results.electricity ? roundToTwoDecimals(results.electricity.totalUnits).toFixed(2) : 'N/A';
         const totalSubAmt = results.electricity ? formatCurrency(results.electricity.totalUnits * results.electricity.perUnitCost) : 'N/A';
-        const totalMotor = results.water ? formatCurrency(results.water.waterBillPerMember * activeMembersCount) : 'N/A';
+        const totalMotor = results.water ? formatCurrency(results.water.waterBillPerMember * members.length) : 'N/A';
         body.push(['TOTAL', totalSub, totalSubAmt, totalMotor, formatCurrency(grandTotal)]);
         return { headers, body };
     };
@@ -529,7 +654,7 @@ const HBC = () => {
         doc.setFontSize(10);
 
         const meterRows = [];
-        activeMembers.forEach((member, i) => {
+        members.forEach((member, i) => {
             const prev = memberReadings[member.id].previous;
             const curr = memberReadings[member.id].current;
             const prevN = prev !== '' ? parseFloat(prev) : NaN;
@@ -553,6 +678,50 @@ const HBC = () => {
         });
         y = doc.lastAutoTable.finalY + sectionGap;
 
+        // ——— Reading period (if set) ———
+        if (readingPeriodDate) {
+            addPageIfNeeded(lineHeight * 2);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Reading period: ${readingPeriodDate}`, left, y);
+            doc.setFont(undefined, 'normal');
+            y += lineHeight + 4;
+        }
+
+        // ——— Meter photos (record proof) ———
+        const metersWithPhotos = [...members.map(m => ({ id: m.id, label: m.name })), { id: 'motor', label: 'Motor' }].filter(m => meterImages[m.id]);
+        if (metersWithPhotos.length > 0) {
+            addPageIfNeeded(lineHeight * 4);
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(11);
+            doc.text('Meter Photos (Record Proof)', centerX, y, { align: 'center' });
+            y += lineHeight + 4;
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+
+            const imgMaxW = 50;
+            const imgMaxH = 35;
+            for (const m of metersWithPhotos) {
+                const dataUrl = meterImages[m.id];
+                if (!dataUrl) continue;
+                addPageIfNeeded(imgMaxH + 12);
+                const match = dataUrl.match(/^data:image\/(\w+);base64,(.+)$/);
+                if (match) {
+                    const fmt = match[1].toUpperCase() === 'JPG' ? 'JPEG' : match[1].toUpperCase();
+                    const base64 = match[2];
+                    try {
+                        doc.text(`${m.label} meter:`, left, y);
+                        y += 4;
+                        doc.addImage(base64, fmt, left, y, imgMaxW, imgMaxH);
+                        y += imgMaxH + 6;
+                    } catch (err) {
+                        doc.text(`[Image for ${m.label} could not be embedded]`, left, y);
+                        y += 6;
+                    }
+                }
+            }
+            y += sectionGap;
+        }
+
         // ——— Section 2: Total used Unit & Unit wise bill (centered, bold heading) ———
         addPageIfNeeded(lineHeight * 4);
         doc.setFont(undefined, 'bold');
@@ -563,9 +732,9 @@ const HBC = () => {
         doc.setFontSize(10);
 
         const perUnitCost = results.electricity ? results.electricity.perUnitCost : parseFloat(waterPricePerUnit || 0);
-        const motorUnitsPerMember = results.water ? roundToTwoDecimals(results.water.totalWaterUnits / activeMembersCount) : 0;
+        const motorUnitsPerMember = results.water ? roundToTwoDecimals(results.water.totalWaterUnits / members.length) : 0;
 
-        activeMembers.forEach((member, i) => {
+        members.forEach((member, i) => {
             addPageIfNeeded(lineHeight * 4);
             const subUnits = results.type !== 'water-only' && results.electricity
                 ? roundToTwoDecimals(results.electricity.results[member.id].units)
@@ -634,6 +803,68 @@ const HBC = () => {
         }
     };
 
+    const downloadAsExcel = () => {
+        if (!results) return;
+        const wb = XLSX.utils.book_new();
+
+        // Sheet 1: Summary + Meter Readings + Bill Breakdown
+        const rows = [];
+
+        if (readingPeriodDate) {
+            rows.push(['Reading period', readingPeriodDate], []);
+        }
+
+        rows.push(['HBC Bill Calculator - Results'], []);
+
+        // Summary
+        rows.push(['Summary']);
+        rows.push(['Total sub-meter units', results.type === 'water-only' ? 'N/A' : roundToTwoDecimals(results.electricity.totalUnits).toFixed(2)]);
+        rows.push(['Per unit cost (₹)', results.type === 'water-only' ? 'N/A' : formatCurrency(results.electricity.perUnitCost)]);
+        rows.push(['Motor total units', results.type === 'electricity-only' ? 'N/A' : roundToTwoDecimals(results.water.totalWaterUnits).toFixed(2)]);
+        rows.push(['Motor per person (equal)', results.type === 'electricity-only' ? 'N/A' : roundToTwoDecimals(results.water.waterUnitsPerMember).toFixed(2)]);
+        rows.push([]);
+
+        // Meter Readings
+        rows.push(['Meter Readings']);
+        rows.push(['Meter', 'Previous', 'Current', 'Difference']);
+        members.forEach((member, i) => {
+            const prev = memberReadings[member.id].previous;
+            const curr = memberReadings[member.id].current;
+            const prevN = prev !== '' ? parseFloat(prev) : NaN;
+            const currN = curr !== '' ? parseFloat(curr) : NaN;
+            const diff = (!isNaN(prevN) && !isNaN(currN) && currN >= prevN) ? roundToTwoDecimals(currN - prevN) : '—';
+            rows.push([`${i + 1} house ${member.name}`, prev || '—', curr || '—', diff]);
+        });
+        const motorPrevN = waterPreviousReading !== '' ? parseFloat(waterPreviousReading) : NaN;
+        const motorCurrN = waterCurrentReading !== '' ? parseFloat(waterCurrentReading) : NaN;
+        const motorDiff = (!isNaN(motorPrevN) && !isNaN(motorCurrN) && motorCurrN >= motorPrevN) ? roundToTwoDecimals(motorCurrN - motorPrevN) : '—';
+        rows.push(['MOTOR', waterPreviousReading || '—', waterCurrentReading || '—', motorDiff]);
+        rows.push([]);
+
+        // Bill Breakdown
+        rows.push(['Bill Breakdown']);
+        const { headers, body } = getTableBodyData();
+        rows.push(headers);
+        body.forEach(r => rows.push(r));
+        rows.push([]);
+
+        // Member-wise usage (electricity only)
+        if (results.type !== 'water-only' && results.electricity) {
+            rows.push(['Member-wise Electricity Usage']);
+            rows.push(['Member', 'Units']);
+            members.forEach(member => {
+                const r = results.electricity.results[member.id];
+                rows.push([member.name, roundToTwoDecimals(r.units).toFixed(2)]);
+            });
+        }
+
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        XLSX.utils.book_append_sheet(wb, ws, 'HBC Results');
+
+        const filename = readingPeriodDate ? `hbc-results-${readingPeriodDate}.xlsx` : 'hbc-results.xlsx';
+        XLSX.writeFile(wb, filename);
+    };
+
     return (
         <div className="main-body">
             <motion.div
@@ -645,29 +876,39 @@ const HBC = () => {
                 <motion.div initial={fadeInUp.initial} animate={fadeInUp.animate} transition={fadeInUp.transition}>
                     <h1>🏠 HBC</h1>
                     <p className="calculator-intro">
-                        One main meter bill, <strong>4 sub-meters</strong> (pay by your units), and <strong>1 motor meter</strong> (split equally). Choose how many persons are present, set the rate, enter readings, then click <strong>Calculate Bills</strong>.
+                        One main meter bill, <strong>sub-meters</strong> (pay by your units), and <strong>1 motor meter</strong> (split equally). Add or remove members, set the rate, enter readings, then click <strong>Calculate Bills</strong>.
                     </p>
 
-                    <div className="calculator-input-group calculator-person-selector">
-                        <label>Number of persons (motor split equally among)</label>
-                        <div className="calculator-person-buttons">
-                            {[1, 2, 3, 4].map(n => (
-                                <motion.button
-                                    key={n}
-                                    type="button"
-                                    onClick={() => setActiveMembersCount(n)}
-                                    className={activeMembersCount === n ? 'calculator-per-unit-btn' : 'calculator-calculate-btn-secondary'}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        minWidth: '2.5rem',
-                                        opacity: activeMembersCount === n ? 1 : 0.7
-                                    }}
-                                    whileHover={buttonHover}
-                                    whileTap={buttonTap}
-                                >
-                                    {n} {n === 1 ? 'person' : 'persons'}
-                                </motion.button>
-                            ))}
+                    <div className="calculator-members-manager">
+                        <label>Members ({members.length} — motor split equally among)</label>
+                        <div className="calculator-add-member-row">
+                            <input
+                                type="text"
+                                id="new-member-name"
+                                placeholder="New member name"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        addMember(e.target.value);
+                                        e.target.value = '';
+                                    }
+                                }}
+                            />
+                            <motion.button
+                                type="button"
+                                className="calculator-add-member-btn"
+                                onClick={() => {
+                                    const input = document.getElementById('new-member-name');
+                                    if (input) {
+                                        addMember(input.value);
+                                        input.value = '';
+                                        input.focus();
+                                    }
+                                }}
+                                whileHover={buttonHover}
+                                whileTap={buttonTap}
+                            >
+                                + Add member
+                            </motion.button>
                         </div>
                     </div>
                     <div className="calculator-steps-pill">
@@ -691,7 +932,7 @@ const HBC = () => {
                 >
                     <h2 className="calculator-section-title">1. Price per unit (from main bill)</h2>
                     <p className="calculator-section-hint">
-                        {allReadingsFilled ? 'Use your main meter bill to get ₹/unit; same rate for sub-meters and motor.' : `Fill previous & current readings in every active card (${activeMembersCount} sub-meters + motor) to enable this section.`}
+                        {allReadingsFilled ? 'Use your main meter bill to get ₹/unit; same rate for sub-meters and motor.' : `Fill previous & current readings in every active card (${members.length} sub-meters + motor) to enable this section.`}
                     </p>
                     <div className="calculator-per-unit-calculator">
                         <div className="calculator-input-group">
@@ -771,7 +1012,18 @@ const HBC = () => {
                     transition={{ ...fadeInUp.transition, delay: 0.15 }}
                 >
                     <h2 className="calculator-section-title">2. Sub-meters (pay by your units)</h2>
-                    <p className="calculator-section-hint">Enter each active person’s sub-meter readings. Motor is split equally among {activeMembersCount} {activeMembersCount === 1 ? 'person' : 'persons'}.</p>
+                    <p className="calculator-section-hint">Enter each active person’s sub-meter readings. Motor is split equally among {members.length} {members.length === 1 ? 'person' : 'persons'}.</p>
+                    <div className="calculator-reading-period-row">
+                        <div className="calculator-input-group calculator-reading-period-input">
+                            <label htmlFor="reading-period-date">📅 Reading period (for monthly history)</label>
+                            <input
+                                type="month"
+                                id="reading-period-date"
+                                value={readingPeriodDate}
+                                onChange={(e) => setReadingPeriodDate(e.target.value)}
+                            />
+                        </div>
+                    </div>
                     <div className={`calculator-input-group ${errors['total-electricity-bill'] ? 'calculator-error' : ''}`}>
                         <label htmlFor="total-electricity-bill">
                             Main meter total bill (₹) <span className="calculator-label-optional"></span>
@@ -798,7 +1050,7 @@ const HBC = () => {
                     </div>
 
                     <motion.div className="calculator-members-grid" variants={staggerContainer} initial="initial" animate="animate">
-                        {activeMembers.map((member, index) => (
+                        {members.map((member, index) => (
                             <motion.div
                                 key={member.id}
                                 className="calculator-member-card"
@@ -806,7 +1058,27 @@ const HBC = () => {
                                 custom={index}
                                 animate={focusedCardId === member.id ? cardFocusVariants.focused : cardFocusVariants.idle}
                             >
-                                <h3>{member.name} — sub-meter</h3>
+                                <div className="calculator-member-card-header">
+                                    <input
+                                        type="text"
+                                        className="calculator-member-name-input"
+                                        value={member.name}
+                                        onChange={(e) => updateMemberName(member.id, e.target.value)}
+                                        placeholder="Member name"
+                                    />
+                                    <span className="calculator-member-card-subtitle">— sub-meter</span>
+                                    <motion.button
+                                        type="button"
+                                        className="calculator-remove-member-btn"
+                                        onClick={() => removeMember(member.id)}
+                                        disabled={members.length <= 1}
+                                        aria-label={`Remove ${member.name}`}
+                                        whileHover={members.length > 1 ? buttonHover : undefined}
+                                        whileTap={members.length > 1 ? buttonTap : undefined}
+                                    >
+                                        ✕
+                                    </motion.button>
+                                </div>
                                 <div className="calculator-member-inputs">
                                     <div className={`calculator-input-group ${errors[`${member.id}-previous`] ? 'calculator-error' : ''}`}>
                                         <label htmlFor={`${member.id}-previous`}>Previous reading</label>
@@ -816,7 +1088,7 @@ const HBC = () => {
                                             step="0.01"
                                             min="0"
                                             placeholder="Previous"
-                                            value={memberReadings[member.id].previous}
+                                            value={(memberReadings[member.id] || {}).previous || ''}
                                             onChange={(e) => {
                                                 handleMemberReadingChange(member.id, 'previous', e.target.value);
                                                 clearError(`${member.id}-previous`);
@@ -837,7 +1109,7 @@ const HBC = () => {
                                             step="0.01"
                                             min="0"
                                             placeholder="Current"
-                                            value={memberReadings[member.id].current}
+                                            value={(memberReadings[member.id] || {}).current || ''}
                                             onChange={(e) => {
                                                 handleMemberReadingChange(member.id, 'current', e.target.value);
                                                 clearError(`${member.id}-current`);
@@ -851,15 +1123,30 @@ const HBC = () => {
                                         )}
                                     </div>
                                     {(() => {
-                                        const prev = parseFloat(memberReadings[member.id].previous);
-                                        const curr = parseFloat(memberReadings[member.id].current);
-                                        if (memberReadings[member.id].previous === '' || memberReadings[member.id].current === '' || isNaN(prev) || isNaN(curr) || curr < prev) return null;
+                                        const r = memberReadings[member.id] || {};
+                                        const prev = parseFloat(r.previous);
+                                        const curr = parseFloat(r.current);
+                                        if (r.previous === '' || r.current === '' || isNaN(prev) || isNaN(curr) || curr < prev) return null;
                                         return (
                                             <div className="calculator-member-diff-inline">
                                                 Difference: <strong>{roundToTwoDecimals(curr - prev).toFixed(2)}</strong>
                                             </div>
                                         );
                                     })()}
+                                    <div className="calculator-meter-photo-upload">
+                                        <label className="calculator-meter-photo-label">📷 Meter photo (optional)</label>
+                                        {meterImages[member.id] ? (
+                                            <div className="calculator-meter-photo-preview">
+                                                <img src={meterImages[member.id]} alt={`${member.name} meter`} />
+                                                <motion.button type="button" className="calculator-meter-photo-remove" onClick={() => handleRemoveMeterImage(member.id)} whileHover={buttonHover} whileTap={buttonTap} aria-label="Remove photo">✕</motion.button>
+                                            </div>
+                                        ) : (
+                                            <label className="calculator-meter-photo-dropzone">
+                                                <input type="file" accept="image/*" capture="environment" onChange={(e) => handleMeterImageUpload(member.id, e)} />
+                                                <span>+ Add photo</span>
+                                            </label>
+                                        )}
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
@@ -919,6 +1206,20 @@ const HBC = () => {
                                         Difference: <strong>{motorDifference.toFixed(2)}</strong>
                                     </div>
                                 )}
+                                <div className="calculator-meter-photo-upload">
+                                    <label className="calculator-meter-photo-label">📷 Meter photo (optional)</label>
+                                    {meterImages.motor ? (
+                                        <div className="calculator-meter-photo-preview">
+                                            <img src={meterImages.motor} alt="Motor meter" />
+                                            <motion.button type="button" className="calculator-meter-photo-remove" onClick={() => handleRemoveMeterImage('motor')} whileHover={buttonHover} whileTap={buttonTap} aria-label="Remove photo">✕</motion.button>
+                                        </div>
+                                    ) : (
+                                        <label className="calculator-meter-photo-dropzone calculator-meter-photo-dropzone-motor">
+                                            <input type="file" accept="image/*" capture="environment" onChange={(e) => handleMeterImageUpload('motor', e)} />
+                                            <span>+ Add photo</span>
+                                        </label>
+                                    )}
+                                </div>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -968,6 +1269,52 @@ const HBC = () => {
                     )}
                 </motion.div>
 
+                {/* Auto Summary — live preview as user enters data */}
+                <motion.div
+                        className="calculator-auto-summary-section"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <h3 className="calculator-auto-summary-title">⭐ Auto Summary</h3>
+                        <div className="calculator-summary-box calculator-auto-summary-box">
+                            {totalUnits && (
+                                <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                    <h4>Sub-meters total</h4>
+                                    <div className="calculator-value">{totalUnits}</div>
+                                </motion.div>
+                            )}
+                            {motorDifference != null && (
+                                <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                    <h4>Motor units</h4>
+                                    <div className="calculator-value">{motorDifference.toFixed(2)}</div>
+                                </motion.div>
+                            )}
+                            {totalAllDifferences && (
+                                <motion.div className="calculator-summary-card calculator-auto-summary-total" variants={staggerItem}>
+                                    <h4>Total units</h4>
+                                    <div className="calculator-value">{totalAllDifferences}</div>
+                                </motion.div>
+                            )}
+                            {savedPerUnitPrice != null && savedPerUnitPrice > 0 && (
+                                <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                    <h4>Per unit (₹)</h4>
+                                    <div className="calculator-value">{formatCurrency(savedPerUnitPrice)}</div>
+                                </motion.div>
+                            )}
+                            {readingPeriodDate && (
+                                <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                    <h4>Reading period</h4>
+                                    <div className="calculator-value">{readingPeriodDate}</div>
+                                </motion.div>
+                            )}
+                            <motion.div className="calculator-summary-card" variants={staggerItem}>
+                                <h4>Members</h4>
+                                <div className="calculator-value">{members.length}</div>
+                            </motion.div>
+                        </div>
+                    </motion.div>
+
                 {/* Primary action: sub-meter + motor; secondary: motor only */}
                 <motion.div
                     className="calculator-button-group"
@@ -999,6 +1346,9 @@ const HBC = () => {
                             <span className="calculator-download-label">Download:</span>
                             <motion.button type="button" className="calculator-download-btn calculator-download-pdf" onClick={downloadAsPDF} aria-label="Download as PDF" whileHover={buttonHover} whileTap={buttonTap}>
                                 PDF
+                            </motion.button>
+                            <motion.button type="button" className="calculator-download-btn calculator-download-excel" onClick={downloadAsExcel} aria-label="Download as Excel" whileHover={buttonHover} whileTap={buttonTap}>
+                                Excel
                             </motion.button>
                             <motion.button type="button" className="calculator-download-btn calculator-download-jpg" onClick={downloadAsJPG} aria-label="Download as JPG" whileHover={buttonHover} whileTap={buttonTap}>
                                 JPG
@@ -1037,6 +1387,62 @@ const HBC = () => {
                             </motion.div>
                         </motion.div>
 
+                        {/* Meter photos in results (record proof — included in JPG) */}
+                        {(() => {
+                            const withPhotos = [...members.map(m => ({ id: m.id, label: m.name })), { id: 'motor', label: 'Motor' }].filter(m => meterImages[m.id]);
+                            if (withPhotos.length === 0) return null;
+                            return (
+                                <motion.div className="calculator-results-meter-photos" variants={staggerItem}>
+                                    <h4 className="calculator-results-meter-photos-title">📷 Meter Photos (Record Proof)</h4>
+                                    {readingPeriodDate && <p className="calculator-results-meter-photos-period">Period: {readingPeriodDate}</p>}
+                                    <div className="calculator-results-meter-photos-grid">
+                                        {withPhotos.map(m => (
+                                            <div key={m.id} className="calculator-results-meter-photo-item">
+                                                <img src={meterImages[m.id]} alt={`${m.label} meter`} />
+                                                <span>{m.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            );
+                        })()}
+
+                        {/* Member-wise Usage Chart (electricity only) */}
+                        {results.type !== 'water-only' && results.electricity && (
+                            <motion.div className="calculator-usage-chart-wrapper" variants={staggerItem}>
+                                <h4 className="calculator-usage-chart-title">Member-wise Electricity Usage</h4>
+                                <div className="calculator-usage-chart">
+                                    {members.map((member, index) => {
+                                        const r = results.electricity.results[member.id];
+                                        const units = roundToTwoDecimals(r.units);
+                                        const maxUnits = results.electricity.totalUnits;
+                                        const percent = maxUnits > 0 ? (units / maxUnits) * 100 : 0;
+                                        const colors = [
+                                            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                                            'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                                            'linear-gradient(135deg, #ec4899 0%, #db2777 100%)'
+                                        ];
+                                        return (
+                                            <div key={member.id} className="calculator-usage-chart-row">
+                                                <span className="calculator-usage-chart-label">{member.name}</span>
+                                                <div className="calculator-usage-chart-bar-track">
+                                                    <motion.div
+                                                        className="calculator-usage-chart-bar"
+                                                        style={{ background: colors[index % colors.length] }}
+                                                        initial={{ width: 0 }}
+                                                        animate={{ width: `${Math.max(percent, 4)}%` }}
+                                                        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                                    />
+                                                </div>
+                                                <span className="calculator-usage-chart-value">{units.toFixed(2)} units</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </motion.div>
+                        )}
+
                         {/* Desktop/Tablet: Table view */}
                         <motion.div className="calculator-table-wrapper calculator-results-table-desktop" variants={staggerItem}>
                         <table className="calculator-results-table">
@@ -1052,7 +1458,7 @@ const HBC = () => {
                             <tbody>
                                 {(() => {
                                     let grandTotal = 0;
-                                    const rows = activeMembers.map(member => {
+                                    const rows = members.map(member => {
                                         let electricityAmount = 0;
                                         let waterAmount = 0;
                                         let electricityUnits = 0;
@@ -1109,7 +1515,7 @@ const HBC = () => {
                                             <td>
                                                 <strong>
                                                     {results.type === 'electricity-only' ? 'N/A' :
-                                                        formatCurrency(results.water.waterBillPerMember * activeMembersCount)}
+                                                        formatCurrency(results.water.waterBillPerMember * members.length)}
                                                 </strong>
                                             </td>
                                             <td>
@@ -1124,7 +1530,7 @@ const HBC = () => {
 
                         {/* Mobile: Card layout for better UX on small screens */}
                         <motion.div className="calculator-results-cards-mobile" variants={staggerItem}>
-                            {activeMembers.map(member => {
+                            {members.map(member => {
                                 let electricityAmount = 0, waterAmount = 0, electricityUnits = 0;
                                 if (results.type !== 'water-only' && results.electricity) {
                                     const r = results.electricity.results[member.id];
@@ -1167,7 +1573,7 @@ const HBC = () => {
                             })}
                             {(() => {
                                 let grandTotal = 0;
-                                activeMembers.forEach(member => {
+                                members.forEach(member => {
                                     let electricityAmount = 0, waterAmount = 0;
                                     if (results.type !== 'water-only' && results.electricity) electricityAmount = results.electricity.results[member.id].electricityAmount;
                                     if (results.type !== 'electricity-only' && results.water) waterAmount = results.water.waterBillPerMember;

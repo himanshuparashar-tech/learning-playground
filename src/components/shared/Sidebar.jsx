@@ -71,7 +71,7 @@ const menuItems = [
       },
     ],
   },
-  { name: 'CodePlay', icon: <BiCode size={20} />, path: '/demo' },
+  // { name: 'CodePlay', icon: <BiCode size={20} />, path: '/demo' },
   { name: 'FAQ', icon: <BiAperture size={20} />, path: '/faq' },
   { name: 'Display', icon: <CgDisplayGrid size={20} />, path: '/display' },
   { name: 'HBC', icon: <BiCalculator size={20} />, path: '/hbc' },
